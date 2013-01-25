@@ -98,3 +98,13 @@ class AdjacencyLists(Graph):
         nodes = self.get_nodelist()
         n1_index = nodes.index(n1)
         self.__nodes[n1_index].append(n2)
+
+    def remove_node(self, node):
+        """
+        Requirement: list must not be acyclic.
+        """
+        for row in self.__nodes:
+            neighbors = row[1:len(row)]
+            
+            if node in neighbors:
+                neighbors.remove(row)
