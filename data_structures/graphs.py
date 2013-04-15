@@ -59,6 +59,12 @@ class Graph(object):
 class AdjacencyLists(Graph):
     """
     Adjacency list representation of a graph.
+
+    Convention:
+    The graph is represented as a list-of-lists. The first element
+    in each list is a specific node in the graph. The rest of the
+    list represents nodes immediately reachable from the node
+    represented by the first element.
     """
 
     def __init__(self):
@@ -101,6 +107,7 @@ class AdjacencyLists(Graph):
 
     def remove_node(self, node):
         """
+        FIXME Documentation: Clarify what "list"
         Requirement: list must not be acyclic.
         """
         for row in self.__nodes:
