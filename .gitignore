@@ -1,0 +1,6 @@
+*.swp
+*~
+*.log
+*.class
+*.pyc
+*/__pycache__/*
