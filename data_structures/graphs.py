@@ -1,3 +1,7 @@
+#! /usr/bin/env python3
+
+import unittest
+
 """
 Package for graph data structures.
 """
@@ -11,7 +15,15 @@ class NotInNodesException(Exception):
         self.value = value
 
     def __str__(self):
-        return repr(self.value)
+        return "These node(s) are not yet added to the graph: " + repr(self.value)
+
+class DuplicateNodeException(Exception):
+    
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return "Already added to the graph: " + repr(self.value)
 
 class Graph(object):
     """
@@ -58,7 +70,9 @@ class Graph(object):
 
 class AdjacencyLists(Graph):
     """
-    Adjacency list representation of a graph.
+    Adjacency list representation of a graph. Note that no two nodes
+    may be the same in a graph. Otherwise, we'll have confusion when
+    making nodes adjacent.
 
     Convention:
     The graph is represented as a list-of-lists. The first element
@@ -69,6 +83,7 @@ class AdjacencyLists(Graph):
 
     def __init__(self):
         self.__nodes = []
+        self.__added_nodes = set()
 
     def get_neighbors(self, n1):
         """
@@ -90,28 +105,121 @@ class AdjacencyLists(Graph):
         else:
             return False
     
-    def get_nodelist(self):
+    @property
+    def added_nodes(self):
         """
-        Returns a tuple of all the nodes in this graph.
+        Returns a set of all the nodes in this graph.
         """
-        return tuple(map(lambda x: x[0], self.___nodes))
+        return self.__added_nodes
 
     def add_node(self, node):
-        # FIXME Shall I check if node is already in the graph?
-        self.__nodes.append([node])
+        # TODO Make thread safe
+        if node in self.__added_nodes:
+            raise DuplicateNodeException(node)
+        else:
+            self.__added_nodes.add(node)
+            self.__nodes.append([node])
 
     def make_neighbor(self, n1, n2):
-        nodes = self.get_nodelist()
+        """
+        The connection created is only one-way: n2 will be
+        reachable from n1 but n1 will not be necessarily
+        reachable from n2.
+        """
+        if n1 not in self.added_nodes or n2 not in self.added_nodes:
+            raise NotInNodesException([n1, n2])
+        nodes = self.__get_nodelist()
         n1_index = nodes.index(n1)
-        self.__nodes[n1_index].append(n2)
+        # Check if the connection already exists. If so, do
+        # not make it redundant!
+        if n2 not in self.__nodes[n1_index]:
+            self.__nodes[n1_index].append(n2)
+
+    def __get_nodelist(self):
+        return list(map(lambda x: x[0], self.__nodes))
 
     def remove_node(self, node):
         """
-        FIXME Documentation: Clarify what "list"
         Requirement: list must not be acyclic.
         """
-        for row in self.__nodes:
+        # Remove from added_nodes
+        self.__added_nodes.remove(node)
+
+        # Remove incoming connections
+        for index, row in enumerate(self.__nodes):
             neighbors = row[1:len(row)]
             
             if node in neighbors:
                 neighbors.remove(row)
+
+            # Check if the row is the adjacency list
+            # for the given node and delete.
+            if row[0] == node:
+                self.__nodes.remove(row)
+
+class AdjacencyListTest(unittest.TestCase):
+    """
+    To test:
+        - Behavior when introducing deep and shallow copies.
+        - 
+    """
+
+    def setUp(self):
+        self.four_nodes = AdjacencyLists()
+        self.four_nodes.add_node("node1")
+        self.four_nodes.add_node("node2")
+        self.four_nodes.add_node("node3")
+        self.four_nodes.add_node("node4")
+
+        self.test_node = "test_node"
+
+    def test_add_node(self):
+        """
+        Test cases:
+            - Introduce a new node -- should be added
+            - Introduce an already-added node - must throw a
+              DuplicateNodeException
+        """
+        self.four_nodes.add_node(self.test_node)
+        self.assertTrue(self.test_node in self.four_nodes.added_nodes)
+        self.assertRaises(DuplicateNodeException, self.four_nodes.add_node, "node1")
+
+    def test_remove_node(self):
+        """
+        Add a node, check if added indeed. Then, remove that node
+        and check that it is not there anymore.
+        """
+        self.four_nodes.add_node(self.test_node)
+        self.assertTrue(self.test_node in self.four_nodes.added_nodes)
+        
+        self.four_nodes.remove_node(self.test_node)
+        self.assertTrue(self.test_node not in self.four_nodes.added_nodes)
+
+    def test_neighbor(self):
+        """
+        Tests both make_neighbor and is_reachable functionality.
+        """
+        self.four_nodes.make_neighbor("node1", "node2")
+        self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
+        self.assertFalse(self.four_nodes.is_reachable("node2", "node1"))
+        self.assertRaises(NotInNodesException, self.four_nodes.make_neighbor, self.test_node, "node1")
+
+
+    def construct_four_nodes(self):
+        """
+        Utility test function to connect the four nodes of self.four_nodes.
+        """
+        self.four_nodes.make_neighbor("node1", "node2")
+        self.four_nodes.make_neighbor("node2", "node1")
+        self.four_nodes.make_neighbor("node1", "node3")
+        self.four_nodes.make_neighbor("node3", "node1")
+
+        self.four_nodes.make_neighbor("node1", "node4")
+        self.four_nodes.make_neighbor("node4", "node1")
+        self.four_nodes.make_neighbor("node2", "node4")
+        self.four_nodes.make_neighbor("node4", "node2")
+        self.four_nodes.make_neighbor("node3", "node4")
+        self.four_nodes.make_neighbor("node4", "node3")
+
+if __name__ == "__main__":
+    unittest.main()
