@@ -157,6 +157,18 @@ class AdjacencyLists(Graph):
             if row[0] == node:
                 self.__nodes.remove(row)
 
+class UndirectedAdjList(AdjacencyLists):
+    """
+    Creates undirected graphs with an adjacency list
+    representation.
+    """
+
+    def make_neighbor(self, n1, n2):
+        super(UndirectedAdjList, self).make_neighbor(n1, n2)
+        super(UndirectedAdjList, self).make_neighbor(n2, n1)
+
+############## HERE BE UNIT TESTS ##############
+
 class AdjacencyListTest(unittest.TestCase):
     """
     To test:
@@ -242,6 +254,22 @@ class AdjacencyListTest(unittest.TestCase):
     def test_get_neighbors(self):
         self.construct_four_nodes()
         self.get_neighbors_test()
+
+class UndirectedAdjListTest(AdjacencyListTest):
+    
+    def setUp(self):
+        super(UndirectedAdjListTest, self).setUp()
+
+        self.four_nodes = UndirectedAdjList()
+        self.four_nodes.add_node("node1")
+        self.four_nodes.add_node("node2")
+        self.four_nodes.add_node("node3")
+        self.four_nodes.add_node("node4")
+
+    def test_neighbor(self):
+        self.four_nodes.make_neighbor("node1", "node2")
+        self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
+        self.assertTrue(self.four_nodes.is_reachable("node2", "node1"))
 
 if __name__ == "__main__":
     unittest.main()
