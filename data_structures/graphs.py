@@ -204,10 +204,10 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertFalse(self.four_nodes.is_reachable("node2", "node1"))
         self.assertRaises(NotInNodesException, self.four_nodes.make_neighbor, self.test_node, "node1")
 
-
     def construct_four_nodes(self):
         """
         Utility test function to connect the four nodes of self.four_nodes.
+        After calling this function, get_neighbors_test should pass.
         """
         self.four_nodes.make_neighbor("node1", "node2")
         self.four_nodes.make_neighbor("node2", "node1")
@@ -220,6 +220,28 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.make_neighbor("node4", "node2")
         self.four_nodes.make_neighbor("node3", "node4")
         self.four_nodes.make_neighbor("node4", "node3")
+
+    def get_neighbors_test(self):
+        n1_neighbors = self.four_nodes.get_neighbors("node1")
+        n2_neighbors = self.four_nodes.get_neighbors("node2")
+        n3_neighbors = self.four_nodes.get_neighbors("node3")
+        n4_neighbors = self.four_nodes.get_neighbors("node4")
+
+        n1_expected_neighbors = set(["node2", "node3", "node4"])
+        self.assertEqual(n1_expected_neighbors, set(n1_neighbors))
+
+        n2_expected_neighbors = set(["node4", "node1"])
+        self.assertEqual(n2_expected_neighbors, set(n2_neighbors))
+
+        n4_expected_neighbors = set(["node2", "node1", "node3"])
+        self.assertEqual(n4_expected_neighbors, set(n4_neighbors))
+
+        n3_expected_neighbors = set(["node1", "node4"])
+        self.assertEqual(n3_expected_neighbors, set(n3_neighbors))
+
+    def test_get_neighbors(self):
+        self.construct_four_nodes()
+        self.get_neighbors_test()
 
 if __name__ == "__main__":
     unittest.main()
