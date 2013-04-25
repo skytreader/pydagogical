@@ -6,6 +6,8 @@ import unittest
 Naive binary tree implementation.
 """
 
+# TODO Implement binary tree as a graph
+
 class BinaryTree(object):
     """
     Interface for binary tree objects.
@@ -55,10 +57,21 @@ class DFSIterator(object):
         """
         Return what comes next and update iterator's internal
         state to point to the DFS successor of the current node.
+
+        Always returns the data of the current node, not the node
+        itself.
         """
-        if self.bintree.left_node is None:
-            self.roving_pointer = self.traversal_stack.pop()
-            return self.roving_pointer
+        
+        # Pointing to a null node. This only happens when
+        # we tried to return the right son of some non-null
+        # node and that right son turned out to be null.
+        if self.roving_pointer is None:
+            pass
+        # left node is None so next element is this node.
+        elif self.roving_pointer.left_node is None:
+            return_val = self.roving_pointer.node_data
+            self.roving_pointer = self.roving_pointer.right_son
+            return self.roving_pointer.node_data
 
 class NaiveBinaryTree(BinaryTree):
     """
