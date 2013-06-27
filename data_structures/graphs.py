@@ -68,6 +68,14 @@ class Graph(object):
         """
         pass
 
+    def get_degree(self, node):
+        """
+        Returns the current degree of a node in a graph.
+
+        TODO: Formal definition of degree.
+        """
+        pass
+
 class AdjacencyLists(Graph):
     """
     Adjacency list representation of a graph. Note that no two nodes
