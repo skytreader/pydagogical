@@ -82,6 +82,7 @@ class Graph(object):
         direclly leave n1. For undirected graphs, get_outdegree
         should return the same value as get_indegree.
         """
+        pass
 
 class AdjacencyLists(Graph):
     """
