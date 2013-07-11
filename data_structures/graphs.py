@@ -68,6 +68,21 @@ class Graph(object):
         """
         pass
 
+    def get_indegree(self, n1):
+        """
+        For a directed graph, the number of vertices which can
+        directly reach n1. For undirected graphs, get_indegree
+        should return the same value as get_outdegree.
+        """
+        pass
+
+    def get_outdegree(self, n1):
+        """
+        For a directed graph, the number of vertices which
+        direclly leave n1. For undirected graphs, get_outdegree
+        should return the same value as get_indegree.
+        """
+
 class AdjacencyLists(Graph):
     """
     Adjacency list representation of a graph. Note that no two nodes
