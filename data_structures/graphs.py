@@ -212,7 +212,6 @@ class AdjacencyListTest(unittest.TestCase):
     """
     To test:
         - Behavior when introducing deep and shallow copies.
-        - 
     """
 
     def setUp(self):
@@ -300,6 +299,16 @@ class AdjacencyListTest(unittest.TestCase):
     def test_get_neighbors(self):
         self.construct_four_nodes()
         self.get_neighbors_test()
+
+    def test_get_indegree(self):
+        n1_neighbors = self.four_nodes.get_neighbors("node1")
+        self.assertEqual(self.four_nodes.get_indegree("node1"), len(n1_neighbors))
+
+        # NotInNodesException test
+        self.assertRaises(NotInNodesException, self.four_nodes.get_indegree, "does not exist")
+
+    def test_get_outdegree(self):
+        pass
 
 class UndirectedAdjListTest(AdjacencyListTest):
     
