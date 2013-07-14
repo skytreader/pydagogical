@@ -1,6 +1,7 @@
-*.swp
-*~
-*.log
-*.class
+*.py~
 *.pyc
 */__pycache__/*
+*.sw?
+*~
+*.log
+*.bak
