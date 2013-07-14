@@ -103,15 +103,15 @@ class AdjacencyLists(Graph):
 
     def get_neighbors(self, n1):
         """
-        Returns a list of all the nodes reachable via n1.
-        Returns None if n1 has no neighbors or if n1 is not
-        even in the graph.
+        Returns a list of all the nodes reachable via n1. Returns an 
+        empty list if n1 has no neighbors. Throws a NotInNodesException
+        if n1 is not even in the graph.
         """
         for row in self.__nodes:
             if row[0] == n1:
                 return row[1:len(row)]
 
-        return None
+        raise NotInNodesException(n1)
 
     def is_reachable(self, n1, n2):
         n1_neighbors = self.get_neighbors(n1)
@@ -266,6 +266,13 @@ class AdjacencyListTest(unittest.TestCase):
 
         n3_expected_neighbors = set(["node1", "node4"])
         self.assertEqual(n3_expected_neighbors, set(n3_neighbors))
+
+        # Isolated node test
+        self.four_nodes.add_node("five")
+        self.assertTrue(self.four_nodes.get_neighbors("five") == [])
+
+        # NotInNodesException test
+        self.assertRaises(NotInNodesException, self.four_nodes.get_neighbors, "does not exist")
 
     def test_get_neighbors(self):
         self.construct_four_nodes()
