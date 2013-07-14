@@ -173,6 +173,29 @@ class AdjacencyLists(Graph):
             if row[0] == node:
                 self.__nodes.remove(row)
 
+    def get_outdegree(self, n1):
+        """
+        Returns the number of nodes reachable from n1. Throws
+        a NotInNodesException if n1 is not in the graph.
+        """
+        neighbors = self.get_neighbors(n1)
+        return len(neighbors)
+
+    def get_indegree(self, n1):
+        """
+        Returns the number of nodes that can reach n1. Throws
+        a NotInNodesException if n1 is not in the graph.
+        """
+        if n1 in self.added_nodes:
+            outcount = 0
+            
+            for node in self.added_nodes:
+                outcount += 1 if self.is_reachable(node, n1) else 0
+
+            return outcount
+        else:
+            raise NotInNodesException(n1)
+
 class UndirectedAdjList(AdjacencyLists):
     """
     Creates undirected graphs with an adjacency list
