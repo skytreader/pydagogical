@@ -29,6 +29,10 @@ class Graph(object):
     """
     General class for graphs. Add objects for nodes and equality must
     be defined for the nodes.
+
+    All methods that make use of the current set of nodes in the graph
+    (not methods that add a node to the graph) should throw a
+    NotInNodesException if given a node that is not yet in the graph.
     """
 
     def is_reachable(self, n1, n2):
@@ -71,16 +75,18 @@ class Graph(object):
     def get_indegree(self, n1):
         """
         For a directed graph, the number of vertices which can
-        directly reach n1. For undirected graphs, get_indegree
-        should return the same value as get_outdegree.
+        directly reach n1 (i.e., those who have n1 as a neighbor).
+        For undirected graphs, get_indegree should return the same
+        value as get_outdegree.
         """
         pass
 
     def get_outdegree(self, n1):
         """
         For a directed graph, the number of vertices which
-        direclly leave n1. For undirected graphs, get_outdegree
-        should return the same value as get_indegree.
+        directly leave n1 (i.e., the neighbors of n1). For
+        undirected graphs, get_outdegree should return the
+        same value as get_indegree.
         """
         pass
 
@@ -308,7 +314,8 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertRaises(NotInNodesException, self.four_nodes.get_indegree, "does not exist")
 
     def test_get_outdegree(self):
-        pass
+        n1_neighbors = self.four_nodes.get_neighbors("node1")
+        self.assertEqual(self.four_nodes.get_outdegree("node1"), len(n1_neighbors))
 
 class UndirectedAdjListTest(AdjacencyListTest):
     
@@ -325,6 +332,16 @@ class UndirectedAdjListTest(AdjacencyListTest):
         self.four_nodes.make_neighbor("node1", "node2")
         self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
         self.assertTrue(self.four_nodes.is_reachable("node2", "node1"))
+
+    def test_degree_eq(self):
+        """
+        Tests that the in degree and out degree of every node in the graph
+        is equal.
+        """
+        nodes = self.four_nodes.added_nodes
+
+        for n in nodes:
+            self.assertEqual(self.four_nodes.get_indegree(n), self.four_nodes.get_outdegree(n))
 
 if __name__ == "__main__":
     unittest.main()
