@@ -104,6 +104,7 @@ class AdjacencyLists(Graph):
     """
 
     def __init__(self):
+        # self.__nodes is the adjacency list
         self.__nodes = []
         self.__added_nodes = set()
 
