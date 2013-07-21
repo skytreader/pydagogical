@@ -7,9 +7,6 @@ Package for graph data structures.
 """
 
 class NotInNodesException(Exception):
-    """
-    Will I really actually use this?
-    """
 
     def __init__(self, value):
         self.value = value
