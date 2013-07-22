@@ -55,6 +55,12 @@ class Graph(object):
         """
         pass
     
+    def add_nodes(self, nodes):
+        """
+        Convenience method that adds nodes as a list.
+        """
+        pass
+    
     def remove_node(self, node):
         """
         Removes the given node from the graph. All incoming
@@ -132,13 +138,32 @@ class AdjacencyLists(Graph):
         """
         return self.__added_nodes
 
+    def __add(self, node):
+        """
+        Adds the node, assuming that the node is _not_ yet
+        added (hence, not violating the purpose of DuplicateNodesException.
+        """
+        self.__added_nodes.add(node)
+        self.__nodes.append([node])
+
     def add_node(self, node):
         # TODO Make thread safe
         if node in self.__added_nodes:
             raise DuplicateNodeException(node)
         else:
-            self.__added_nodes.add(node)
-            self.__nodes.append([node])
+            self.__add(node)
+
+    def add_nodes(self, nodes):
+        """
+        Adds nodes as a list. Raises DuplicateNodeException
+        if at least one of the nodes is already in the list.
+        """
+        for node in nodes:
+            if node in self.__added_nodes:
+                raise DuplicateNodeException(node)
+
+        for node in nodes:
+            self.__add(node)
 
     def make_neighbor(self, n1, n2):
         """
@@ -237,6 +262,25 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.add_node(self.test_node)
         self.assertTrue(self.test_node in self.four_nodes.added_nodes)
         self.assertRaises(DuplicateNodeException, self.four_nodes.add_node, "node1")
+
+    def test_add_nodes(self):
+        """
+        Adds lists of possible nodes.
+        """
+        # should be able to insert this fine
+        test_nodes = ["the", "television's", "selling", "plastic", "figurine", "for", "leaders"]
+        # none of these should be inserted---intersects with "the"
+        duplicate_test_nodes = ["scared", "of", "losing", "all", "the", "time"]
+        self.four_nodes.add_nodes(test_nodes)
+
+        for node in test_nodes:
+            self.assertTrue(node in self.four_nodes.added_nodes)
+
+        self.assertRaises(DuplicateNodeException, self.four_nodes.add_nodes, duplicate_test_nodes)
+
+        for node in duplicate_test_nodes:
+            if node != "the":
+                self.assertTrue(node not in self.four_nodes.added_nodes)
 
     def test_remove_node(self):
         """
