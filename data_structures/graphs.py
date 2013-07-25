@@ -110,6 +110,7 @@ class AdjacencyLists(Graph):
         # self.__nodes is the adjacency list
         self.__nodes = []
         self.__added_nodes = set()
+        self._edge_count = 0
 
     def get_neighbors(self, n1):
         """
@@ -137,6 +138,10 @@ class AdjacencyLists(Graph):
         Returns a set of all the nodes in this graph.
         """
         return self.__added_nodes
+
+    @property
+    def edge_count(self):
+        return self._edge_count
 
     def __add(self, node):
         """
@@ -170,7 +175,10 @@ class AdjacencyLists(Graph):
         The connection created is only one-way: n2 will be
         reachable from n1 but n1 will not be necessarily
         reachable from n2.
+
+        You can't represent self-loops here, unfortunately.
         """
+        print("Plain AdjList call")
         if n1 not in self.added_nodes or n2 not in self.added_nodes:
             raise NotInNodesException([n1, n2])
         nodes = self.__get_nodelist()
@@ -179,8 +187,13 @@ class AdjacencyLists(Graph):
         # not make it redundant!
         if n2 not in self.__nodes[n1_index]:
             self.__nodes[n1_index].append(n2)
+            self._edge_count += 1
 
     def __get_nodelist(self):
+        """
+        Returns a list of nodes in the order they are
+        represented in the adjacency list.
+        """
         return list(map(lambda x: x[0], self.__nodes))
 
     def remove_node(self, node):
@@ -231,9 +244,15 @@ class UndirectedAdjList(AdjacencyLists):
     representation.
     """
 
+    def __init__(self):
+        super(UndirectedAdjList, self).__init__()
+
     def make_neighbor(self, n1, n2):
         super(UndirectedAdjList, self).make_neighbor(n1, n2)
         super(UndirectedAdjList, self).make_neighbor(n2, n1)
+        print("Edge count: " + str(self._edge_count))
+        # Remove extraneous addition to edge_count
+        self._edge_count -= 1
 
 ############## HERE BE UNIT TESTS ##############
 
@@ -318,6 +337,10 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.make_neighbor("node4", "node2")
         self.four_nodes.make_neighbor("node3", "node4")
         self.four_nodes.make_neighbor("node4", "node3")
+
+    def test_edge_count(self):
+        self.construct_four_nodes()
+        self.assertEqual(self.four_nodes.edge_count, 5)
 
     def get_neighbors_test(self):
         n1_neighbors = self.four_nodes.get_neighbors("node1")
