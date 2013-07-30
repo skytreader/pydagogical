@@ -178,7 +178,6 @@ class AdjacencyLists(Graph):
 
         You can't represent self-loops here, unfortunately.
         """
-        print("Plain AdjList call")
         if n1 not in self.added_nodes or n2 not in self.added_nodes:
             raise NotInNodesException([n1, n2])
         nodes = self.__get_nodelist()
@@ -246,13 +245,14 @@ class UndirectedAdjList(AdjacencyLists):
 
     def __init__(self):
         super(UndirectedAdjList, self).__init__()
+        self.__edge_count = 0
 
     def make_neighbor(self, n1, n2):
         super(UndirectedAdjList, self).make_neighbor(n1, n2)
         super(UndirectedAdjList, self).make_neighbor(n2, n1)
-        print("Edge count: " + str(self._edge_count))
-        # Remove extraneous addition to edge_count
-        self._edge_count -= 1
+        self.__edge_count += 1
+        self._edge_count = self.__edge_count
+        print("UndirectedAdjList Current edge count: " + str(self._edge_count))
 
 ############## HERE BE UNIT TESTS ##############
 
@@ -268,6 +268,7 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.add_node("node2")
         self.four_nodes.add_node("node3")
         self.four_nodes.add_node("node4")
+        print("setUp: four_nodes type: " + str(type(self.four_nodes)))
 
         self.test_node = "test_node"
 
@@ -326,6 +327,8 @@ class AdjacencyListTest(unittest.TestCase):
         Utility test function to connect the four nodes of self.four_nodes.
         After calling this function, get_neighbors_test should pass.
         """
+        print("===========Constructing four nodes===============")
+        print("Type of structure: " + str(type(self.four_nodes)))
         self.four_nodes.make_neighbor("node1", "node2")
         self.four_nodes.make_neighbor("node2", "node1")
         self.four_nodes.make_neighbor("node1", "node3")
@@ -340,7 +343,10 @@ class AdjacencyListTest(unittest.TestCase):
 
     def test_edge_count(self):
         self.construct_four_nodes()
-        self.assertEqual(self.four_nodes.edge_count, 5)
+        # Should be 10 since each bidirectional edge had to be
+        # created with two calls to make_neighbor, therefore an
+        # edge count each.
+        self.assertEqual(self.four_nodes.edge_count, 10)
 
     def get_neighbors_test(self):
         n1_neighbors = self.four_nodes.get_neighbors("node1")
@@ -385,18 +391,22 @@ class AdjacencyListTest(unittest.TestCase):
 class UndirectedAdjListTest(AdjacencyListTest):
     
     def setUp(self):
-        super(UndirectedAdjListTest, self).setUp()
-
         self.four_nodes = UndirectedAdjList()
         self.four_nodes.add_node("node1")
         self.four_nodes.add_node("node2")
         self.four_nodes.add_node("node3")
         self.four_nodes.add_node("node4")
+        print("setUp: four_nodes type: " + str(type(self.four_nodes)))
+        self.test_node = "test_node"
 
     def test_neighbor(self):
         self.four_nodes.make_neighbor("node1", "node2")
         self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
         self.assertTrue(self.four_nodes.is_reachable("node2", "node1"))
+
+    def test_edge_count(self):
+        self.construct_four_nodes()
+        self.assertEqual(self.four_nodes.edge_count, 5)
 
     def test_degree_eq(self):
         """
