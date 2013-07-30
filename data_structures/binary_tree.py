@@ -6,8 +6,6 @@ import unittest
 Naive binary tree implementation.
 """
 
-# TODO Implement binary tree as a graph
-
 class BinaryTree(object):
     """
     Interface for binary tree objects.
