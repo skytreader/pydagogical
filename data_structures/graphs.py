@@ -246,13 +246,19 @@ class UndirectedAdjList(AdjacencyLists):
     def __init__(self):
         super(UndirectedAdjList, self).__init__()
         self.__edge_count = 0
+        self.__edge_set = []
 
     def make_neighbor(self, n1, n2):
-        super(UndirectedAdjList, self).make_neighbor(n1, n2)
-        super(UndirectedAdjList, self).make_neighbor(n2, n1)
-        self.__edge_count += 1
-        self._edge_count = self.__edge_count
-        print("UndirectedAdjList Current edge count: " + str(self._edge_count))
+        edge = set((n1, n2))
+
+        if edge in self.__edge_set:
+            pass
+        else:
+            self.__edge_set.append(edge)
+            super(UndirectedAdjList, self).make_neighbor(n1, n2)
+            super(UndirectedAdjList, self).make_neighbor(n2, n1)
+            self.__edge_count += 1
+            self._edge_count = self.__edge_count
 
 ############## HERE BE UNIT TESTS ##############
 
