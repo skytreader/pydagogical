@@ -274,7 +274,6 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.add_node("node2")
         self.four_nodes.add_node("node3")
         self.four_nodes.add_node("node4")
-        print("setUp: four_nodes type: " + str(type(self.four_nodes)))
 
         self.test_node = "test_node"
 
@@ -333,8 +332,6 @@ class AdjacencyListTest(unittest.TestCase):
         Utility test function to connect the four nodes of self.four_nodes.
         After calling this function, get_neighbors_test should pass.
         """
-        print("===========Constructing four nodes===============")
-        print("Type of structure: " + str(type(self.four_nodes)))
         self.four_nodes.make_neighbor("node1", "node2")
         self.four_nodes.make_neighbor("node2", "node1")
         self.four_nodes.make_neighbor("node1", "node3")
@@ -402,7 +399,6 @@ class UndirectedAdjListTest(AdjacencyListTest):
         self.four_nodes.add_node("node2")
         self.four_nodes.add_node("node3")
         self.four_nodes.add_node("node4")
-        print("setUp: four_nodes type: " + str(type(self.four_nodes)))
         self.test_node = "test_node"
 
     def test_neighbor(self):
