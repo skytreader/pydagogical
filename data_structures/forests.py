@@ -41,14 +41,6 @@ class Forest(object):
     def link_child(self, parent, child):
         pass
 
-class NonexistentNodeException(Exception):
-    
-    def __init__(self, value):
-        self.value = value
-    
-    def __str__(self):
-        return repr(self.value)
-
 class ListForest(Forest):
     """
     Implements a forest as a list-of-lists. Don't use this if you need

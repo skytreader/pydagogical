@@ -1,26 +1,12 @@
 #! /usr/bin/env python3
 
+from exceptions import NotInNodesException, DuplicateNodeException
+
 import unittest
 
 """
 Package for graph data structures.
 """
-
-class NotInNodesException(Exception):
-
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return "These node(s) are not yet added to the graph: " + repr(self.value)
-
-class DuplicateNodeException(Exception):
-    
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return "Already added to the graph: " + repr(self.value)
 
 class Graph(object):
     """
