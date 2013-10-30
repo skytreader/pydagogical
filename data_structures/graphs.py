@@ -246,6 +246,18 @@ class UndirectedAdjList(AdjacencyLists):
             self.__edge_count += 1
             self._edge_count = self.__edge_count
 
+class DirectedWeightedAdjList(AdjacencyLists):
+    """
+    Creates directed graphs, with possible weights between nodes. Uses adjacency
+    lists for representing the graph.
+    """
+
+    def __init__(self):
+        super(DirectedWeightedAdjList, self):__init__()
+        self.edge_count = 0
+        self.__edge_set = 0
+            
+
 ############## HERE BE UNIT TESTS ##############
 
 class AdjacencyListTest(unittest.TestCase):
