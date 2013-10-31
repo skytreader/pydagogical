@@ -451,6 +451,47 @@ class UndirectedAdjListTest(AdjacencyListTest):
         self.construct_four_nodes()
         self.assertEqual(self.four_nodes.edge_count, 5)
 
+    def test_get_weight(self):
+        """
+        Almost the same as construct_four_nodes except that it generates random
+        weights and tests for those weights.
+
+        Modified from AdjacencyListTest since this one is undirected and
+        therefore going back and forth two nodes should not have different
+        costs.
+        """
+        weights = {}
+        connseq = (("node1", "node2"), ("node2", "node1"), ("node1", "node3"),
+          ("node3", "node1"), ("node1", "node4"), ("node4", "node1"),
+          ("node2", "node4"), ("node4", "node2"), ("node3", "node4"),
+          ("node4", "node3"))
+        
+        # TODO Avoid unnecessary loops if you have time to recode
+        connsets = set()
+
+        for connection in connseq:
+            if connection not in connsets:
+                connsets.add(set(connection))
+
+        for connection in connsets:
+            weights[connection] = random.randint(1, 100)
+
+        self.four_nodes.make_neighbor("node1", "node2", weights[set(("node1", "node2"))])
+        self.four_nodes.make_neighbor("node2", "node1", weights[set(("node2", "node1"))])
+        self.four_nodes.make_neighbor("node1", "node3", weights[set(("node1", "node3"))])
+        self.four_nodes.make_neighbor("node3", "node1", weights[set(("node3", "node1"))])
+
+        self.four_nodes.make_neighbor("node1", "node4", weights[set(("node1", "node4"))])
+        self.four_nodes.make_neighbor("node4", "node1", weights[set(("node4", "node1"))])
+        self.four_nodes.make_neighbor("node2", "node4", weights[set(("node2", "node4"))])
+        self.four_nodes.make_neighbor("node4", "node2", weights[set(("node4", "node2"))])
+        self.four_nodes.make_neighbor("node3", "node4", weights[set(("node3", "node4"))])
+        self.four_nodes.make_neighbor("node4", "node3", weights[set(("node4", "node3"))])
+
+        for connection in connseq:
+            self.assertEqual(self.four_nodes.get_weight(connection[0], connection[1]),
+              weights[connection])
+
     def test_degree_eq(self):
         """
         Tests that the in degree and out degree of every node in the graph
