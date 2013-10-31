@@ -114,7 +114,8 @@ class AdjacencyLists(Graph):
         """
         for row in self.__nodes:
             if row[0] == n1:
-                return row[1:len(row)]
+                nodes_and_weight = row[1:len(row)]
+                return list(map(lambda x: x[0], nodes_and_weights))
 
         raise NotInNodesException(n1)
 
@@ -164,7 +165,7 @@ class AdjacencyLists(Graph):
         for node in nodes:
             self.__add(node)
 
-    def make_neighbor(self, n1, n2):
+    def make_neighbor(self, n1, n2, weight = 0):
         """
         The connection created is only one-way: n2 will be
         reachable from n1 but n1 will not be necessarily
@@ -173,14 +174,29 @@ class AdjacencyLists(Graph):
         You can't represent self-loops here, unfortunately.
         """
         if n1 not in self.added_nodes or n2 not in self.added_nodes:
-            raise NotInNodesException([n1, n2])
+            raise NotInNodesException((n1, n2))
         nodes = self.__get_nodelist()
         n1_index = nodes.index(n1)
         # Check if the connection already exists. If so, do
         # not make it redundant!
-        if n2 not in self.__nodes[n1_index]:
-            self.__nodes[n1_index].append(n2)
+        if n2 not in self.get_neighbors(n1):
+            self.__nodes[n1_index].append((n2, weight))
             self._edge_count += 1
+
+    def get_weight(self, n1, n2):
+        nodes = self.__get_nodelist()
+        n1_index = nodes.index(n1)
+
+        if n2 not in self.get_neighbors(n1):
+            return None
+        else:
+            # Find n2 and return its weight
+            n1_neighbors = self.__nodes[n1_index][1:len(self.__nodex[n1_index])]
+
+            for node_weight in n1_neighbors:
+                if node_weight[0] == n2:
+                    return node_weight[1]
+
 
     def __get_nodelist(self):
         """
