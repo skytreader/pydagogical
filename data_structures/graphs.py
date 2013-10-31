@@ -49,17 +49,25 @@ class Graph(object):
     
     def remove_node(self, node):
         """
-        Removes the given node from the graph. All incoming
-        connections to this node are removed as well.
+        Removes the given node from the graph. All incoming connections to this
+        node are removed as well.
         """
         pass
 
-    def make_neighbor(self, n1, n2):
+    def make_neighbor(self, n1, n2, weight = 0):
         """
         Makes n2 reachable from n1 (but not necessarily n1
         from n2).
         """
         pass
+
+    def get_weight(self, n1, n2):
+        """
+        Get the cost of going to n2 through n1. If there is no connection from
+        n1 to n2, return None. If the graph represented is not weighted, raise
+        a NotImplementedError. (By default, this throws NotImplementedError).
+        """
+        raise NotImplementedError("This does not represent a weighted graph.")
 
     def get_indegree(self, n1):
         """
@@ -83,7 +91,7 @@ class AdjacencyLists(Graph):
     """
     Adjacency list representation of a graph. Note that no two nodes
     may be the same in a graph. Otherwise, we'll have confusion when
-    making nodes adjacent.
+    making nodes adjacent. The graph created by default is directed.
 
     Convention:
     The graph is represented as a list-of-lists. The first element
