@@ -114,7 +114,7 @@ class AdjacencyLists(Graph):
         """
         for row in self.__nodes:
             if row[0] == n1:
-                nodes_and_weight = row[1:len(row)]
+                nodes_and_weights = row[1:len(row)]
                 return list(map(lambda x: x[0], nodes_and_weights))
 
         raise NotInNodesException(n1)
