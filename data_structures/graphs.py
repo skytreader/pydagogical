@@ -253,7 +253,7 @@ class DirectedWeightedAdjList(AdjacencyLists):
     """
 
     def __init__(self):
-        super(DirectedWeightedAdjList, self):__init__()
+        super(DirectedWeightedAdjList, self).__init__()
         self.edge_count = 0
         self.__edge_set = 0
             
