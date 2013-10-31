@@ -2,6 +2,7 @@
 
 from exceptions import NotInNodesException, DuplicateNodeException
 
+import random
 import unittest
 
 """
@@ -191,7 +192,7 @@ class AdjacencyLists(Graph):
             return None
         else:
             # Find n2 and return its weight
-            n1_neighbors = self.__nodes[n1_index][1:len(self.__nodex[n1_index])]
+            n1_neighbors = self.__nodes[n1_index][1:len(self.__nodes[n1_index])]
 
             for node_weight in n1_neighbors:
                 if node_weight[0] == n2:
@@ -258,29 +259,17 @@ class UndirectedAdjList(AdjacencyLists):
         self.__edge_count = 0
         self.__edge_set = []
 
-    def make_neighbor(self, n1, n2):
+    def make_neighbor(self, n1, n2, weight = 0):
         edge = set((n1, n2))
 
         if edge in self.__edge_set:
             pass
         else:
             self.__edge_set.append(edge)
-            super(UndirectedAdjList, self).make_neighbor(n1, n2)
-            super(UndirectedAdjList, self).make_neighbor(n2, n1)
+            super(UndirectedAdjList, self).make_neighbor(n1, n2, weight)
+            super(UndirectedAdjList, self).make_neighbor(n2, n1, weight)
             self.__edge_count += 1
             self._edge_count = self.__edge_count
-
-class DirectedWeightedAdjList(AdjacencyLists):
-    """
-    Creates directed graphs, with possible weights between nodes. Uses adjacency
-    lists for representing the graph.
-    """
-
-    def __init__(self):
-        super(DirectedWeightedAdjList, self).__init__()
-        self.edge_count = 0
-        self.__edge_set = 0
-            
 
 ############## HERE BE UNIT TESTS ##############
 
@@ -365,6 +354,36 @@ class AdjacencyListTest(unittest.TestCase):
         self.four_nodes.make_neighbor("node4", "node2")
         self.four_nodes.make_neighbor("node3", "node4")
         self.four_nodes.make_neighbor("node4", "node3")
+
+    def test_get_weight(self):
+        """
+        Almost the same as construct_four_nodes except that it generates random
+        weights and tests for those weights.
+        """
+        weights = {}
+        connseq = (("node1", "node2"), ("node2", "node1"), ("node1", "node3"),
+          ("node3", "node1"), ("node1", "node4"), ("node4", "node1"),
+          ("node2", "node4"), ("node4", "node2"), ("node3", "node4"),
+          ("node4", "node3"))
+
+        for connection in connseq:
+            weights[connection] = random.randint(1, 100)
+
+        self.four_nodes.make_neighbor("node1", "node2", weights[("node1", "node2")])
+        self.four_nodes.make_neighbor("node2", "node1", weights[("node2", "node1")])
+        self.four_nodes.make_neighbor("node1", "node3", weights[("node1", "node3")])
+        self.four_nodes.make_neighbor("node3", "node1", weights[("node3", "node1")])
+
+        self.four_nodes.make_neighbor("node1", "node4", weights[("node1", "node4")])
+        self.four_nodes.make_neighbor("node4", "node1", weights[("node4", "node1")])
+        self.four_nodes.make_neighbor("node2", "node4", weights[("node2", "node4")])
+        self.four_nodes.make_neighbor("node4", "node2", weights[("node4", "node2")])
+        self.four_nodes.make_neighbor("node3", "node4", weights[("node3", "node4")])
+        self.four_nodes.make_neighbor("node4", "node3", weights[("node4", "node3")])
+
+        for connection in connseq:
+            self.assertEqual(self.four_nodes.get_weight(connection[0], connection[1]),
+              weights[connection])
 
     def test_edge_count(self):
         self.construct_four_nodes()
