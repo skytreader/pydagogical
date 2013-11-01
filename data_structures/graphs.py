@@ -432,6 +432,22 @@ class AdjacencyListTest(unittest.TestCase):
         n1_neighbors = self.four_nodes.get_neighbors("node1")
         self.assertEqual(self.four_nodes.get_outdegree("node1"), len(n1_neighbors))
 
+class Route(object):
+    """
+    Super special class just for the heck of test_get_weight below.
+    """
+
+    def __init__(self, r):
+        """
+        r is an ordered tuple with two elements
+        """
+        self.origin = r[0]
+        self.destination = r[1]
+
+    def __eq__(self, r2):
+        return (self.origin == r2.origin or self.origin == r2.destination) \
+          and (self.destination == r2.destination or self.destination == r2.origin)
+
 class UndirectedAdjListTest(AdjacencyListTest):
     
     def setUp(self):
@@ -460,37 +476,43 @@ class UndirectedAdjListTest(AdjacencyListTest):
         therefore going back and forth two nodes should not have different
         costs.
         """
-        weights = {}
         connseq = (("node1", "node2"), ("node2", "node1"), ("node1", "node3"),
           ("node3", "node1"), ("node1", "node4"), ("node4", "node1"),
           ("node2", "node4"), ("node4", "node2"), ("node3", "node4"),
           ("node4", "node3"))
         
         # TODO Avoid unnecessary loops if you have time to recode
-        connsets = set()
+        connroutes = []
 
         for connection in connseq:
-            if connection not in connsets:
-                connsets.add(set(connection))
+            route = Route(connection)
+            if route not in connroutes:
+                connroutes.append(route)
 
-        for connection in connsets:
-            weights[connection] = random.randint(1, 100)
+        connroutes = tuple(connroutes)
+        weights = []
 
-        self.four_nodes.make_neighbor("node1", "node2", weights[set(("node1", "node2"))])
-        self.four_nodes.make_neighbor("node2", "node1", weights[set(("node2", "node1"))])
-        self.four_nodes.make_neighbor("node1", "node3", weights[set(("node1", "node3"))])
-        self.four_nodes.make_neighbor("node3", "node1", weights[set(("node3", "node1"))])
+        for i in range(len(connroutes)):
+            weights.append(random.randint(1, 100))
 
-        self.four_nodes.make_neighbor("node1", "node4", weights[set(("node1", "node4"))])
-        self.four_nodes.make_neighbor("node4", "node1", weights[set(("node4", "node1"))])
-        self.four_nodes.make_neighbor("node2", "node4", weights[set(("node2", "node4"))])
-        self.four_nodes.make_neighbor("node4", "node2", weights[set(("node4", "node2"))])
-        self.four_nodes.make_neighbor("node3", "node4", weights[set(("node3", "node4"))])
-        self.four_nodes.make_neighbor("node4", "node3", weights[set(("node4", "node3"))])
+        weights = tuple(weights)
+        get_assigned_weight = lambda x: weights[connroutes.index(x)]
 
-        for connection in connseq:
-            self.assertEqual(self.four_nodes.get_weight(connection[0], connection[1]),
-              weights[connection])
+        self.four_nodes.make_neighbor("node1", "node2", get_assigned_weight(Route(("node1", "node2"))))
+        self.four_nodes.make_neighbor("node2", "node1", get_assigned_weight(Route(("node2", "node1"))))
+        self.four_nodes.make_neighbor("node1", "node3", get_assigned_weight(Route(("node1", "node3"))))
+        self.four_nodes.make_neighbor("node3", "node1", get_assigned_weight(Route(("node3", "node1"))))
+
+        self.four_nodes.make_neighbor("node1", "node4", get_assigned_weight(Route(("node1", "node4"))))
+        self.four_nodes.make_neighbor("node4", "node1", get_assigned_weight(Route(("node4", "node1"))))
+        self.four_nodes.make_neighbor("node2", "node4", get_assigned_weight(Route(("node2", "node4"))))
+        self.four_nodes.make_neighbor("node4", "node2", get_assigned_weight(Route(("node4", "node2"))))
+        self.four_nodes.make_neighbor("node3", "node4", get_assigned_weight(Route(("node3", "node4"))))
+        self.four_nodes.make_neighbor("node4", "node3", get_assigned_weight(Route(("node4", "node3"))))
+ 
+        for i in range(len(connroutes)):
+            self.assertEqual(self.four_nodes.get_weight(connroutes[i].origin,
+              connroutes[i].destination), weights[i])
 
     def test_degree_eq(self):
         """
