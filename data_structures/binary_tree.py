@@ -128,6 +128,7 @@ class IteratorTest(unittest.TestCase):
         # Create the nodes
         nodes = {}
         self.node_data = "ABCDEFGHIJKLMNO"
+        self.dfs_order = "HDIBJEKALFMCNGO"
 
         for c in self.node_data:
             nodes[c] = NaiveBinaryTree(c)
@@ -165,8 +166,14 @@ class IteratorTest(unittest.TestCase):
         """
         Ensures that setUp is not wonky and is as expected.
         """
+
+        # Ensure that binary trees are pointing to expected data
         for c in self.node_data:
             self.assertEqual(c, self.nodes[c].node_data)
+
+        # Ensure that we expect the same number of nodes from the orders of
+        # iteration
+        self.assertEqual(len(self.node_data), len(self.dfs_order))
 
 if __name__ == "__main__":
     unittest.main()
