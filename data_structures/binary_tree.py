@@ -64,12 +64,25 @@ class DFSIterator(object):
         # we tried to return the right son of some non-null
         # node and that right son turned out to be null.
         if self.roving_pointer is None:
-            pass
-        # left node is None so next element is this node.
-        elif self.roving_pointer.left_node is None:
-            return_val = self.roving_pointer.node_data
-            self.roving_pointer = self.roving_pointer.right_son
-            return self.roving_pointer.node_data
+            # Point roving_pointer to last node visited
+            self.roving_pointer = self.traversal_stack.pop()
+            # Check the right son
+            if self.roving_pointer.right_son is not None:
+                # Point roving_pointer to its right_son
+                self.roving_pointer = self.roving_pointer.right_son
+            
+            # Otherwise it is None and so we are already pointing at the next
+            # DFS node in the tree---no need to change where roving_pointer is
+            # currently pointing.
+
+        # left node is not None so that is the next element
+        if self.roving_pointer.left_son is not None:
+            # Push to stack for backtracking
+            self.traversal_stack.append(self.roving_pointer)
+            # Update roving_pointer to point to the left_son
+            self.roving_pointer = self.roving_pointer.left_son
+        
+        return self.roving_pointer
 
 class NaiveBinaryTree(BinaryTree):
     """
