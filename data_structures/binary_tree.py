@@ -39,6 +39,11 @@ class BinaryTree(object):
         """
         pass
 
+    def __str__(self):
+        #return str(self.node_data) + ":{'left_son':'" + str(self.left_son) + "',''right_son':'" + str(self.right_son)
+        # This is the __str__ for debuggin
+        return str(self.node_data)
+
 class DFSIterator(object):
     
     def __init__(self, bintree):
@@ -47,6 +52,7 @@ class DFSIterator(object):
         self.roving_pointer = self.bintree
         # the traversal stack
         self.traversal_stack = []
+        self.visited = []
 
         self.__initialize()
 
@@ -58,6 +64,7 @@ class DFSIterator(object):
         Initialize the tree so that the first traversal call is fast.
         """
         while self.roving_pointer.left_son is not None:
+            self.traversal_stack.append(self.roving_pointer)
             self.roving_pointer = self.roving_pointer.left_son
 
     def __next__(self):
@@ -90,7 +97,13 @@ class DFSIterator(object):
             self.traversal_stack.append(self.roving_pointer)
             # Update roving_pointer to point to the left_son
             self.roving_pointer = self.roving_pointer.left_son
+        else:
+            # Else we've reached a leaf
+            self.roving_pointer = self.traversal_stack.pop()
         
+        self.visited.append(self.roving_pointer)
+        print("Visited: " + str(self.visited))
+        print("Stack: " + str(self.traversal_stack))
         return self.roving_pointer
 
 class NaiveBinaryTree(BinaryTree):
@@ -180,6 +193,7 @@ class IteratorTest(unittest.TestCase):
         iterator_order = ""
         
         for node in dfs:
+            print("We have " + node.node_data)
             iterator_order = node.node_data
 
         self.assertEqual(self.dfs_order, iterator_order)
