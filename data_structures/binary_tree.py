@@ -6,6 +6,16 @@ import unittest
 Naive binary tree implementation.
 """
 
+def debug_print(ls):
+    list_string = "["
+
+    for item in ls:
+        list_string += str(item) + ","
+
+    list_string += "]"
+
+    return list_string
+
 class BinaryTree(object):
     """
     Interface for binary tree objects.
@@ -42,7 +52,6 @@ class BinaryTree(object):
     def __str__(self):
         #return str(self.node_data) + ":{'left_son':'" + str(self.left_son) + "',''right_son':'" + str(self.right_son)
         # This is the __str__ for debuggin
-        print("DEBUG: This __str__ got called!")
         return str(self.node_data)
 
 class DFSIterator(object):
@@ -103,8 +112,8 @@ class DFSIterator(object):
             self.roving_pointer = self.traversal_stack.pop()
         
         self.visited.append(self.roving_pointer)
-        print("Visited: " + str(self.visited))
-        print("Stack: " + str(self.traversal_stack))
+        print("Visited: " + debug_print(self.visited))
+        print("Stack: " + debug_print(self.traversal_stack))
         return self.roving_pointer
 
 class NaiveBinaryTree(BinaryTree):
@@ -119,6 +128,7 @@ class NaiveBinaryTree(BinaryTree):
         """
         Searches using depth-first search by default.
         """
+        pass
 
 class NaiveBinaryTreeTest(unittest.TestCase):
     
