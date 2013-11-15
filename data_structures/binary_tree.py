@@ -60,7 +60,7 @@ class DFSIterator(object):
         while self.roving_pointer.left_son is not None:
             self.roving_pointer = self.roving_pointer.left_son
 
-    def next(self):
+    def __next__(self):
         """
         Return what comes next and update iterator's internal
         state to point to the DFS successor of the current node.
@@ -174,6 +174,15 @@ class IteratorTest(unittest.TestCase):
         # Ensure that we expect the same number of nodes from the orders of
         # iteration
         self.assertEqual(len(self.node_data), len(self.dfs_order))
+
+    def test_dfs(self):
+        dfs = DFSIterator(self.test_root)
+        iterator_order = ""
+        
+        for node in dfs:
+            iterator_order = node.node_data
+
+        self.assertEqual(self.dfs_order, iterator_order)
 
 if __name__ == "__main__":
     unittest.main()
