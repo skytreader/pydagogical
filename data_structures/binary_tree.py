@@ -48,8 +48,17 @@ class DFSIterator(object):
         # the traversal stack
         self.traversal_stack = []
 
+        self.__initialize()
+
     def __iter__(self):
         return self
+
+    def __initialize(self):
+        """
+        Initialize the tree so that the first traversal call is fast.
+        """
+        while self.roving_pointer.left_son is not None:
+            self.roving_pointer = self.roving_pointer.left_son
 
     def next(self):
         """
@@ -105,6 +114,56 @@ class NaiveBinaryTreeTest(unittest.TestCase):
     def test_init(self):
         self.assertEqual(self.bt1.left_son, None)
         self.assertEqual(self.bt1.right_son, None)
+
+class DFSIteratorTest(unittest.TestCase):
+    
+    def setUp(self):
+        """
+        Creates a binary tree with the letters of the alphabet (A-O) laid out in
+        level-order.
+        """
+        # Create the nodes
+        nodes = {}
+        self.node_data = "ABCDEFGHIJKLMNO"
+
+        for c in self.node_data:
+            nodes[c] = NaiveBinaryTree(c)
+
+        self.test_root = nodes["A"]
+
+        # Connect the nodes
+        # LEVEL 0
+        nodes["A"].left_son = nodes["B"]
+        nodes["A"].right_son = nodes["C"]
+
+        # LEVEL 1
+        nodes["B"].left_son = nodes["D"]
+        nodes["B"].right_son = nodes["E"]
+
+        nodes["C"].left_son = nodes["F"]
+        nodes["C"].right_son = nodes["G"]
+
+        # LEVEL 2
+        nodes["D"].left_son = nodes["H"]
+        nodes["D"].right_son = nodes["I"]
+
+        nodes["E"].left_son = nodes["J"]
+        nodes["E"].right_son = nodes["K"]
+
+        nodes["F"].left_son = nodes["L"]
+        nodes["F"].right_son = nodes["M"]
+
+        nodes["G"].left_son = nodes["N"]
+        nodes["G"].right_son = nodes["O"]
+
+        self.nodes = nodes
+
+    def test_setUp(self):
+        """
+        Ensures that setUp is not wonky and is as expected.
+        """
+        for c in self.node_data:
+            self.assertEqual(c, self.nodes[c].node_data)
 
 if __name__ == "__main__":
     unittest.main()
