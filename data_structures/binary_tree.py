@@ -42,6 +42,7 @@ class BinaryTree(object):
     def __str__(self):
         #return str(self.node_data) + ":{'left_son':'" + str(self.left_son) + "',''right_son':'" + str(self.right_son)
         # This is the __str__ for debuggin
+        print("DEBUG: This __str__ got called!")
         return str(self.node_data)
 
 class DFSIterator(object):
