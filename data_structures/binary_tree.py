@@ -115,7 +115,10 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         self.assertEqual(self.bt1.left_son, None)
         self.assertEqual(self.bt1.right_son, None)
 
-class DFSIteratorTest(unittest.TestCase):
+class IteratorTest(unittest.TestCase):
+    """
+    Test all the iterators in this class.
+    """
     
     def setUp(self):
         """
