@@ -82,12 +82,6 @@ class InorderIterator(object):
 
         print "Roving pointer is currently at " + str(self.roving_pointer)
 
-    def __get_next_unvisited(self, node):
-        """
-        Get the next unvisted node for n.
-        """
-
-
     def next(self):
         """
         Return what comes next and update iterator's internal state to point to
@@ -112,9 +106,16 @@ class InorderIterator(object):
                 while backtrack_node in self.visited:
                     backtrack_node = self.traversal_stack.pop()
             else:
-                self.roving_pointer = self.roving_pointer.right_son
+                # Traverse the right son. But wait, everytime you traverse a 
+                # right son, you need to get to its leaf first.
+                local_rover = self.roving_pointer.right_son
 
-        # At this point, by virtue of DFS, we are sure that the left son has
+                while local_rover.left_son is not None:
+                    local_rover = local_rover.left_son
+
+                self.roving_pointer = local_rover
+
+        # At this point, by virtue of inorder, we are sure that the left son has
         # been visited.
         
         self.visited.append(next_node)
