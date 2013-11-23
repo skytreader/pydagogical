@@ -77,7 +77,9 @@ class DFSIterator(object):
             self.traversal_stack.append(self.roving_pointer)
             self.roving_pointer = self.roving_pointer.left_son
 
-    def __next__(self):
+        print "Roving pointer is currently at " + str(self.roving_pointer)
+
+    def next(self):
         """
         Return what comes next and update iterator's internal
         state to point to the DFS successor of the current node.
