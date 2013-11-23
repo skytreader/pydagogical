@@ -81,6 +81,7 @@ class InorderIterator(object):
             self.roving_pointer = self.roving_pointer.left_son
 
         print "Roving pointer is currently at " + str(self.roving_pointer)
+        print "Traversal stack check: " + debug_print(self.traversal_stack)
 
     def next(self):
         """
@@ -92,25 +93,31 @@ class InorderIterator(object):
         is to update internal state of this iterator.
         """
         next_node = self.roving_pointer
+        
+        if next_node in self.visited:
+            raise StopIteration
 
         # Update roving_pointer to point to what succeeds next_node
 
         if self.roving_pointer.left_son is None or\
           self.roving_pointer.left_son in self.visited:
-            if self.roving_pointer.right_son is None:
+            if self.roving_pointer.right_son is None and len(self.traversal_stack):
                 # Backtrack to parent node. If it was never visited, it goes next.
                 backtrack_node = self.traversal_stack.pop()
     
                 # Keep backtracking until you are not pointing to a visited node
-                # anymore.
+                # anymore. FIXME Is this necessary?
                 while backtrack_node in self.visited:
                     backtrack_node = self.traversal_stack.pop()
-            else:
+
+                self.roving_pointer = backtrack_node
+            elif self.roving_pointer.right_son is not None:
                 # Traverse the right son. But wait, everytime you traverse a 
                 # right son, you need to get to its leaf first.
                 local_rover = self.roving_pointer.right_son
 
                 while local_rover.left_son is not None:
+                    self.traversal_stack.append(local_rover)
                     local_rover = local_rover.left_son
 
                 self.roving_pointer = local_rover
@@ -212,7 +219,7 @@ class IteratorTest(unittest.TestCase):
         
         for node in dfs:
             print("We have " + node.node_data)
-            iterator_order = node.node_data
+            iterator_order += node.node_data
 
         self.assertEqual(self.dfs_order, iterator_order)
 
