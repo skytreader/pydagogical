@@ -54,7 +54,10 @@ class BinaryTree(object):
         # This is the __str__ for debuggin
         return str(self.node_data)
 
-class DFSIterator(object):
+class InorderIterator(object):
+    """
+    inorder traversal
+    """
     
     def __init__(self, bintree):
         self.bintree = bintree
@@ -79,41 +82,45 @@ class DFSIterator(object):
 
         print "Roving pointer is currently at " + str(self.roving_pointer)
 
+    def __get_next_unvisited(self, node):
+        """
+        Get the next unvisted node for n.
+        """
+
+
     def next(self):
         """
-        Return what comes next and update iterator's internal
-        state to point to the DFS successor of the current node.
-        """
-        
-        # Pointing to a null node. This only happens when
-        # we tried to return the right son of some non-null
-        # node and that right son turned out to be null.
-        if self.roving_pointer is None:
-            # Point roving_pointer to last node visited
-            self.roving_pointer = self.traversal_stack.pop()
-            # Check the right son
-            if self.roving_pointer.right_son is not None:
-                # Point roving_pointer to its right_son
-                self.roving_pointer = self.roving_pointer.right_son
-            
-            # Otherwise it is None and so we are already pointing at the next
-            # DFS node in the tree---no need to change where roving_pointer is
-            # currently pointing.
+        Return what comes next and update iterator's internal state to point to
+        the DFS successor of the current node.
 
-        # left node is not None so that is the next element
-        if self.roving_pointer.left_son is not None:
-            # Push to stack for backtracking
-            self.traversal_stack.append(self.roving_pointer)
-            # Update roving_pointer to point to the left_son
-            self.roving_pointer = self.roving_pointer.left_son
-        else:
-            # Else we've reached a leaf
-            self.roving_pointer = self.traversal_stack.pop()
+        Invariant: Everytime next is called, self.roving_pointer is already
+        pointing to the node to be returned. All that is left for next to do
+        is to update internal state of this iterator.
+        """
+        next_node = self.roving_pointer
+
+        # Update roving_pointer to point to what succeeds next_node
+
+        if self.roving_pointer.left_son is None or\
+          self.roving_pointer.left_son in self.visited:
+            if self.roving_pointer.right_son is None:
+                # Backtrack to parent node. If it was never visited, it goes next.
+                backtrack_node = self.traversal_stack.pop()
+    
+                # Keep backtracking until you are not pointing to a visited node
+                # anymore.
+                while backtrack_node in self.visited:
+                    backtrack_node = self.traversal_stack.pop()
+            else:
+                self.roving_pointer = self.roving_pointer.right_son
+
+        # At this point, by virtue of DFS, we are sure that the left son has
+        # been visited.
         
-        self.visited.append(self.roving_pointer)
+        self.visited.append(next_node)
         print("Visited: " + debug_print(self.visited))
         print("Stack: " + debug_print(self.traversal_stack))
-        return self.roving_pointer
+        return next_node
 
 class NaiveBinaryTree(BinaryTree):
     """
@@ -199,7 +206,7 @@ class IteratorTest(unittest.TestCase):
         self.assertEqual(len(self.node_data), len(self.dfs_order))
 
     def test_dfs(self):
-        dfs = DFSIterator(self.test_root)
+        dfs = InorderIterator(self.test_root)
         iterator_order = ""
         
         for node in dfs:
