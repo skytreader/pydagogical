@@ -83,9 +83,6 @@ class DFSIterator(object):
         """
         Return what comes next and update iterator's internal
         state to point to the DFS successor of the current node.
-
-        Always returns the data of the current node, not the node
-        itself.
         """
         
         # Pointing to a null node. This only happens when
