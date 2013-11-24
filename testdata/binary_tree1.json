@@ -1,0 +1,62 @@
+{
+	"_comment":"A full binary tree with the letters A-O as data. The leters are laid out in level-order sequence.",
+	"node_data":"A",
+	"left_son": {
+		"node_data":"B",
+		"left_son":{
+			"node_data":"D",
+			"left_son":{
+				"node_data":"H",
+				"left_son":null,
+				"right_son":null
+			},
+			"right_son":{
+				"node_data":"I",
+				"left_son":null,
+				"right_son":null
+			}
+		},
+		"right_son":{
+			"node_data":"E",
+			"left_son":{
+				"node_data":"J",
+				"left_son":null,
+				"right_son":null
+			},
+			"right_son":{
+				"node_data":"K",
+				"left_son":null,
+				"right_son":null
+			}
+		}
+	},
+	"right_son": {
+		"node_data":"C",
+		"left_son":{
+			"node_data":"F",
+			"left_son":{
+				"node_data":"L",
+				"left_son":null,
+				"right_son":null
+			},
+			"right_son":{
+				"node_data":"M",
+				"left_son":null,
+				"right_son":null
+			}
+		},
+		"right_son":{
+			"node_data":"G",
+			"left_son":{
+				"node_data":"N",
+				"left_son":null,
+				"right_son":null
+			},
+			"right_son":{
+				"node_data":"O",
+				"left_son":null,
+				"right_son":null
+			}
+		}
+	}
+}
