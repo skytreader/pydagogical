@@ -40,7 +40,25 @@ class BinaryTreeParser(JSONLoader):
 
     def load(self):
         # Traverse the JSON-binary tree structure in pre order to.
-        return self.__recursive_load(self._parsed_json)
+        # return self.__recursive_load(self._parsed_json)
+        traversal_stack = []
+        bintree_stack = []
+        done = []
+        current = self._parsed_json
+        traversal_stack.append(self.__parsed_json["right_son"])
+        # Parents
+        bintree_stack.append(BinaryTree(self.__parsed_json["node_data"]))
+
+        while len(traversal_stack):
+            if current is None:
+                # link binary trees here with parents
+                leaf_parent = bintree_stack.pop()
+                leaf_parent.left_son = None
+                current = traversal_stack.pop()
+            else:
+                traversal_stack.append(current["right_son"])
+                bintree_stack.append(BinaryTree(current["node_data"]))
+                current = current["left_son"]
     
     def __recursive_load(self, treemap):
         if treemap is None:
