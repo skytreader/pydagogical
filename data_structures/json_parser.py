@@ -42,23 +42,28 @@ class BinaryTreeParser(JSONLoader):
         # Traverse the JSON-binary tree structure in pre order to.
         # return self.__recursive_load(self._parsed_json)
         traversal_stack = []
-        bintree_stack = []
-        done = []
-        current = self._parsed_json
-        traversal_stack.append(self.__parsed_json["right_son"])
-        # Parents
-        bintree_stack.append(BinaryTree(self.__parsed_json["node_data"]))
+        root_node = BinaryTree(self._parsed_json["node_data"])
+        parent_stack = [root_node]
+
+        if self._parsed_json["right_son"] is not None:
+            traversal_stack.append(self._parsed_json["right_son"])
+
+        if self._parsed_json["left_son"] is not None:
+            traversal_stack.append(self._parsed_json["left_son"])
 
         while len(traversal_stack):
-            if current is None:
-                # link binary trees here with parents
-                leaf_parent = bintree_stack.pop()
-                leaf_parent.left_son = None
-                current = traversal_stack.pop()
-            else:
-                traversal_stack.append(current["right_son"])
-                bintree_stack.append(BinaryTree(current["node_data"]))
-                current = current["left_son"]
+            # This is still a hash map
+            son_node = traversal_stack.pop()
+
+            # Problem: with this approach, how do I know when to 
+            # link to a right son?
+            root_node.left_son = BinaryTree(son_node["node_data"])
+
+            if son_node["right_son"] is not None:
+                traversal_stack.append(son_node["right_son"])
+
+            if son_node["left_son"] is not None:
+                traversal_stack.apprend(son_node["left_son"])
     
     def __recursive_load(self, treemap):
         if treemap is None:
