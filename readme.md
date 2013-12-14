@@ -1,1 +1,3 @@
-Nothing much...just stuff I'm trying out which does not fit anywhere else, really.
+Promoted from a branch in my [sandbox repo](https://github.com/skytreader/sandbox).
+
+I need it as a submodule to something else in sandbox.
