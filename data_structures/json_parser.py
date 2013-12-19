@@ -39,7 +39,8 @@ class BinaryTreeParser(JSONLoader):
         super(JSONLoader, self).__init__(filename, BinaryTree)
 
     def load(self):
-        # Traverse the JSON-binary tree structure in pre order to.
+        # Traverse the JSON-binary tree structure in pre order to reconstruct
+        # it as a Python object.
         # return self.__recursive_load(self._parsed_json)
         traversal_stack = []
         root_node = BinaryTree(self._parsed_json["node_data"])
