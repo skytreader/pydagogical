@@ -95,7 +95,17 @@ class GraphParser(JSONLoader):
         super(self, JSONLoader).__init(filename, Graph)
 
     def __load_adjancency_list(self):
-        pass
+        graph = Graph()
+        representation = self._parsed_json["representation"]
+        graph.add_nodes(representation.keys())
+
+        for node in representation.keys():
+            neighbors = representation[node]
+
+            for n in neighbors:
+                graph.make_neighbor(node, n)
+
+        return graph
 
     def __load_adjacency_matrix(self):
         pass
