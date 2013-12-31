@@ -89,7 +89,19 @@ class BinaryTreeParser(JSONLoader):
 
         return btree
 
-class AdjacencyListParser(JSONLoader):
+class GraphParser(JSONLoader):
     
     def __init__(self, filename):
         super(self, JSONLoader).__init(filename, Graph)
+
+    def __load_adjancency_list(self):
+        pass
+
+    def __load_adjacency_matrix(self):
+        pass
+
+    def load(self):
+        if self._parsed_json["is_matrix"]:
+            return self.__load_adjacency_matrix()
+        else:
+            return self.__load_adjacency_list()
