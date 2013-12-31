@@ -1,6 +1,7 @@
 import json
 
 from binary_tree import BinaryTree
+from graphs import Graph
 
 """
 Load a json from (as from EPiQueue) and transform it into an instance of one of
@@ -8,6 +9,17 @@ the data structure classes in this package.
 """
 
 class JSONLoader(object):
+    """
+    All modules meant to parse JSON should extend this.
+
+    A typical pattern is as follows:
+     - The subclass would take a filename for its constructor. The subclass
+       would then invoke the constructor of JSONLoader (it would know its
+       return_class, of course).
+     - The subclass needs to implement the load method. The parsed JSON object
+       can be referenced via self._parsed_json. The load method should return
+       an instance of the specified return_class.
+    """
     
     def __init__(self, filename, return_class):
         self._return_class = return_class
@@ -76,3 +88,8 @@ class BinaryTreeParser(JSONLoader):
         btree.right_son = right_tree
 
         return btree
+
+class AdjacencyListParser(JSONLoader):
+    
+    def __init__(self, filename):
+        super(self, JSONLoader).__init(filename, Graph)
