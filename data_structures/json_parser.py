@@ -1,7 +1,7 @@
 import json
 
 from binary_tree import BinaryTree
-from graphs import Graph
+from graphs import Graph, AdjacencyLists
 
 """
 Load a json from (as from EPiQueue) and transform it into an instance of one of
@@ -95,7 +95,7 @@ class GraphParser(JSONLoader):
         super(self, JSONLoader).__init(filename, Graph)
 
     def __load_adjancency_list(self):
-        graph = Graph()
+        graph = AdjacencyLists()
         representation = self._parsed_json["representation"]
         graph.add_nodes(representation.keys())
 
