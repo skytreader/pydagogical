@@ -296,11 +296,16 @@ class DFSIterator(object):
 
     def __init__(self, graph):
         self.graph = graph
-        self.visited = []
+        self.visited = set()
         self.traversal_stack = []
 
     def next(self):
-        
+        if self.visited == self.graph.added_nodes:
+            raise StopIteration
+        else:
+            # Randomly pick a node that is not yet visited.
+            unvisited = self.visited.difference(self.graph.added_nodes)
+            random_node = random.choice(unvisited)
 
 ############## HERE BE UNIT TESTS ##############
 
