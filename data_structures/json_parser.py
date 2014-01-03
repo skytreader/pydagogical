@@ -43,8 +43,7 @@ class JSONLoader(object):
 
 class BinaryTreeParser(JSONLoader):
     """
-    Create an instance with the filename of the json file and call load. load
-    should return an instance of the data structure class.
+    Parse binary tree JSONs.
     """
 
     def __init__(self, filename):
@@ -90,6 +89,10 @@ class BinaryTreeParser(JSONLoader):
         return btree
 
 class GraphParser(JSONLoader):
+    """
+    Parse graphs encoded in JSON. Can be used for both adjacency lists and
+    adjacency matrix representation.
+    """
     
     def __init__(self, filename):
         super(self, JSONLoader).__init(filename, Graph)
