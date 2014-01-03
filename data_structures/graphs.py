@@ -271,6 +271,23 @@ class UndirectedAdjList(AdjacencyLists):
             self.__edge_count += 1
             self._edge_count = self.__edge_count
 
+############## HERE BE ITERATORS ##############
+
+class DFSIterator(object):
+    """
+    Depth-first search traversal of graphs. Avoid modifying the graph while
+    traversing the graph. The modifications may not be reflected during
+    traversal.
+    """
+
+    def __init__(self, graph):
+        self.graph = graph
+        self.visited = []
+        self.traversal_stack = []
+
+    def next(self):
+        pass
+
 ############## HERE BE UNIT TESTS ##############
 
 class AdjacencyListTest(unittest.TestCase):

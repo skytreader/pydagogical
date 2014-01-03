@@ -56,8 +56,8 @@ class BinaryTree(object):
 
 class InorderIterator(object):
     """
-    Inorder traversal. Avoid growing the tree while iterating. This added nodes
-    will not be traversed.
+    Inorder traversal. Avoid modifying the tree while iterating. The modifications
+    may not be reflected during traversal.
     """
     
     def __init__(self, bintree):
