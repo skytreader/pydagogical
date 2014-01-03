@@ -59,6 +59,7 @@ class InorderIterator(object):
     Inorder traversal. Avoid modifying the tree while iterating. The modifications
     may not be reflected during traversal.
     """
+    #TODO Ensure that the iterator is for Python 3
     
     def __init__(self, bintree):
         self.bintree = bintree

@@ -212,7 +212,6 @@ class AdjacencyLists(Graph):
                 if node_weight[0] == n2:
                     return node_weight[1]
 
-
     def __get_nodelist(self):
         """
         Returns a list of nodes in the order they are
@@ -293,6 +292,7 @@ class DFSIterator(object):
     traversing the graph. The modifications may not be reflected during
     traversal.
     """
+    #TODO Ensure that the iterator is for Python 3
 
     def __init__(self, graph):
         self.graph = graph
@@ -300,7 +300,7 @@ class DFSIterator(object):
         self.traversal_stack = []
 
     def next(self):
-        pass
+        
 
 ############## HERE BE UNIT TESTS ##############
 
