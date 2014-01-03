@@ -298,14 +298,33 @@ class DFSIterator(object):
         self.graph = graph
         self.visited = set()
         self.traversal_stack = []
+        self.current_node = None
 
     def next(self):
         if self.visited == self.graph.added_nodes:
             raise StopIteration
+        elif len(traversal_stack): # A current connected node is being traversed.
+            return self.__dfs()
         else:
             # Randomly pick a node that is not yet visited.
             unvisited = self.visited.difference(self.graph.added_nodes)
             random_node = random.choice(unvisited)
+            return self.__dfs(start_node = random_node)
+
+    def __dfs(self, start_node = None):
+        """
+        Assumes that if start_node is None, traversal_stack is not empty.
+        Otherwise, traversal_stack is empty.
+        """
+        # TODO Beware of possible cycles
+        if start_node:
+            # FIXME What about nodes reachable from themselves?
+            self.traversal_stack.append(self.graph.get_neighbors(start_node))
+            return start_node
+        else:
+            next_node = self.traversal_stack.pop()
+            self.traversal_stack.append(self.graph.get_neighbors(next_node))
+            return next_node
 
 ############## HERE BE UNIT TESTS ##############
 
