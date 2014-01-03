@@ -56,7 +56,8 @@ class BinaryTree(object):
 
 class InorderIterator(object):
     """
-    inorder traversal
+    Inorder traversal. Avoid growing the tree while iterating. This added nodes
+    will not be traversed.
     """
     
     def __init__(self, bintree):
@@ -79,9 +80,6 @@ class InorderIterator(object):
         while self.roving_pointer.left_son is not None:
             self.traversal_stack.append(self.roving_pointer)
             self.roving_pointer = self.roving_pointer.left_son
-
-        print "Roving pointer is currently at " + str(self.roving_pointer)
-        print "Traversal stack check: " + debug_print(self.traversal_stack)
 
     def next(self):
         """
@@ -126,8 +124,6 @@ class InorderIterator(object):
         # been visited.
         
         self.visited.append(next_node)
-        print("Visited: " + debug_print(self.visited))
-        print("Stack: " + debug_print(self.traversal_stack))
         return next_node
 
 class NaiveBinaryTree(BinaryTree):
@@ -218,7 +214,6 @@ class IteratorTest(unittest.TestCase):
         iterator_order = ""
         
         for node in dfs:
-            print("We have " + node.node_data)
             iterator_order += node.node_data
 
         self.assertEqual(self.dfs_order, iterator_order)
