@@ -47,6 +47,20 @@ class Graph(object):
         Convenience method that adds nodes as a list.
         """
         pass
+
+    @property
+    def added_nodes(self):
+        """
+        Must return a set of all the nodes in this graph.
+        """
+        raise NotImplementedError("added_nodes is not supported by this implementation.")
+
+    @property
+    def edge_count(self):
+        """
+        Must return a count of all the edges in this graph.
+        """
+        raise NotImplementedError("edge_count is not supported by this implementation.")
     
     def remove_node(self, node):
         """
