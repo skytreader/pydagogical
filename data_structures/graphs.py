@@ -292,7 +292,6 @@ class DFSIterator(object):
     traversing the graph. The modifications may not be reflected during
     traversal.
     """
-    #TODO Ensure that the iterator is for Python 3
 
     def __init__(self, graph):
         self.graph = graph
@@ -303,7 +302,7 @@ class DFSIterator(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """
         A DFS driver method, incidentally designed to work for the iterator.
         """

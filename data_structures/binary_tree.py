@@ -82,7 +82,7 @@ class InorderIterator(object):
             self.traversal_stack.append(self.roving_pointer)
             self.roving_pointer = self.roving_pointer.left_son
 
-    def next(self):
+    def __next__(self):
         """
         Return what comes next and update iterator's internal state to point to
         the DFS successor of the current node.
