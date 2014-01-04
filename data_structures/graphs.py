@@ -300,7 +300,13 @@ class DFSIterator(object):
         self.traversal_stack = []
         self.current_node = None
 
+    def __iter__(self):
+        return self
+
     def next(self):
+        """
+        A DFS driver method, incidentally designed to work for the iterator.
+        """
         if self.visited == self.graph.added_nodes:
             raise StopIteration
         elif len(traversal_stack): # A current connected node is being traversed.
@@ -313,6 +319,8 @@ class DFSIterator(object):
 
     def __dfs(self, start_node = None):
         """
+        Where all the magic of this iterator happens.
+
         Assumes that if start_node is None, traversal_stack is not empty.
         Otherwise, traversal_stack is empty.
         """
