@@ -308,12 +308,12 @@ class DFSIterator(object):
         """
         if self.visited == self.graph.added_nodes:
             raise StopIteration
-        elif len(traversal_stack): # A current connected node is being traversed.
+        elif len(self.traversal_stack): # A current connected node is being traversed.
             return self.__dfs()
         else:
             # Randomly pick a node that is not yet visited.
-            unvisited = self.visited.difference(self.graph.added_nodes)
-            random_node = random.choice(unvisited)
+            unvisited = self.graph.added_nodes.difference(self.visited)
+            random_node = random.choice(tuple(unvisited))
             return self.__dfs(start_node = random_node)
 
     def __dfs(self, start_node = None):
@@ -324,13 +324,18 @@ class DFSIterator(object):
         Otherwise, traversal_stack is empty.
         """
         # TODO Beware of possible cycles
-        if start_node:
+        if start_node and start_node not in self.visited:
             # FIXME What about nodes reachable from themselves?
             self.traversal_stack.append(self.graph.get_neighbors(start_node))
+            self.visited.add(start_node)
             return start_node
-        else:
+        elif len(self.traversal_stock):
+            # Note: Would've been an excellent use of a do-while construct
             next_node = self.traversal_stack.pop()
+            while next_node in self.visited:
+                next_node = self.traversal_stack.pop()
             self.traversal_stack.append(self.graph.get_neighbors(next_node))
+            self.visited.add(next_node)
             return next_node
 
 ############## HERE BE UNIT TESTS ##############
@@ -585,6 +590,15 @@ class UndirectedAdjListTest(AdjacencyListTest):
 
         for n in nodes:
             self.assertEqual(self.four_nodes.get_indegree(n), self.four_nodes.get_outdegree(n))
+
+class IteratorTest(unittest.TestCase):
+    
+    def test_dfs_iterator(self):
+        singleset = UndirectedAdjList()
+        singleset.add_node("node1")
+        dfs_iteration = ["node1"]
+        dfs_result = [node for node in DFSIterator(singleset)]
+        self.assertEqual(dfs_iteration, dfs_result)
 
 if __name__ == "__main__":
     unittest.main()
