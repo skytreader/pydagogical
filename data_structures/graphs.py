@@ -125,7 +125,7 @@ class AdjacencyLists(Graph):
     def __init__(self):
         # FIXME Would be better if we used a map for self.__nodes
         # self.__nodes is the adjacency list
-        self.__nodes = []
+        self.__nodes = dict()
         self.__added_nodes = set()
         self._edge_count = 0
 
@@ -135,12 +135,10 @@ class AdjacencyLists(Graph):
         empty list if n1 has no neighbors. Throws a NotInNodesException
         if n1 is not even in the graph.
         """
-        for row in self.__nodes:
-            if row[0] == n1:
-                nodes_and_weights = row[1:len(row)]
-                return list(map(lambda x: x[0], nodes_and_weights))
-
-        raise NotInNodesException(n1)
+        if n1 in self.added_nodes:
+            return list(map(lambda x: x[0], self.__nodes[n1]))
+        else:
+            raise NotInNodesException(n1)
 
     def is_reachable(self, n1, n2):
         n1_neighbors = self.get_neighbors(n1)
@@ -167,7 +165,7 @@ class AdjacencyLists(Graph):
         added (hence, not violating the purpose of DuplicateNodesException.
         """
         self.__added_nodes.add(node)
-        self.__nodes.append([node])
+        self.__nodes[node] = []
 
     def add_node(self, node):
         # TODO Make thread safe
@@ -196,30 +194,27 @@ class AdjacencyLists(Graph):
 
         You can't represent self-loops here, unfortunately.
         """
+        # FIXME Better exception message for this part
         if n1 not in self.added_nodes or n2 not in self.added_nodes:
             raise NotInNodesException((n1, n2))
-        nodes = self.__get_nodelist()
-        n1_index = nodes.index(n1)
-        # Check if the connection already exists. If so, do
-        # not make it redundant!
-        if n2 not in self.get_neighbors(n1):
-            self.__nodes[n1_index].append((n2, weight))
+
+        n1_list = self.__nodes[n1]
+        if n2 not in n1_list:
+            n1_list.append((n2, weight))
+            self.__nodes[n1] = n1_list
             self._edge_count += 1
 
     def get_weight(self, n1, n2):
-        nodes = self.__get_nodelist()
-        n1_index = nodes.index(n1)
-
         if n2 not in self.get_neighbors(n1):
             return None
         else:
+            n1_neighbors = self.__nodes[n1]
             # Find n2 and return its weight
-            n1_neighbors = self.__nodes[n1_index][1:len(self.__nodes[n1_index])]
-
             for node_weight in n1_neighbors:
                 if node_weight[0] == n2:
                     return node_weight[1]
 
+    # FIXME Someone still using this?
     def __get_nodelist(self):
         """
         Returns a list of nodes in the order they are
@@ -234,17 +229,16 @@ class AdjacencyLists(Graph):
         # Remove from added_nodes
         self.__added_nodes.remove(node)
 
-        # Remove incoming connections
-        for index, row in enumerate(self.__nodes):
-            neighbors = row[1:len(row)]
-            
-            if node in neighbors:
-                neighbors.remove(row)
+        # Remove outgoing connections
+        self.__nodes.pop(node)
 
-            # Check if the row is the adjacency list
-            # for the given node and delete.
-            if row[0] == node:
-                self.__nodes.remove(row)
+        # Remove incoming connections
+        for n in tuple(self.__added_nodes):
+            n_neighbors = self.__nodes[n]
+
+            if node in n_neighbors:
+                n_neighbors.remove(node)
+                self.__nodes[n] = n_neighbors
 
     def get_outdegree(self, n1):
         """
