@@ -352,15 +352,17 @@ class DFSIslandIterator(DFSIterator):
     taking place may or may not reflect in the traversal.
     """
     
+    #FIXME What if the specified start_node is not in the graph?
+
     def __init__(self, graph, start_node):
-        super(DFSIterator, self).__init__(graph)
+        super(DFSIslandIterator, self).__init__(graph)
         self.traversal_stack.append(start_node)
 
     def __next__(self):
         if len(self.traversal_stack):
             self.current_node = self.traversal_stack.pop()
             # Get the unvisited neighbors
-            node_neighbors = self.graph.get_neighbors(self.current_node)
+            node_neighbors = set(self.graph.get_neighbors(self.current_node))
             # Difference from the visited nodes
             unvisited = node_neighbors.difference(self.visited)
             self.visited.add(self.current_node)
@@ -637,6 +639,20 @@ class IteratorTest(unittest.TestCase):
         square.make_neighbor("node2", "node3")
         square.make_neighbor("node3", "node4")
         square.make_neighbor("node4", "node1")
+
+    def test_dfs_islands(self):
+        four_single_islands = UndirectedAdjList()
+        four_single_islands.add_node("node1")
+        four_single_islands.add_node("node2")
+        four_single_islands.add_node("node3")
+        four_single_islands.add_node("node4")
+
+        islander = lambda node: [n for n in DFSIslandIterator(four_single_islands, node)]
+
+        self.assertEqual(["node1"], islander("node1"))
+        self.assertEqual(["node2"], islander("node2"))
+        self.assertEqual(["node3"], islander("node3"))
+        self.assertEqual(["node4"], islander("node4"))
 
 if __name__ == "__main__":
     unittest.main()
