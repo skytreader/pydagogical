@@ -342,7 +342,7 @@ class DFSIterator(object):
             self.visited.add(next_node)
             return next_node
 
-class DFSPathSearch(DFSIterator):
+class DFSIslandIterator(DFSIterator):
     """
     Traverses the graph in a depth-first manner and allows you to specify where
     to start. If the given graph has islands, only the nodes in the start_node's
@@ -357,7 +357,6 @@ class DFSPathSearch(DFSIterator):
         self.traversal_stack.append(start_node)
 
     def __next__(self):
-        # How about the first time that this function is invoked?
         if len(self.traversal_stack):
             self.current_node = self.traversal_stack.pop()
             # Get the unvisited neighbors
