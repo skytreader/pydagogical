@@ -193,9 +193,11 @@ class AdjacencyLists(Graph):
 
         You can't represent self-loops here, unfortunately.
         """
-        # FIXME Better exception message for this part
-        if n1 not in self.added_nodes or n2 not in self.added_nodes:
-            raise NotInNodesException((n1, n2))
+        if n1 not in self.added_nodes:
+            raise NotInNodesException(n1)
+
+        if n2 not in self.added_nodes:
+            raise NotInNodesException(n2)
 
         n1_list = self.__nodes[n1]
         if n2 not in n1_list:
