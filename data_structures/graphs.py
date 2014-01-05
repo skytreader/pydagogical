@@ -123,7 +123,6 @@ class AdjacencyLists(Graph):
     """
 
     def __init__(self):
-        # FIXME Would be better if we used a map for self.__nodes
         # self.__nodes is the adjacency list
         self.__nodes = dict()
         self.__added_nodes = set()
@@ -213,14 +212,6 @@ class AdjacencyLists(Graph):
             for node_weight in n1_neighbors:
                 if node_weight[0] == n2:
                     return node_weight[1]
-
-    # FIXME Someone still using this?
-    def __get_nodelist(self):
-        """
-        Returns a list of nodes in the order they are
-        represented in the adjacency list.
-        """
-        return list(map(lambda x: x[0], self.__nodes))
 
     def remove_node(self, node):
         """
