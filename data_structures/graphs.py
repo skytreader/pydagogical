@@ -288,9 +288,13 @@ class UndirectedAdjList(AdjacencyLists):
 
 class DFSIterator(object):
     """
-    Depth-first search traversal of graphs. Avoid modifying the graph while
-    traversing the graph. The modifications may not be reflected during
-    traversal.
+    Enumerates all the nodes in the graph via depth-first search. This is not
+    concerened with path finding and so there is no way to specify where to
+    start the search.
+
+    Avoid modifying the graph structure while iteration. This will lead to
+    undefined behaviors; it will not be guaranteed that the modifications will
+    be reflected in the graph.
     """
 
     def __init__(self, graph):
@@ -314,9 +318,9 @@ class DFSIterator(object):
             # Randomly pick a node that is not yet visited.
             unvisited = self.graph.added_nodes.difference(self.visited)
             random_node = random.choice(tuple(unvisited))
-            return self.__dfs(start_node = random_node)
+            return self._dfs(start_node = random_node)
 
-    def __dfs(self, start_node = None):
+    def _dfs(self, start_node = None):
         """
         Where all the magic of this iterator happens.
 
@@ -326,10 +330,10 @@ class DFSIterator(object):
         # TODO Beware of possible cycles
         if start_node and start_node not in self.visited:
             # FIXME What about nodes reachable from themselves?
-            self.traversal_stack.append(self.graph.get_neighbors(start_node))
+            self.traversal_stack.extend(self.graph.get_neighbors(start_node))
             self.visited.add(start_node)
             return start_node
-        elif len(self.traversal_stock):
+        elif len(self.traversal_stack):
             # Note: Would've been an excellent use of a do-while construct
             next_node = self.traversal_stack.pop()
             while next_node in self.visited:
@@ -337,6 +341,34 @@ class DFSIterator(object):
             self.traversal_stack.append(self.graph.get_neighbors(next_node))
             self.visited.add(next_node)
             return next_node
+
+class DFSPathSearch(DFSIterator):
+    """
+    Traverses the graph in a depth-first manner and allows you to specify where
+    to start. If the given graph has islands, only the nodes in the start_node's
+    island will be enumerated by this iterator.
+
+    As with DFIterator, modifications done on the graph while traversal is
+    taking place may or may not reflect in the traversal.
+    """
+    
+    def __init__(self, graph, start_node):
+        super(DFSIterator, self).__init__(graph)
+        self.current_node = start_node
+
+    def __next__(self):
+        # How about the first time that this function is invoked?
+        if len(self.traversal_stack):
+            # Get the unvisited neighbors
+            node_neighbors = self.graph.get_neighbors(self.current_node)
+            # Difference from the visited nodes
+            unvisited = node_neighbors.difference(self.visited)
+            # Get a random unvisited neighbor to visit next
+            self.current_node = random.choice(tuple(unvisited))
+            self.visited.add(self.current_node)
+            return self.visited
+        else:
+            raise StopIteration
 
 ############## HERE BE UNIT TESTS ##############
 
@@ -599,6 +631,14 @@ class IteratorTest(unittest.TestCase):
         dfs_iteration = ["node1"]
         dfs_result = [node for node in DFSIterator(singleset)]
         self.assertEqual(dfs_iteration, dfs_result)
+
+        # Square four-node graph
+        square = UndirectedAdjList()
+        square.add_nodes(["node1", "node2", "node3", "node4"])
+        square.make_neighbor("node1", "node2")
+        square.make_neighbor("node2", "node3")
+        square.make_neighbor("node3", "node4")
+        square.make_neighbor("node4", "node1")
 
 if __name__ == "__main__":
     unittest.main()
