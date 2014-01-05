@@ -19,6 +19,13 @@ class Graph(object):
     NotInNodesException if given a node that is not yet in the graph.
     """
 
+    def __eq__(self, g2):
+        """
+        Two graphs are equal if and only if they are topographically similar and
+        if their corresponding nodes contain the same data.
+        """
+        raise NotImplementedError("equality must be defined for Graph objects.")
+
     def is_reachable(self, n1, n2):
         """
         Returns true if we can go to n2 via n1. Note
@@ -116,6 +123,7 @@ class AdjacencyLists(Graph):
     """
 
     def __init__(self):
+        # FIXME Would be better if we used a map for self.__nodes
         # self.__nodes is the adjacency list
         self.__nodes = []
         self.__added_nodes = set()
