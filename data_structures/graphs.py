@@ -354,19 +354,18 @@ class DFSPathSearch(DFSIterator):
     
     def __init__(self, graph, start_node):
         super(DFSIterator, self).__init__(graph)
-        self.current_node = start_node
+        self.traversal_stack.append(start_node)
 
     def __next__(self):
         # How about the first time that this function is invoked?
         if len(self.traversal_stack):
+            self.current_node = self.traversal_stack.pop()
             # Get the unvisited neighbors
             node_neighbors = self.graph.get_neighbors(self.current_node)
             # Difference from the visited nodes
             unvisited = node_neighbors.difference(self.visited)
-            # Get a random unvisited neighbor to visit next
-            self.current_node = random.choice(tuple(unvisited))
             self.visited.add(self.current_node)
-            return self.visited
+            return self.current_node
         else:
             raise StopIteration
 
