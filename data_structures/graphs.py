@@ -121,7 +121,7 @@ class Graph(object):
         transpose_graph = GraphType()
 
         # Add every node in this graph into transpose_graph
-        for node in self.added_nodes
+        for node in self.added_nodes:
             transpose_graph.add_node(node)
         
         # Get their neighbors and reverse!
@@ -129,7 +129,7 @@ class Graph(object):
             neighbors = self.get_neighbors(node)
 
             for neighbor in neighbors:
-                transpose.make_neighbor(neighbor, node)
+                transpose_graph.make_neighbor(neighbor, node)
 
         return transpose_graph
 
@@ -534,6 +534,15 @@ class AdjacencyListTest(unittest.TestCase):
 
         # NotInNodesException test
         self.assertRaises(NotInNodesException, self.four_nodes.get_neighbors, "does not exist")
+
+    def test_transpose(self):
+        simple_graph = AdjacencyLists()
+        simple_graph.add_nodes(("n1", "n2"))
+        simple_graph.make_neighbor("n1", "n2")
+
+        simple_graph_transpose = simple_graph.get_transpose(AdjacencyLists)
+        self.assertTrue(simple_graph_transpose.is_reachable("n2", "n1"))
+        self.assertFalse(simple_graph_transpose.is_reachable("n1", "n2"))
 
     def test_get_neighbors(self):
         self.construct_four_nodes()
