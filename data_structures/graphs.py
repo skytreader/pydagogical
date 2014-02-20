@@ -109,6 +109,30 @@ class Graph(object):
         """
         pass
 
+    def get_transpose(self, GraphType):
+        """
+        Returns a new graph with every edge reversed. That is, if A -> B in
+        current graph, the graph returned will have A <- B. Of course, if the
+        graph is undirected, this will not do anything.
+
+        GraphType - A concrete implementation of the Graph class which will be
+        used by this method to construct the transpose.
+        """
+        transpose_graph = GraphType()
+
+        # Add every node in this graph into transpose_graph
+        for node in self.added_nodes
+            transpose_graph.add_node(node)
+        
+        # Get their neighbors and reverse!
+        for node in self.added_nodes:
+            neighbors = self.get_neighbors(node)
+
+            for neighbor in neighbors:
+                transpose.make_neighbor(neighbor, node)
+
+        return transpose_graph
+
 class AdjacencyLists(Graph):
     """
     Adjacency list representation of a graph. Note that no two nodes
