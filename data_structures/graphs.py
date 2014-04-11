@@ -9,6 +9,7 @@ import unittest
 Package for graph data structures.
 """
 
+# TODO Be able to remove connections
 class Graph(object):
     """
     General class for graphs. Add objects for nodes and equality must
