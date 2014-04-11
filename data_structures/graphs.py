@@ -144,6 +144,8 @@ class AdjacencyLists(Graph):
     in each list is a specific node in the graph. The rest of the
     list represents nodes immediately reachable from the node
     represented by the first element.
+
+    This can represent a directed, possibly weighted, graph.
     """
 
     def __init__(self):
@@ -284,6 +286,8 @@ class UndirectedAdjList(AdjacencyLists):
     """
     Creates undirected graphs with an adjacency list
     representation.
+
+    This may represent an undirected, possibly weighted, graph.
     """
 
     def __init__(self):
@@ -594,7 +598,7 @@ class UndirectedAdjListTest(AdjacencyListTest):
         self.construct_four_nodes()
         self.assertEqual(self.four_nodes.edge_count, 5)
 
-    def test_get_weight(self):
+    from def test_get_weight(self):
         """
         Almost the same as construct_four_nodes except that it generates random
         weights and tests for those weights.
