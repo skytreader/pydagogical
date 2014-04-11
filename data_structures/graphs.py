@@ -336,7 +336,7 @@ class DFSIterator(object):
         if self.visited == self.graph.added_nodes:
             raise StopIteration
         elif len(self.traversal_stack): # A current connected node is being traversed.
-            return self.__dfs()
+            return self._dfs()
         else:
             # Randomly pick a node that is not yet visited.
             unvisited = self.graph.added_nodes.difference(self.visited)
@@ -361,7 +361,7 @@ class DFSIterator(object):
             next_node = self.traversal_stack.pop()
             while next_node in self.visited:
                 next_node = self.traversal_stack.pop()
-            self.traversal_stack.append(self.graph.get_neighbors(next_node))
+            self.traversal_stack.extend(self.graph.get_neighbors(next_node))
             self.visited.add(next_node)
             return next_node
 
@@ -598,7 +598,7 @@ class UndirectedAdjListTest(AdjacencyListTest):
         self.construct_four_nodes()
         self.assertEqual(self.four_nodes.edge_count, 5)
 
-    from def test_get_weight(self):
+    def test_get_weight(self):
         """
         Almost the same as construct_four_nodes except that it generates random
         weights and tests for those weights.
@@ -671,6 +671,13 @@ class IteratorTest(unittest.TestCase):
         square.make_neighbor("node2", "node3")
         square.make_neighbor("node3", "node4")
         square.make_neighbor("node4", "node1")
+        
+        # The test is that we should only iterate on square four times
+        iteration_count = 0
+        for node in DFSIterator(square):
+            iteration_count += 1
+
+        self.assertEqual(iteration_count, 4)
 
     def test_dfs_islands(self):
         four_single_islands = UndirectedAdjList()
