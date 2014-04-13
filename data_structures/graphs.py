@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from exceptions import NotInNodesException, DuplicateNodeException
+from errors import NotInNodesException, DuplicateNodeException
 
 import random
 import unittest
