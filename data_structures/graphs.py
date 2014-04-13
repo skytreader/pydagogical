@@ -283,6 +283,13 @@ class AdjacencyLists(Graph):
         else:
             raise NotInNodesException(n1)
 
+# TODO
+class AdjacencyMatrix(Graph):
+    
+    def __init__(self):
+        self.__adjmat = []
+        self.added_nodes = set()
+
 class UndirectedAdjList(AdjacencyLists):
     """
     Creates undirected graphs with an adjacency list
