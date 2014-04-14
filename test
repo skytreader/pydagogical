@@ -1,1 +1,7 @@
+# Basic data structures here
 python3 data_structures/graphs.py
+python3 data_structures/binary_tree.py
+python3 data_structures/forests.py
+
+# Accompanying algorithms here
+python3 data_structures/graph_algorithms.py
