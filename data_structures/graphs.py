@@ -107,6 +107,7 @@ class Graph(object):
         """
         pass
 
+    # FIXME Is this still necessary since this is just equal to get_neighbors?
     def get_outdegree(self, n1):
         """
         For a directed graph, the number of vertices which
@@ -308,6 +309,17 @@ class AdjacencyMatrix(Graph):
                 in_count += 1 if row[node_index] else 0
 
         return in_count
+
+    def get_neighbors(self, node):
+        neighbors = []
+        node_index = self.__get_index(node)
+        node_adjacency = self.__adjmat[node_index]
+
+        for neighbor in node_adjacency:
+            if neighbor:
+                neighbors.insert(0, neighbor)
+
+        return neighbors
 
 class UndirectedAdjList(AdjacencyLists):
     """
