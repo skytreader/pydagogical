@@ -53,7 +53,7 @@ class Graph(object):
     def add_nodes(self, nodes):
         """
         Convenience method that adds a set of nodes as given in the nodes
-        iterable.
+        iterable. This has a default implementation.
         """
         for node in nodes:
             if node in self.added_nodes:
@@ -276,11 +276,38 @@ class AdjacencyMatrix(Graph):
     def __init__(self):
         self.__adjmat = []
         self.added_nodes = set()
+        self.__node_sequence = []
 
     def add_node(self, node):
         self.added_nodes.add(node)
+        self.__node_sequence.insert(0, node)
+        self__adjmat.insert(0, [0 for i in range(len(self.__node_sequence))])
+        
+        for index, row in enumerate(self.__adjmat, start=1):
+            row.insert(0, 0)
 
+    def __get_index(self, node):
+        """
+        Return the index of this node in the matrix.
 
+        (Idea: It might be faster if we implement this as a hash.)
+        """
+        if node not in self.added_nodes:
+            raise NotInNodesException(node)
+
+        for idx, n in enumerate(self.__node_sequence):
+            if n == node:
+                return idx
+    
+    def get_indegree(self, node):
+        in_count = 0
+        node_index = self.__get_index(node)
+
+        for index, row in enumerate(self.__adjmat):
+            if n != self.__node_sequence[index]:
+                in_count += 1 if row[node_index] else 0
+
+        return in_count
 
 class UndirectedAdjList(AdjacencyLists):
     """
