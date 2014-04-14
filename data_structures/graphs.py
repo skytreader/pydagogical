@@ -52,9 +52,15 @@ class Graph(object):
     
     def add_nodes(self, nodes):
         """
-        Convenience method that adds nodes as a list.
+        Convenience method that adds a set of nodes as given in the nodes
+        iterable.
         """
-        pass
+        for node in nodes:
+            if node in self.added_nodes:
+                raise DuplicateNodeException(node)
+
+        for node in nodes:
+            self.add_node(node)
 
     @property
     def added_nodes(self):
@@ -185,32 +191,13 @@ class AdjacencyLists(Graph):
     def edge_count(self):
         return self._edge_count
 
-    def __add(self, node):
-        """
-        Adds the node, assuming that the node is _not_ yet
-        added (hence, not violating the purpose of DuplicateNodesException.
-        """
-        self.__added_nodes.add(node)
-        self.__nodes[node] = []
-
     def add_node(self, node):
         # TODO Make thread safe
         if node in self.__added_nodes:
             raise DuplicateNodeException(node)
         else:
-            self.__add(node)
-
-    def add_nodes(self, nodes):
-        """
-        Adds nodes as a list. Raises DuplicateNodeException
-        if at least one of the nodes is already in the list.
-        """
-        for node in nodes:
-            if node in self.__added_nodes:
-                raise DuplicateNodeException(node)
-
-        for node in nodes:
-            self.__add(node)
+            self.__added_nodes.add(node)
+            self.__nodes[node] = []
 
     def make_neighbor(self, n1, n2, weight = 0):
         """
@@ -289,6 +276,11 @@ class AdjacencyMatrix(Graph):
     def __init__(self):
         self.__adjmat = []
         self.added_nodes = set()
+
+    def add_node(self, node):
+        self.added_nodes.add(node)
+
+
 
 class UndirectedAdjList(AdjacencyLists):
     """
