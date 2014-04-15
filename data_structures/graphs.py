@@ -447,22 +447,53 @@ class DFSIslandIterator(DFSIterator):
 
 ############## HERE BE UNIT TESTS ##############
 
-# TODO Will it be better to refactor this into a GraphTest class then have
-# unit test classes for implementations to inherit from this class.
 class AdjacencyListTest(unittest.TestCase):
     """
+    This can be used as a master class for Graph unit tests. That is, if you are
+    creating a new Graph implementation, it suffices for the unit tests to extend
+    this class, and override the following methods:
+        - _get_graph_instance
+        - _construct_test_graph
+
+    See the docstring of the mentioned methods for more info. You are, of course,
+    more than free to add more tests and modify existing ones.
+
     To test:
         - Behavior when introducing deep and shallow copies.
     """
 
     def setUp(self):
-        self.four_nodes = AdjacencyLists()
-        self.four_nodes.add_node("node1")
-        self.four_nodes.add_node("node2")
-        self.four_nodes.add_node("node3")
-        self.four_nodes.add_node("node4")
+        self.test_graph = self._get_graph_instance()
+        self.test_graph.add_node("node1")
+        self.test_graph.add_node("node2")
+        self.test_graph.add_node("node3")
+        self.test_graph.add_node("node4")
 
         self.test_node = "test_node"
+
+    def _get_graph_instance(self):
+        """
+        Override this to return an instance of the Graph implementation you want
+        to test.
+        """
+        return AdjacencyLists()
+
+    def _construct_test_graph(self):
+        """
+        Utility test function to connect the four nodes of self.test_graph.
+        After calling this function, get_neighbors_test should pass.
+        """
+        self.test_graph.make_neighbor("node1", "node2")
+        self.test_graph.make_neighbor("node2", "node1")
+        self.test_graph.make_neighbor("node1", "node3")
+        self.test_graph.make_neighbor("node3", "node1")
+
+        self.test_graph.make_neighbor("node1", "node4")
+        self.test_graph.make_neighbor("node4", "node1")
+        self.test_graph.make_neighbor("node2", "node4")
+        self.test_graph.make_neighbor("node4", "node2")
+        self.test_graph.make_neighbor("node3", "node4")
+        self.test_graph.make_neighbor("node4", "node3")
 
     def test_add_node(self):
         """
@@ -471,9 +502,9 @@ class AdjacencyListTest(unittest.TestCase):
             - Introduce an already-added node - must throw a
               DuplicateNodeException
         """
-        self.four_nodes.add_node(self.test_node)
-        self.assertTrue(self.test_node in self.four_nodes.added_nodes)
-        self.assertRaises(DuplicateNodeException, self.four_nodes.add_node, "node1")
+        self.test_graph.add_node(self.test_node)
+        self.assertTrue(self.test_node in self.test_graph.added_nodes)
+        self.assertRaises(DuplicateNodeException, self.test_graph.add_node, "node1")
 
     def test_add_nodes(self):
         """
@@ -483,57 +514,40 @@ class AdjacencyListTest(unittest.TestCase):
         test_nodes = ["the", "television's", "selling", "plastic", "figurine", "for", "leaders"]
         # none of these should be inserted---intersects with "the"
         duplicate_test_nodes = ["scared", "of", "losing", "all", "the", "time"]
-        self.four_nodes.add_nodes(test_nodes)
+        self.test_graph.add_nodes(test_nodes)
 
         for node in test_nodes:
-            self.assertTrue(node in self.four_nodes.added_nodes)
+            self.assertTrue(node in self.test_graph.added_nodes)
 
-        self.assertRaises(DuplicateNodeException, self.four_nodes.add_nodes, duplicate_test_nodes)
+        self.assertRaises(DuplicateNodeException, self.test_graph.add_nodes, duplicate_test_nodes)
 
         for node in duplicate_test_nodes:
             if node != "the":
-                self.assertTrue(node not in self.four_nodes.added_nodes)
+                self.assertTrue(node not in self.test_graph.added_nodes)
 
     def test_remove_node(self):
         """
-        Add a node, check if added indeed. Then, remove that node
-        and check that it is not there anymore.
+        Add a node, check if added indeed. Then, remove that node and check that
+        it is not there anymore.
         """
-        self.four_nodes.add_node(self.test_node)
-        self.assertTrue(self.test_node in self.four_nodes.added_nodes)
+        self.test_graph.add_node(self.test_node)
+        self.assertTrue(self.test_node in self.test_graph.added_nodes)
         
-        self.four_nodes.remove_node(self.test_node)
-        self.assertTrue(self.test_node not in self.four_nodes.added_nodes)
+        self.test_graph.remove_node(self.test_node)
+        self.assertTrue(self.test_node not in self.test_graph.added_nodes)
 
     def test_neighbor(self):
         """
         Tests both make_neighbor and is_reachable functionality.
         """
-        self.four_nodes.make_neighbor("node1", "node2")
-        self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
-        self.assertFalse(self.four_nodes.is_reachable("node2", "node1"))
-        self.assertRaises(NotInNodesException, self.four_nodes.make_neighbor, self.test_node, "node1")
-
-    def construct_four_nodes(self):
-        """
-        Utility test function to connect the four nodes of self.four_nodes.
-        After calling this function, get_neighbors_test should pass.
-        """
-        self.four_nodes.make_neighbor("node1", "node2")
-        self.four_nodes.make_neighbor("node2", "node1")
-        self.four_nodes.make_neighbor("node1", "node3")
-        self.four_nodes.make_neighbor("node3", "node1")
-
-        self.four_nodes.make_neighbor("node1", "node4")
-        self.four_nodes.make_neighbor("node4", "node1")
-        self.four_nodes.make_neighbor("node2", "node4")
-        self.four_nodes.make_neighbor("node4", "node2")
-        self.four_nodes.make_neighbor("node3", "node4")
-        self.four_nodes.make_neighbor("node4", "node3")
+        self.test_graph.make_neighbor("node1", "node2")
+        self.assertTrue(self.test_graph.is_reachable("node1", "node2"))
+        self.assertFalse(self.test_graph.is_reachable("node2", "node1"))
+        self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, self.test_node, "node1")
 
     def test_get_weight(self):
         """
-        Almost the same as construct_four_nodes except that it generates random
+        Almost the same as _construct_test_graph except that it generates random
         weights and tests for those weights.
         """
         weights = {}
@@ -545,38 +559,38 @@ class AdjacencyListTest(unittest.TestCase):
         for connection in connseq:
             weights[connection] = random.randint(1, 100)
 
-        self.four_nodes.make_neighbor("node1", "node2", weights[("node1", "node2")])
-        self.four_nodes.make_neighbor("node2", "node1", weights[("node2", "node1")])
-        self.four_nodes.make_neighbor("node1", "node3", weights[("node1", "node3")])
-        self.four_nodes.make_neighbor("node3", "node1", weights[("node3", "node1")])
+        self.test_graph.make_neighbor("node1", "node2", weights[("node1", "node2")])
+        self.test_graph.make_neighbor("node2", "node1", weights[("node2", "node1")])
+        self.test_graph.make_neighbor("node1", "node3", weights[("node1", "node3")])
+        self.test_graph.make_neighbor("node3", "node1", weights[("node3", "node1")])
 
-        self.four_nodes.make_neighbor("node1", "node4", weights[("node1", "node4")])
-        self.four_nodes.make_neighbor("node4", "node1", weights[("node4", "node1")])
-        self.four_nodes.make_neighbor("node2", "node4", weights[("node2", "node4")])
-        self.four_nodes.make_neighbor("node4", "node2", weights[("node4", "node2")])
-        self.four_nodes.make_neighbor("node3", "node4", weights[("node3", "node4")])
-        self.four_nodes.make_neighbor("node4", "node3", weights[("node4", "node3")])
+        self.test_graph.make_neighbor("node1", "node4", weights[("node1", "node4")])
+        self.test_graph.make_neighbor("node4", "node1", weights[("node4", "node1")])
+        self.test_graph.make_neighbor("node2", "node4", weights[("node2", "node4")])
+        self.test_graph.make_neighbor("node4", "node2", weights[("node4", "node2")])
+        self.test_graph.make_neighbor("node3", "node4", weights[("node3", "node4")])
+        self.test_graph.make_neighbor("node4", "node3", weights[("node4", "node3")])
 
         for connection in connseq:
-            self.assertEqual(self.four_nodes.get_weight(connection[0], connection[1]),
+            self.assertEqual(self.test_graph.get_weight(connection[0], connection[1]),
               weights[connection])
 
         # Test that, by default, the weight is 0.
-        self.four_nodes.add_nodes(("node5", "node6"))
-        self.four_nodes.make_neighbor("node5", "node6")
-        self.assertEqual(self.four_nodes.get_weight("node5", "node6"), 0)
+        self.test_graph.add_nodes(("node5", "node6"))
+        self.test_graph.make_neighbor("node5", "node6")
+        self.assertEqual(self.test_graph.get_weight("node5", "node6"), 0)
 
     def test_edge_count(self):
-        self.construct_four_nodes()
+        self._construct_test_graph()
         # Should be 10 since each bidirectional edge had to be created with two
         # calls to make_neighbor, therefore an edge count each.
-        self.assertEqual(self.four_nodes.edge_count, 10)
+        self.assertEqual(self.test_graph.edge_count, 10)
 
     def get_neighbors_test(self):
-        n1_neighbors = self.four_nodes.get_neighbors("node1")
-        n2_neighbors = self.four_nodes.get_neighbors("node2")
-        n3_neighbors = self.four_nodes.get_neighbors("node3")
-        n4_neighbors = self.four_nodes.get_neighbors("node4")
+        n1_neighbors = self.test_graph.get_neighbors("node1")
+        n2_neighbors = self.test_graph.get_neighbors("node2")
+        n3_neighbors = self.test_graph.get_neighbors("node3")
+        n4_neighbors = self.test_graph.get_neighbors("node4")
 
         n1_expected_neighbors = set(["node2", "node3", "node4"])
         self.assertEqual(n1_expected_neighbors, set(n1_neighbors))
@@ -591,11 +605,11 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertEqual(n3_expected_neighbors, set(n3_neighbors))
 
         # Isolated node test
-        self.four_nodes.add_node("five")
-        self.assertTrue(self.four_nodes.get_neighbors("five") == [])
+        self.test_graph.add_node("five")
+        self.assertTrue(self.test_graph.get_neighbors("five") == [])
 
         # NotInNodesException test
-        self.assertRaises(NotInNodesException, self.four_nodes.get_neighbors, "does not exist")
+        self.assertRaises(NotInNodesException, self.test_graph.get_neighbors, "does not exist")
 
     def test_transpose(self):
         simple_graph = AdjacencyLists()
@@ -607,19 +621,19 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertFalse(simple_graph_transpose.is_reachable("n1", "n2"))
 
     def test_get_neighbors(self):
-        self.construct_four_nodes()
+        self._construct_test_graph()
         self.get_neighbors_test()
 
     def test_get_indegree(self):
-        n1_neighbors = self.four_nodes.get_neighbors("node1")
-        self.assertEqual(self.four_nodes.get_indegree("node1"), len(n1_neighbors))
+        n1_neighbors = self.test_graph.get_neighbors("node1")
+        self.assertEqual(self.test_graph.get_indegree("node1"), len(n1_neighbors))
 
         # NotInNodesException test
-        self.assertRaises(NotInNodesException, self.four_nodes.get_indegree, "does not exist")
+        self.assertRaises(NotInNodesException, self.test_graph.get_indegree, "does not exist")
 
     def test_get_outdegree(self):
-        n1_neighbors = self.four_nodes.get_neighbors("node1")
-        self.assertEqual(self.four_nodes.get_outdegree("node1"), len(n1_neighbors))
+        n1_neighbors = self.test_graph.get_neighbors("node1")
+        self.assertEqual(self.test_graph.get_outdegree("node1"), len(n1_neighbors))
 
 class Route(object):
     """
@@ -639,26 +653,21 @@ class Route(object):
 
 class UndirectedAdjListTest(AdjacencyListTest):
     
-    def setUp(self):
-        self.four_nodes = UndirectedAdjList()
-        self.four_nodes.add_node("node1")
-        self.four_nodes.add_node("node2")
-        self.four_nodes.add_node("node3")
-        self.four_nodes.add_node("node4")
-        self.test_node = "test_node"
+    def _get_graph_instance(self):
+        return UndirectedAdjList()
 
     def test_neighbor(self):
-        self.four_nodes.make_neighbor("node1", "node2")
-        self.assertTrue(self.four_nodes.is_reachable("node1", "node2"))
-        self.assertTrue(self.four_nodes.is_reachable("node2", "node1"))
+        self.test_graph.make_neighbor("node1", "node2")
+        self.assertTrue(self.test_graph.is_reachable("node1", "node2"))
+        self.assertTrue(self.test_graph.is_reachable("node2", "node1"))
 
     def test_edge_count(self):
-        self.construct_four_nodes()
-        self.assertEqual(self.four_nodes.edge_count, 5)
+        self._construct_test_graph()
+        self.assertEqual(self.test_graph.edge_count, 5)
 
     def test_get_weight(self):
         """
-        Almost the same as construct_four_nodes except that it generates random
+        Almost the same as _construct_test_graph except that it generates random
         weights and tests for those weights.
 
         Modified from AdjacencyListTest since this one is undirected and
@@ -687,20 +696,20 @@ class UndirectedAdjListTest(AdjacencyListTest):
         weights = tuple(weights)
         get_assigned_weight = lambda x: weights[connroutes.index(x)]
 
-        self.four_nodes.make_neighbor("node1", "node2", get_assigned_weight(Route(("node1", "node2"))))
-        self.four_nodes.make_neighbor("node2", "node1", get_assigned_weight(Route(("node2", "node1"))))
-        self.four_nodes.make_neighbor("node1", "node3", get_assigned_weight(Route(("node1", "node3"))))
-        self.four_nodes.make_neighbor("node3", "node1", get_assigned_weight(Route(("node3", "node1"))))
+        self.test_graph.make_neighbor("node1", "node2", get_assigned_weight(Route(("node1", "node2"))))
+        self.test_graph.make_neighbor("node2", "node1", get_assigned_weight(Route(("node2", "node1"))))
+        self.test_graph.make_neighbor("node1", "node3", get_assigned_weight(Route(("node1", "node3"))))
+        self.test_graph.make_neighbor("node3", "node1", get_assigned_weight(Route(("node3", "node1"))))
 
-        self.four_nodes.make_neighbor("node1", "node4", get_assigned_weight(Route(("node1", "node4"))))
-        self.four_nodes.make_neighbor("node4", "node1", get_assigned_weight(Route(("node4", "node1"))))
-        self.four_nodes.make_neighbor("node2", "node4", get_assigned_weight(Route(("node2", "node4"))))
-        self.four_nodes.make_neighbor("node4", "node2", get_assigned_weight(Route(("node4", "node2"))))
-        self.four_nodes.make_neighbor("node3", "node4", get_assigned_weight(Route(("node3", "node4"))))
-        self.four_nodes.make_neighbor("node4", "node3", get_assigned_weight(Route(("node4", "node3"))))
+        self.test_graph.make_neighbor("node1", "node4", get_assigned_weight(Route(("node1", "node4"))))
+        self.test_graph.make_neighbor("node4", "node1", get_assigned_weight(Route(("node4", "node1"))))
+        self.test_graph.make_neighbor("node2", "node4", get_assigned_weight(Route(("node2", "node4"))))
+        self.test_graph.make_neighbor("node4", "node2", get_assigned_weight(Route(("node4", "node2"))))
+        self.test_graph.make_neighbor("node3", "node4", get_assigned_weight(Route(("node3", "node4"))))
+        self.test_graph.make_neighbor("node4", "node3", get_assigned_weight(Route(("node4", "node3"))))
  
         for i in range(len(connroutes)):
-            self.assertEqual(self.four_nodes.get_weight(connroutes[i].origin,
+            self.assertEqual(self.test_graph.get_weight(connroutes[i].origin,
               connroutes[i].destination), weights[i])
 
     def test_degree_eq(self):
@@ -708,10 +717,10 @@ class UndirectedAdjListTest(AdjacencyListTest):
         Tests that the in degree and out degree of every node in the graph
         is equal.
         """
-        nodes = self.four_nodes.added_nodes
+        nodes = self.test_graph.added_nodes
 
         for n in nodes:
-            self.assertEqual(self.four_nodes.get_indegree(n), self.four_nodes.get_outdegree(n))
+            self.assertEqual(self.test_graph.get_indegree(n), self.test_graph.get_outdegree(n))
 
 class IteratorTest(unittest.TestCase):
     
