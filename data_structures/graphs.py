@@ -12,12 +12,18 @@ Package for graph data structures.
 # TODO Be able to remove connections
 class Graph(object):
     """
-    General class for graphs. Add objects for nodes and equality must
-    be defined for the nodes.
+    General class for graphs. You can add any object for nodes so long as
+    (in)equality is defined among them.
 
-    All methods that make use of the current set of nodes in the graph
-    (not methods that add a node to the graph) should throw a
-    NotInNodesException if given a node that is not yet in the graph.
+    All methods that make use of the current set of nodes in the graph (not
+    methods that add a node to the graph) should throw a NotInNodesException
+    if given a node that is not yet in the graph.
+
+    Implementing classes should indicate if they are representing directed or
+    undirected graphs. Typically, the only difference between a class
+    representing directed graphs and one representing undirected graphs is the
+    make_neighbor method. Extending a directed/undirected graph for an
+    undirected/directed graph should be trivial.
     """
 
     def __eq__(self, g2):
@@ -143,15 +149,14 @@ class Graph(object):
 
 class AdjacencyLists(Graph):
     """
-    Adjacency list representation of a graph. Note that no two nodes
-    may be the same in a graph. Otherwise, we'll have confusion when
-    making nodes adjacent. The graph created by default is directed.
+    Adjacency list representation of a graph. Note that no two nodes may be the
+    same in a graph. Otherwise, we'll have confusion when making nodes adjacent.
+    The graph created by default is directed.
 
     Convention:
-    The graph is represented as a list-of-lists. The first element
-    in each list is a specific node in the graph. The rest of the
-    list represents nodes immediately reachable from the node
-    represented by the first element.
+    The graph is represented as a list-of-lists. The first element in each list
+    is a specific node in the graph. The rest of the list represents nodes
+    immediately reachable from the node represented by the first element.
 
     This can represent a directed, possibly weighted, graph.
     """
@@ -273,6 +278,11 @@ class AdjacencyLists(Graph):
 
 # TODO
 class AdjacencyMatrix(Graph):
+    """
+    An AdjacenyMatrix representation of an _undirected_ graph. We can easily
+    create a directed adjacency matrix class by extending this class and then
+    overriding a function or two...upcoming!
+    """
     
     def __init__(self):
         self.__adjmat = []
@@ -320,6 +330,9 @@ class AdjacencyMatrix(Graph):
                 neighbors.insert(0, neighbor)
 
         return neighbors
+
+    def get_outdegree(self, node):
+        node_index = self.__get_index(node)
 
 class UndirectedAdjList(AdjacencyLists):
     """
@@ -434,6 +447,8 @@ class DFSIslandIterator(DFSIterator):
 
 ############## HERE BE UNIT TESTS ##############
 
+# TODO Will it be better to refactor this into a GraphTest class then have
+# unit test classes for implementations to inherit from this class.
 class AdjacencyListTest(unittest.TestCase):
     """
     To test:
@@ -546,11 +561,15 @@ class AdjacencyListTest(unittest.TestCase):
             self.assertEqual(self.four_nodes.get_weight(connection[0], connection[1]),
               weights[connection])
 
+        # Test that, by default, the weight is 0.
+        self.four_nodes.add_nodes(("node5", "node6"))
+        self.four_nodes.make_neighbor("node5", "node6")
+        self.assertEqual(self.four_nodes.get_weight("node5", "node6"), 0)
+
     def test_edge_count(self):
         self.construct_four_nodes()
-        # Should be 10 since each bidirectional edge had to be
-        # created with two calls to make_neighbor, therefore an
-        # edge count each.
+        # Should be 10 since each bidirectional edge had to be created with two
+        # calls to make_neighbor, therefore an edge count each.
         self.assertEqual(self.four_nodes.edge_count, 10)
 
     def get_neighbors_test(self):
