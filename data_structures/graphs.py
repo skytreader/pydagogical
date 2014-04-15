@@ -279,10 +279,12 @@ class AdjacencyLists(Graph):
 # TODO
 class AdjacencyMatrix(Graph):
     """
-    An AdjacenyMatrix representation of an _undirected_ graph. We can easily
-    create a directed adjacency matrix class by extending this class and then
-    overriding a function or two...upcoming!
+    An AdjacenyMatrix representation of an _undirected_ graph. Usage of this
+    class for weighted connections is valid as long as the weights are
+    nonnegative.
     """
+
+    DISCONNECTED = -1
     
     def __init__(self):
         self.__adjmat = []
@@ -292,7 +294,9 @@ class AdjacencyMatrix(Graph):
     def add_node(self, node):
         self.added_nodes.add(node)
         self.__node_sequence.insert(0, node)
-        self__adjmat.insert(0, [0 for i in range(len(self.__node_sequence))])
+        self__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
+        # Always costs nothing to get to yourself from yourself, at least initially.
+        self.__adjmat[0][0] = 0
         
         for index, row in enumerate(self.__adjmat, start=1):
             row.insert(0, 0)
@@ -332,7 +336,45 @@ class AdjacencyMatrix(Graph):
         return neighbors
 
     def get_outdegree(self, node):
+        # This is undirected so this is totally valid
+        return self.get_indegree(node)
+
+    def get_weight(self, n1, n2):
+        """
+        Gets the cost of going to n2 via n1. Returns a negative value if n1 and
+        n2 is not connected.
+        """
+        n1_index = self.__get_index(n1)
+        n2_index = self.__get_index(n2)
+
+        n1_adjacency = self.__adjmat[n1]
+        return n1_adjacency[n2_index]
+    
+    def is_reachable(self, n1, n2):
+        connection = self.get_weight(n1, n2)
+        return conection >= 0
+    
+    def make_neighbor(self, n1, n2, weight=0):
+        n1_index = self.__get_index(n1)
+        n2_index = self.__get_index(n2)
+
+        n1_adjacency = self.__adjmat[n1]
+        n1_adjacency[n2_index] = weight
+
+    def remove_node(self, node):
         node_index = self.__get_index(node)
+        self.added_nodes.remove(node)
+        self.__node_sequence.remove(node)
+
+        # Fix the adjmat!
+        # Remove the row
+        temp_adjmat = self.__adjmat[0:node_index]
+        temp_adjmat.extend(self.__adjmat[node_index + 1:len(self.__adjmat)])
+        self.__adjmat = temp_adjmat
+
+        for i, row in enumerate(self.__adjmat):
+            self.__adjmat[i] = row[0:node_index]
+            self.__adjmat[i].extend(row[node_index + 1:len(row)])
 
 class UndirectedAdjList(AdjacencyLists):
     """
