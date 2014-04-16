@@ -300,6 +300,9 @@ class AdjacencyMatrix(Graph):
         return self.__edge_count
 
     def add_node(self, node):
+        if node in self.added_nodes:
+            raise DuplicateNodeException(node)
+
         self.added_nodes.add(node)
         self.__node_sequence.insert(0, node)
         self.__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
