@@ -308,6 +308,7 @@ class AdjacencyMatrix(Graph):
         self.__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
         # Always costs nothing to get to yourself from yourself, at least initially.
         self.__adjmat[0][0] = 0
+        print(self.__adjmat)
         
         for index, row in enumerate(self.__adjmat, start=1):
             row.insert(0, AdjacencyMatrix.DISCONNECTED)
@@ -375,9 +376,9 @@ class AdjacencyMatrix(Graph):
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
-        print("Check: " + str(n1_index) + " " + str(n2_index))
-        print("Adjmat: " + str(self.__adjmat))
-        print("===")
+        #print("Check: " + str(n1_index) + " " + str(n2_index))
+        #print("Adjmat: " + str(self.__adjmat))
+        #print("===")
 
         if self.__adjmat[n1_index][n2_index] == self.__adjmat[n2_index][n1_index] \
           and self.__adjmat[n1_index][n2_index] < 0:
@@ -387,15 +388,15 @@ class AdjacencyMatrix(Graph):
             n1_adjacency = self.__adjmat[n1_index]
             n1_adjacency[n2_index] = weight
 
-            print("Proper clause: " + str(n2_index) + " " + str(n1_index))
-            print("===")
+            #print("Proper clause: " + str(n2_index) + " " + str(n1_index))
+            #print("===")
     
             n2_adjacency = self.__adjmat[n2_index]
             n2_adjacency[n1_index] = weight
             self.__edge_count += 1
         elif self.__adjmat[n1_index][n2_index] != self.__adjmat[n2_index][n1_index]:
-            print("n1n2: " + str(self.__adjmat[n1_index][n2_index]))
-            print("n2n1: " + str(self.__adjmat[n2_index][n1_index]))
+            #print("n1n2: " + str(self.__adjmat[n1_index][n2_index]))
+            #print("n2n1: " + str(self.__adjmat[n2_index][n1_index]))
             raise CorruptedStructureException(type(self))
 
     def remove_node(self, node):
@@ -857,6 +858,7 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         for node1 in own_adjmat.added_nodes:
             for node2 in own_adjmat.added_nodes:
                 if node1 == node2:
+                    print("Puzzle me: " + node1 + " " + node2)
                     self.assertEqual(own_adjmat.get_weight(node1, node2), 0)
                 else:
                     self.assertEqual(own_adjmat.get_weight(node1, node2), AdjacencyMatrix.DISCONNECTED)
