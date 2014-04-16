@@ -307,7 +307,7 @@ class AdjacencyMatrix(Graph):
         self.__adjmat[0][0] = 0
         
         for index, row in enumerate(self.__adjmat, start=1):
-            row.insert(0, 0)
+            row.insert(0, AdjacencyMatrix.DISCONNECTED)
 
     def __get_index(self, node):
         """
@@ -372,17 +372,27 @@ class AdjacencyMatrix(Graph):
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
+        print("Check: " + str(n1_index) + " " + str(n2_index))
+        print("Adjmat: " + str(self.__adjmat))
+        print("===")
+
         if self.__adjmat[n1_index][n2_index] == self.__adjmat[n2_index][n1_index] \
           and self.__adjmat[n1_index][n2_index] < 0:
+            print("Proper clause: " + str(n1_index) + " " + str(n2_index))
             # Since this is undirected, toggling the direction marker should go
             # both ways
             n1_adjacency = self.__adjmat[n1_index]
             n1_adjacency[n2_index] = weight
+
+            print("Proper clause: " + str(n2_index) + " " + str(n1_index))
+            print("===")
     
             n2_adjacency = self.__adjmat[n2_index]
             n2_adjacency[n1_index] = weight
             self.__edge_count += 1
         elif self.__adjmat[n1_index][n2_index] != self.__adjmat[n2_index][n1_index]:
+            print("n1n2: " + str(self.__adjmat[n1_index][n2_index]))
+            print("n2n1: " + str(self.__adjmat[n2_index][n1_index]))
             raise CorruptedStructureException(type(self))
 
     def remove_node(self, node):
@@ -830,6 +840,23 @@ class UndirectedAdjMatTest(AdjacencyListTest):
     
     def _get_graph_instance(self):
         return AdjacencyMatrix()
+
+    def test_add_nodes(self):
+        # The standard tests...
+        super(UndirectedAdjMatTest, self).test_add_nodes()
+        # Then my own
+        own_adjmat = AdjacencyMatrix()
+        own_adjmat.add_node("cn1")
+        own_adjmat.add_node("cn2")
+        own_adjmat.add_node("cn3")
+        own_adjmat.add_node("cn4")
+
+        for node1 in own_adjmat.added_nodes:
+            for node2 in own_adjmat.added_nodes:
+                if node1 == node2:
+                    self.assertEqual(own_adjmat.get_weight(node1, node2), 0)
+                else:
+                    self.assertEqual(own_adjmat.get_weight(node1, node2), AdjacencyMatrix.DISCONNECTED)
 
 if __name__ == "__main__":
     unittest.main()
