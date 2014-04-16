@@ -276,7 +276,6 @@ class AdjacencyLists(Graph):
         else:
             raise NotInNodesException(n1)
 
-# TODO
 class AdjacencyMatrix(Graph):
     """
     An AdjacenyMatrix representation of an _undirected_ graph. Usage of this
@@ -288,13 +287,22 @@ class AdjacencyMatrix(Graph):
     
     def __init__(self):
         self.__adjmat = []
-        self.added_nodes = set()
+        self.__added_nodes = set()
         self.__node_sequence = []
+        self.__edge_count = 0
+
+    @property
+    def added_nodes(self):
+        return self.__added_nodes
+
+    @property
+    def edge_count(self):
+        return self.__edge_count
 
     def add_node(self, node):
         self.added_nodes.add(node)
         self.__node_sequence.insert(0, node)
-        self__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
+        self.__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
         # Always costs nothing to get to yourself from yourself, at least initially.
         self.__adjmat[0][0] = 0
         
@@ -319,7 +327,7 @@ class AdjacencyMatrix(Graph):
         node_index = self.__get_index(node)
 
         for index, row in enumerate(self.__adjmat):
-            if n != self.__node_sequence[index]:
+            if node_index != self.__node_sequence[index]:
                 in_count += 1 if row[node_index] else 0
 
         return in_count
@@ -347,18 +355,18 @@ class AdjacencyMatrix(Graph):
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
-        n1_adjacency = self.__adjmat[n1]
+        n1_adjacency = self.__adjmat[n1_index]
         return n1_adjacency[n2_index]
     
     def is_reachable(self, n1, n2):
         connection = self.get_weight(n1, n2)
-        return conection >= 0
+        return connection >= 0
     
     def make_neighbor(self, n1, n2, weight=0):
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
-        n1_adjacency = self.__adjmat[n1]
+        n1_adjacency = self.__adjmat[n1_index]
         n1_adjacency[n2_index] = weight
 
     def remove_node(self, node):
@@ -801,6 +809,11 @@ class IteratorTest(unittest.TestCase):
         self.assertEqual(["node2"], islander("node2"))
         self.assertEqual(["node3"], islander("node3"))
         self.assertEqual(["node4"], islander("node4"))
+
+class UndirectedAdjMatTest(AdjacencyListTest):
+    
+    def _get_graph_instance(self):
+        return AdjacencyMatrix()
 
 if __name__ == "__main__":
     unittest.main()
