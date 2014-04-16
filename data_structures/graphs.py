@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from errors import NotInNodesException, DuplicateNodeException
+from errors import NotInNodesException, DuplicateNodeException, CorruptedStructureException
 
 import random
 import unittest
@@ -363,11 +363,27 @@ class AdjacencyMatrix(Graph):
         return connection >= 0
     
     def make_neighbor(self, n1, n2, weight=0):
+        if n1 not in self.added_nodes:
+            raise NotInNodesException(n1)
+
+        if n2 not in self.added_nodes:
+            raise NotInNodesException(n2)
+
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
-        n1_adjacency = self.__adjmat[n1_index]
-        n1_adjacency[n2_index] = weight
+        if self.__adjmat[n1_index][n2_index] == self.__adjmat[n2_index][n1_index] \
+          and self.__adjmat[n1_index][n2_index] < 0:
+            # Since this is undirected, toggling the direction marker should go
+            # both ways
+            n1_adjacency = self.__adjmat[n1_index]
+            n1_adjacency[n2_index] = weight
+    
+            n2_adjacency = self.__adjmat[n2_index]
+            n2_adjacency[n1_index] = weight
+            self.__edge_count += 1
+        elif self.__adjmat[n1_index][n2_index] != self.__adjmat[n2_index][n1_index]:
+            raise CorruptedStructureException(type(self))
 
     def remove_node(self, node):
         node_index = self.__get_index(node)
