@@ -1,7 +1,7 @@
 import json
 
-from binary_tree import BinaryTree
-from graphs import Graph, AdjacencyLists
+from .binary_tree import BinaryTree
+from .graphs import Graph, AdjacencyLists
 
 """
 Load a json from (as from EPiQueue) and transform it into an instance of one of
