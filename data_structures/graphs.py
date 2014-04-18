@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from errors import NotInNodesException, DuplicateNodeException, CorruptedStructureException
+from .errors import NotInNodesException, DuplicateNodeException, CorruptedStructureException
 
 """
 Package for graph data structures.
