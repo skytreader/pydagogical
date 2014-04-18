@@ -2,6 +2,8 @@
 
 from .errors import NotInNodesException, DuplicateNodeException, CorruptedStructureException
 
+import random
+
 """
 Package for graph data structures.
 """
