@@ -1,6 +1,7 @@
 from ..graphs import AdjacencyLists, AdjacencyMatrix, UndirectedAdjList, DFSIterator, DFSIslandIterator
-from ..errors import DuplicateNodeException, NotInNodesException
+from ..errors import DuplicateNodeException, NotInNodesException\
 
+import random
 import unittest
 
 class AdjacencyListTest(unittest.TestCase):

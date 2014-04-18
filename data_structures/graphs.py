@@ -2,9 +2,6 @@
 
 from errors import NotInNodesException, DuplicateNodeException, CorruptedStructureException
 
-import random
-import unittest
-
 """
 Package for graph data structures.
 """
