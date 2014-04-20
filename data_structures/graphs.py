@@ -282,6 +282,8 @@ class AdjacencyMatrix(Graph):
     nonnegative.
     """
 
+    # Because all nonnegative weights are go.
+    # Does "zero" weight really make sense.
     DISCONNECTED = -1
     
     def __init__(self):
