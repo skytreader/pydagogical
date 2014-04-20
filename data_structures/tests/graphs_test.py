@@ -144,6 +144,7 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertEqual(self.test_graph.edge_count, 10)
 
     def get_neighbors_test(self):
+        self._construct_test_graph()
         n1_neighbors = self.test_graph.get_neighbors("node1")
         n2_neighbors = self.test_graph.get_neighbors("node2")
         n3_neighbors = self.test_graph.get_neighbors("node3")
