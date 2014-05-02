@@ -348,7 +348,8 @@ class AdjacencyMatrix(Graph):
         node_adjacency = self.__adjmat[node_index]
 
         for index, is_adjacent in enumerate(node_adjacency):
-            if is_adjacent >= 0: # Since the default weight is 0
+            # FIXME More elegant way of handling this? No need to checkindex equality
+            if is_adjacent >= 0 and index != node_index: # Since the default weight is 0
                 neighbors.insert(0, self.__node_sequence[index])
 
         print("get_neighbors: For query " + str(node) + ": " + str(neighbors))
