@@ -341,5 +341,11 @@ class UndirectedAdjMatTest(AdjacencyListTest):
                 else:
                     self.assertEqual(own_adjmat.get_weight(node1, node2), AdjacencyMatrix.DISCONNECTED)
 
+    def test_edge_count(self):
+        # TODO Must reconsider the definition of edge count for graphs
+        # super(UndirectedAdjMatTest, self).test_edge_count()
+        self._construct_test_graph()
+        self.assertEqual(5, self.test_graph.edge_count)
+
 if __name__ == "__main__":
     unittest.main()
