@@ -183,6 +183,7 @@ class AdjacencyListTest(unittest.TestCase):
         self.get_neighbors_test()
 
     def test_get_indegree(self):
+        self._construct_test_graph()
         n1_neighbors = self.test_graph.get_neighbors("node1")
         self.assertEqual(self.test_graph.get_indegree("node1"), len(n1_neighbors))
 

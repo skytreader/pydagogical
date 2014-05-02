@@ -337,8 +337,8 @@ class AdjacencyMatrix(Graph):
         node_index = self.__get_index(node)
 
         for index, row in enumerate(self.__adjmat):
-            if node_index != self.__node_sequence[index]:
-                in_count += 1 if row[node_index] else 0
+            if node_index != index:
+                in_count += 1 if row[node_index] >= 0 else 0
 
         return in_count
 
