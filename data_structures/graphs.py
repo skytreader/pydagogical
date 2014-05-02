@@ -306,18 +306,13 @@ class AdjacencyMatrix(Graph):
 
         self.added_nodes.add(node)
         self.__node_sequence.insert(0, node)
-        print("add_node: node_sequence " + str(self.__node_sequence))
         self.__adjmat.insert(0, [AdjacencyMatrix.DISCONNECTED for i in range(len(self.__node_sequence))])
         # Always costs nothing to get to yourself from yourself, at least initially.
         self.__adjmat[0][0] = 0
-        print("add_node: before " + str(self.__adjmat))
         
         for index in range(1, len(self.__adjmat)):
             self.__adjmat[index].insert(0, AdjacencyMatrix.DISCONNECTED)
-            print("add_node: index " + str(index))
             self.__adjmat[index][index] = 0
-
-        print("add_node: after " + str(self.__adjmat))
 
     def __get_index(self, node):
         """
@@ -352,7 +347,6 @@ class AdjacencyMatrix(Graph):
             if is_adjacent >= 0 and index != node_index: # Since the default weight is 0
                 neighbors.insert(0, self.__node_sequence[index])
 
-        print("get_neighbors: For query " + str(node) + ": " + str(neighbors))
         return neighbors
 
     def get_outdegree(self, node):
@@ -384,27 +378,17 @@ class AdjacencyMatrix(Graph):
         n1_index = self.__get_index(n1)
         n2_index = self.__get_index(n2)
 
-        print("make_neighbor Check: " + str(n1_index) + " " + str(n2_index))
-        print("make_neighbor Adjmat: " + str(self.__adjmat))
-        #print("===")
-
         if self.__adjmat[n1_index][n2_index] == self.__adjmat[n2_index][n1_index] \
           and self.__adjmat[n1_index][n2_index] < 0:
-            print("Proper clause: " + str(n1_index) + " " + str(n2_index))
             # Since this is undirected, toggling the direction marker should go
             # both ways
             n1_adjacency = self.__adjmat[n1_index]
             n1_adjacency[n2_index] = weight
 
-            #print("Proper clause: " + str(n2_index) + " " + str(n1_index))
-            #print("===")
-    
             n2_adjacency = self.__adjmat[n2_index]
             n2_adjacency[n1_index] = weight
             self.__edge_count += 1
         elif self.__adjmat[n1_index][n2_index] != self.__adjmat[n2_index][n1_index]:
-            #print("n1n2: " + str(self.__adjmat[n1_index][n2_index]))
-            #print("n2n1: " + str(self.__adjmat[n2_index][n1_index]))
             raise CorruptedStructureException(type(self))
 
     def remove_node(self, node):
