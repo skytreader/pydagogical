@@ -377,5 +377,15 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         self.test_graph.add_nodes(("node5", "node6"))
         self.test_graph.make_neighbor("node5", "node6")
         self.assertEqual(self.test_graph.get_weight("node5", "node6"), 0)
+
+    def test_neighbor(self):
+        """
+        Tests both make_neighbor and is_reachable functionality.
+        """
+        self.test_graph.make_neighbor("node1", "node2")
+        self.assertTrue(self.test_graph.is_reachable("node1", "node2"))
+        self.assertTrue(self.test_graph.is_reachable("node2", "node1"))
+        self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, self.test_node, "node1")
+
 if __name__ == "__main__":
     unittest.main()
