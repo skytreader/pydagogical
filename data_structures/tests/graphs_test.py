@@ -348,5 +348,34 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         self._construct_test_graph()
         self.assertEqual(5, self.test_graph.edge_count)
 
+    def test_get_weight(self):
+        """
+        Almost the same as _construct_test_graph except that it generates random
+        weights and tests for those weights.
+        """
+        weights = {}
+        connseq = (("node1", "node2"), ("node1", "node3"), ("node1", "node4"),
+          ("node2", "node4"), ("node3", "node4"))
+
+        for connection in connseq:
+            weights[connection] = random.randint(1, 100)
+
+        self.test_graph.make_neighbor("node1", "node2", weights[("node1", "node2")])
+        self.test_graph.make_neighbor("node1", "node3", weights[("node1", "node3")])
+
+        self.test_graph.make_neighbor("node1", "node4", weights[("node1", "node4")])
+        self.test_graph.make_neighbor("node2", "node4", weights[("node2", "node4")])
+        self.test_graph.make_neighbor("node3", "node4", weights[("node3", "node4")])
+
+        for connection in connseq:
+            self.assertEqual(self.test_graph.get_weight(connection[0], connection[1]),
+              weights[connection])
+            self.assertEqual(self.test_graph.get_weight(connection[1], connection[0]),
+              self.test_graph.get_weight(connection[0], connection[1]))
+
+        # Test that, by default, the weight is 0.
+        self.test_graph.add_nodes(("node5", "node6"))
+        self.test_graph.make_neighbor("node5", "node6")
+        self.assertEqual(self.test_graph.get_weight("node5", "node6"), 0)
 if __name__ == "__main__":
     unittest.main()
