@@ -338,13 +338,17 @@ class AdjacencyMatrix(Graph):
         return in_count
 
     def get_neighbors(self, node):
+        """
+        Get the neighbors of the given node. Another node n is considered a
+        neighbor of the given node if their entry in the adjacency matrix is
+        greater than or equal to 0.
+        """
         neighbors = []
         node_index = self.__get_index(node)
         node_adjacency = self.__adjmat[node_index]
 
         for index, is_adjacent in enumerate(node_adjacency):
-            # FIXME More elegant way of handling this? No need to checkindex equality
-            if is_adjacent >= 0 and index != node_index: # Since the default weight is 0
+            if is_adjacent >= 0 and index != node_index:
                 neighbors.insert(0, self.__node_sequence[index])
 
         return neighbors
