@@ -1,5 +1,9 @@
 language: python
 python:
     - "3.2"
+before_script: "pip install -r test-requirements.txt"
 install: "pip install -r requirements.txt"
-script: nosetests
+script: "nosetests --with-xcoverage"
+after_success: "COVERALLS_REPO_TOKEN=$coveralls_token coveralls"
+after_failure: "COVERALLS_REPO_TOKEN=$coveralls_token coveralls"
+
