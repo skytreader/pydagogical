@@ -173,6 +173,9 @@ class AdjacencyListTest(unittest.TestCase):
         self._construct_test_graph()
         self.test_graph.add_node("neighborless")
         self.assertFalse(self.test_graph.is_reachable("node1", "neighborless"))
+        self.assertFalse(self.test_graph.is_reachable("node2", "neighborless"))
+        self.assertFalse(self.test_graph.is_reachable("node3", "neighborless"))
+        self.assertFalse(self.test_graph.is_reachable("node4", "neighborless"))
 
     def test_transpose(self):
         simple_graph = AdjacencyLists()
