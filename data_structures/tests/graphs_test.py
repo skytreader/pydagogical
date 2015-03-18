@@ -342,7 +342,6 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         for node1 in own_adjmat.added_nodes:
             for node2 in own_adjmat.added_nodes:
                 if node1 == node2:
-                    print("Puzzle me: " + node1 + " " + node2)
                     self.assertEqual(own_adjmat.get_weight(node1, node2), 0)
                 else:
                     self.assertEqual(own_adjmat.get_weight(node1, node2), AdjacencyMatrix.DISCONNECTED)
