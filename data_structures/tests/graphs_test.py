@@ -169,6 +169,11 @@ class AdjacencyListTest(unittest.TestCase):
         # NotInNodesException test
         self.assertRaises(NotInNodesException, self.test_graph.get_neighbors, "does not exist")
 
+    def test_not_reachable(self):
+        self._construct_test_graph()
+        self.test_graph.add_node("neighborless")
+        self.assertFalse(self.test_graph.is_reachable("node1", "neighborless"))
+
     def test_transpose(self):
         simple_graph = AdjacencyLists()
         simple_graph.add_nodes(("n1", "n2"))
