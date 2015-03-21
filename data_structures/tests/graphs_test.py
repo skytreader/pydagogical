@@ -1,5 +1,5 @@
 from ..graphs import AdjacencyLists, AdjacencyMatrix, UndirectedAdjList, DFSIterator, DFSIslandIterator
-from ..errors import DuplicateNodeException, NotInNodesException\
+from ..errors import DuplicateNodeException, NotInNodesException
 
 import random
 import unittest
@@ -386,6 +386,12 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         self.assertTrue(self.test_graph.is_reachable("node1", "node2"))
         self.assertTrue(self.test_graph.is_reachable("node2", "node1"))
         self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, self.test_node, "node1")
+
+    def test_notinnodes(self):
+        """
+        Test all the instances that will throw a NotInNodesException.
+        """
+        self.assertRaises(NotInNodesException, self.test_graph.get_neighbors, "stranger")
 
 if __name__ == "__main__":
     unittest.main()
