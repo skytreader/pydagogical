@@ -399,6 +399,10 @@ class UndirectedAdjMatTest(AdjacencyListTest):
         Test all the instances that will throw a NotInNodesException.
         """
         self.assertRaises(NotInNodesException, self.test_graph.get_neighbors, "stranger")
+        self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, "node1", "stranger")
+        self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, "stranger", "node1")
+        self.assertRaises(NotInNodesException, self.test_graph.get_outdegree, "stranger")
+        self.assertRaises(NotInNodesException, self.test_graph.get_indegree, "stranger")
 
 if __name__ == "__main__":
     unittest.main()

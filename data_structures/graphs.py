@@ -254,8 +254,8 @@ class AdjacencyLists(Graph):
 
     def get_outdegree(self, n1):
         """
-        Returns the number of nodes reachable from n1. Throws
-        a NotInNodesException if n1 is not in the graph.
+        Returns the number of nodes reachable from n1. Throws a
+        NotInNodesException if n1 is not in the graph.
         """
         neighbors = self.get_neighbors(n1)
         return len(neighbors)
