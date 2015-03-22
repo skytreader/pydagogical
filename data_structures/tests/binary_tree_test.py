@@ -80,5 +80,21 @@ class IteratorTest(unittest.TestCase):
 
         self.assertEqual(self.dfs_order, iterator_order)
 
+class BooleanTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.boole_tree = NaiveBinaryTree(True)
+        self.boole_tree.left_son = NaiveBinaryTree(False)
+        self.boole_tree.right_son = NaiveBinaryTree(False)
+
+    def test_dfs(self):
+        dfs = InorderIterator(self.boole_tree)
+        iterator_order = []
+
+        for node in dfs:
+            iterator_order.append(node.node_data)
+
+        self.assertEqual([False, True, False], iterator_order)
+
 if __name__ == "__main__":
     unittest.main()
