@@ -7,7 +7,22 @@ Promoted from a branch in my [sandbox repo](https://github.com/skytreader/sandbo
 
 I need it as a submodule to something else in sandbox.
 
-**Notes:**
+## Notes
 
 This is really just for pedagogical purposes and no performance guarantees beside
 asymptotic time complexity ("Big-Oh") are given.
+
+### On code style
+
+When checking for `None` pointers, don't use the more Pythonic form of
+
+    if pointer:
+        pass
+
+or
+
+    if not pointer:
+        pass
+
+since the pointer might contain another value considered false but was really
+inserted into the structure as such.
