@@ -14,7 +14,7 @@ asymptotic time complexity ("Big-Oh") are given.
 
 ### On code style
 
-When checking for `None` pointers, don't use the more Pythonic form of
+When checking for `None` pointers, take care when using the more Pythonic form of
 
     if pointer:
         pass
@@ -25,4 +25,5 @@ or
         pass
 
 since the pointer might contain another value considered false but was really
-inserted into the structure as such.
+inserted into the structure as such. **This really depends on the structure where
+you are checking for `None` pointers**.
