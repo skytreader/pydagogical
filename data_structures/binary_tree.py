@@ -98,19 +98,19 @@ class InorderIterator(object):
 
         # Update roving_pointer to point to what succeeds next_node
 
-        if self.roving_pointer.left_son is None or\
+        if not self.roving_pointer.left_son or\
           self.roving_pointer.left_son in self.visited:
-            if not self.roving_pointer.right_son and len(self.traversal_stack):
+            if self.roving_pointer.right_son is None and len(self.traversal_stack):
                 # Backtrack to parent node. If it was never visited, it goes next.
                 backtrack_node = self.traversal_stack.pop()
     
                 # Keep backtracking until you are not pointing to a visited node
                 # anymore. FIXME Is this necessary?
-                while backtrack_node in self.visited:
-                    backtrack_node = self.traversal_stack.pop()
+                #while backtrack_node in self.visited:
+                #    backtrack_node = self.traversal_stack.pop()
 
                 self.roving_pointer = backtrack_node
-            elif self.roving_pointer.right_son:
+            elif self.roving_pointer.right_son is not None:
                 # Traverse the right son. But wait, everytime you traverse a 
                 # right son, you need to get to its leaf first.
                 local_rover = self.roving_pointer.right_son
