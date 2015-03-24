@@ -100,7 +100,7 @@ class InorderIterator(object):
 
         if not self.roving_pointer.left_son or\
           self.roving_pointer.left_son in self.visited:
-            if self.roving_pointer.right_son is None and len(self.traversal_stack):
+            if not self.roving_pointer.right_son and len(self.traversal_stack):
                 # Backtrack to parent node. If it was never visited, it goes next.
                 backtrack_node = self.traversal_stack.pop()
     
@@ -110,14 +110,14 @@ class InorderIterator(object):
                 #    backtrack_node = self.traversal_stack.pop()
 
                 self.roving_pointer = backtrack_node
-            elif self.roving_pointer.right_son is not None:
+            elif self.roving_pointer.right_son:
                 # Traverse the right son. But wait, everytime you traverse a 
                 # right son, you need to get to its leaf first.
                 local_rover = self.roving_pointer.right_son
 
                 # Basically, just the __initialize function again but done on 
                 # a subtree.
-                while local_rover.left_son is not None:
+                while local_rover.left_son:
                     self.traversal_stack.append(local_rover)
                     local_rover = local_rover.left_son
 
