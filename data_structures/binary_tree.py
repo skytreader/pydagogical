@@ -78,7 +78,7 @@ class InorderIterator(object):
         """
         Initialize the tree so that the first traversal call is fast.
         """
-        while self.roving_pointer.left_son is not None:
+        while self.roving_pointer.left_son:
             self.traversal_stack.append(self.roving_pointer)
             self.roving_pointer = self.roving_pointer.left_son
 
