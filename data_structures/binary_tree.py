@@ -127,7 +127,7 @@ class InorderIterator(object):
         # been visited.
         
         self.visited.append(next_node)
-        return next_node
+        return next_node.node_data
 
 class NaiveBinaryTree(BinaryTree):
     """

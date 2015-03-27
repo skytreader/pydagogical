@@ -75,8 +75,8 @@ class IteratorTest(unittest.TestCase):
         dfs = InorderIterator(self.test_root)
         iterator_order = ""
         
-        for node in dfs:
-            iterator_order += node.node_data
+        for data in dfs:
+            iterator_order += data
 
         self.assertEqual(self.dfs_order, iterator_order)
 
@@ -93,8 +93,8 @@ class BooleanTest(unittest.TestCase):
         dfs = InorderIterator(self.boole_tree)
         iterator_order = []
 
-        for node in dfs:
-            iterator_order.append(node.node_data)
+        for data in dfs:
+            iterator_order.append(data)
 
         self.assertEqual([True, False, True, True, False], iterator_order)
 
@@ -111,8 +111,8 @@ class StructureTest(unittest.TestCase):
         dfs = InorderIterator(self.boole_tree)
         iterator_order = []
 
-        for node in dfs:
-            iterator_order.append(node.node_data)
+        for data in dfs:
+            iterator_order.append(data)
 
         self.assertEqual(["D", "B", "E", "A", "C"], iterator_order)
 
