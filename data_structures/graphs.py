@@ -179,11 +179,7 @@ class AdjacencyLists(Graph):
 
     def is_reachable(self, n1, n2):
         n1_neighbors = self.get_neighbors(n1)
-        
-        if n1_neighbors is not None:
-            return n2 in n1_neighbors
-        else:
-            return False
+        return n1_neighbors and n2 in n1_neighbors
     
     @property
     def added_nodes(self):

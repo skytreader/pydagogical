@@ -196,9 +196,9 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertEqual(self.test_graph.get_indegree("node1"), len(n1_neighbors))
 
     def test_not_in_nodes(self):
-        # NotInNodesException test
         self.assertRaises(NotInNodesException, self.test_graph.get_indegree, "does not exist")
         self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, "n1", "does not exist")
+        self.assertRaises(NotInNodesException, self.test_graph.make_neighbor, "does not exist", "n2")
 
     def test_get_outdegree(self):
         n1_neighbors = self.test_graph.get_neighbors("node1")
