@@ -222,7 +222,7 @@ class AdjacencyLists(Graph):
 
     def get_weight(self, n1, n2):
         if n2 not in self.get_neighbors(n1):
-            return None
+            raise NotInNodesException(n2)
         else:
             n1_neighbors = self.__nodes[n1]
             # Find n2 and return its weight
