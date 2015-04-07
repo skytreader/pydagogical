@@ -1,5 +1,7 @@
 import math
 
+from errors import InvalidParameterException
+
 """
 A collection of hash function algorithms.
 """
@@ -22,4 +24,6 @@ def multiplication_hash(key, slots, multiplier):
     """
     Hash via the multiplication method.
     """
+    if 0 > multiplier > 1:
+        raise InvalidParameterException(multiplier)
     return math.floor(slots * ((natnum(key) * multiplier) % 1)
