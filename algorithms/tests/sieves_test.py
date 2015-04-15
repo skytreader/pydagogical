@@ -2,7 +2,7 @@ import unittest
 
 from ..sieves import SieveOfEratosthenes
 
-SIEVE_LIMIT = 10000
+SIEVE_LIMIT = 100
 CARMICHAEL_NUMBERS = (561, 1105, 1729, 2465, 2821, 6601, 8911)
 PRIMES = (2, 3, 7, 11)
 COMPOSITES = (4, 6, 8, 9, 10, 12)
