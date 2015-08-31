@@ -19,4 +19,4 @@ def pulverize(a, b):
         _s, s = s, _s - q * s
         _t, t = t, _t - q * t
 
-    return (s, t)
+    return (_s, _t)
