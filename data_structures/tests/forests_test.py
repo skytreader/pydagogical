@@ -43,7 +43,7 @@ class ListForestTests(unittest.TestCase):
           Gil-Galad
           Findulas
 
-        Garadriel is the mother of:
+        Galadriel is the mother of:
           Celebrian
         
         And, when in doubt, always check their ages. :D
