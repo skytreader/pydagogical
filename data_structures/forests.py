@@ -24,7 +24,7 @@ class Forest(object):
     def add_node(self, node_contents):
         pass
 
-    def get_nodes(self, node_contents):
+    def get_nodes(self):
         pass
 
     def get_children(self, node):
