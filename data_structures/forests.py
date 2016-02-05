@@ -25,6 +25,9 @@ class Forest(object):
         pass
 
     def get_nodes(self):
+        """
+        Return an iterable containing all the nodes _in this forest_.
+        """
         pass
 
     def get_children(self, node):
