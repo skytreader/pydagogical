@@ -38,9 +38,44 @@ class Neuron(object):
 
         return self.decision_fn(sum(list(map(lambda x: x[0] * x[1], zip(i, w)))))
 
+class NeuralNetwork(object):
+    
+    def __init__(self, neurons, weights):
+        """
+        neurons is a list-of-lists of neurons. The order in which the neurons
+        are listed is taken as the order of the layers.
+
+        weights is a list-of-lists, assumed to have the same dimensions as
+        neurons.
+        """
+        self.neurons = neurons
+        self.weights = weights
+
+    def feed(self, i, include_bias=False):
+        current_inputs = i
+
+        for idx, layer in enumerate(self.neurons):
+            new_inputs = []
+            for jdx, neuron in enumerate(layer):
+                new_inputs.append(neuron.feed(current_inputs, self.weights[idx][jdx], include_bias))
+
+            # The previous layer's output is the next layer's input
+            current_inputs = new_inputs
+
+        # This should now contain the last layer's output
+        return current_inputs
+
 if __name__ == "__main__":
     and_neuron = Neuron(mcp_factory(0), 1, -0.6)
     possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
 
+    # for inp in possible_inputs:
+    #     print(inp, and_neuron.feed(inp, [0.5, 0.5], True))
+
+    simple_thres = mcp_factory(0)
+    xor_neurons = ((Neuron(simple_thres, -1.5, 1), Neuron(simple_thres, -0.5, 1)),
+      (Neuron(simple_thres, -0.5, 1)))
+    xor_network = NeuralNetwork(xor_neurons, ((1, 1), (-2, 1)))
+    
     for inp in possible_inputs:
-        print(inp, and_neuron.feed(inp, [0.5, 0.5], True))
+        print(inp, xor_network.feed(inp, True))
