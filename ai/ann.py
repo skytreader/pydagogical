@@ -57,7 +57,7 @@ class NeuralNetwork(object):
         for idx, layer in enumerate(self.neurons):
             new_inputs = []
             for jdx, neuron in enumerate(layer):
-                new_inputs.append(neuron.feed(current_inputs, self.weights[idx][jdx], include_bias))
+                new_inputs.append(neuron.feed(current_inputs, self.weights[idx], include_bias))
 
             # The previous layer's output is the next layer's input
             current_inputs = new_inputs
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     simple_thres = mcp_factory(0)
     xor_neurons = ((Neuron(simple_thres, -1.5, 1), Neuron(simple_thres, -0.5, 1)),
-      (Neuron(simple_thres, -0.5, 1)))
+      (Neuron(simple_thres, -0.5, 1),))
     xor_network = NeuralNetwork(xor_neurons, ((1, 1), (-2, 1)))
     
     for inp in possible_inputs:
