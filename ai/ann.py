@@ -69,8 +69,8 @@ if __name__ == "__main__":
     and_neuron = Neuron(mcp_factory(0), 1, -0.6)
     possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
 
-    # for inp in possible_inputs:
-    #     print(inp, and_neuron.feed(inp, [0.5, 0.5], True))
+    for inp in possible_inputs:
+        print(inp, and_neuron.feed(inp, [0.5, 0.5], True))
 
     simple_thres = mcp_factory(0)
     xor_neurons = ((Neuron(simple_thres, -1.5, 1), Neuron(simple_thres, -0.5, 1)),
