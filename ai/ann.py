@@ -65,6 +65,24 @@ class NeuralNetwork(object):
         # This should now contain the last layer's output
         return current_inputs
 
+class BackPropagationTrainer(object):
+    
+    def __init__(self, network, learning_rate):
+        """
+        network is the neural network instance
+
+        learning_rate is a number between 0 and 1.
+
+        TODO Check that properly.
+        """
+        self.network = network
+        self.learning_rate = learning_rate
+
+    def train(self, inp, expected):
+        # TODO Should I include the bias here??
+        result = self.network.feed(inp)
+        deltas = [(x - y) for x, y in zip(result, expected)]
+
 if __name__ == "__main__":
     and_neuron = Neuron(mcp_factory(0), 1, -0.6)
     possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
