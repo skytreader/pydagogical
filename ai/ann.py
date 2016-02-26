@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import math
+import random
 
 SIGMOID = lambda x: 1 / (1 + (math.e ** -x))
 
@@ -90,13 +91,19 @@ class BackPropagationTrainer(object):
             for jdx, d in enumerate(deltas):
                 news[jds] -= (d * self.learning_rate)
 
-if __name__ == "__main__":
+def and_experiment(possible_inputs):
+    """
+    Experiment on a perceptron.
+    """
     and_neuron = Neuron(mcp_factory(0), 1, -0.6)
-    possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
 
     for inp in possible_inputs:
         print(inp, and_neuron.feed(inp, [0.5, 0.5], True))
 
+def xor_experiment(possible_inputs):
+    """
+    Experiment with a two-layer neural network.
+    """
     simple_thres = mcp_factory(0)
     xor_neurons = ((Neuron(simple_thres, -1.5, 1), Neuron(simple_thres, -0.5, 1)),
       (Neuron(simple_thres, -0.5, 1),))
@@ -104,3 +111,21 @@ if __name__ == "__main__":
     
     for inp in possible_inputs:
         print(inp, xor_network.feed(inp, True))
+
+def or_experiment(possible_inputs):
+    """
+    Experiment for a neural network with a hidden layer.
+    """
+    simple_thres = mcp_factory(0)
+    or_neurons = ((Neuron(simple_thres) for _ in range(2)),
+      (Neuron(simple_thres) for _ in range(5)),
+      (Neuron(simple_thres),))
+    # essentially random. I don't care!!!!
+    weights = [[random.uniform(1, 8) for _ in range(2)],
+      [random.uniform(1, 8) for _ in range(5)],
+      [random.uniform(1, 8)]]
+
+if __name__ == "__main__":
+    possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
+    and_experiment(possible_inputs)
+    xor_experiment(possible_inputs)
