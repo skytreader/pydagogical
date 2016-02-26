@@ -83,6 +83,13 @@ class BackPropagationTrainer(object):
         result = self.network.feed(inp)
         deltas = [(x - y) for x, y in zip(result, expected)]
 
+        # This would assume that the weights is mutable. It should never be tuples then
+        for idx, ws in enumerate(self.network.weights):
+            news = [w for w in ws]
+
+            for jdx, d in enumerate(deltas):
+                news[jds] -= (d * self.learning_rate)
+
 if __name__ == "__main__":
     and_neuron = Neuron(mcp_factory(0), 1, -0.6)
     possible_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
