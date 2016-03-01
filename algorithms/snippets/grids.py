@@ -1,3 +1,5 @@
+import unittest
+
 """
 Grid-traversal-related snippets.
 
@@ -33,7 +35,10 @@ def get_adjacent_8c(p, row_limit, col_limit):
 
     for r in rows:
         for c in cols:
-            adjacent.append((r, c))
+            if (r, c) != p:
+                adjacent.append((r, c))
+    
+    return adjacent
 
 def get_adjacent_4c(p, row_limit, col_limi):
     """
@@ -57,9 +62,17 @@ def get_adjacent_4c(p, row_limit, col_limi):
         cols.extend([p[1] + 1, p[1] - 1])
 
     adjacent = []
+    adjacent.extend([(r, p[1]) for r in rows])
+    adjacent.extend([(p[0], c) for c in cols])
 
-    for r in rows:
-        adjacent.append((r, p[1]))
+    return adjacent
 
-    for c in cols:
-        adjacent.append((p[0], c))
+class FunctionsTest(unittest.TestCase):
+    
+    def test_get_adjacent_8c(self):
+        full_neighbors = set([(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0),
+          (2, 1), (2, 2)])
+        self.assertEqual(full_neighbors, set(get_adjacent_8c((1, 1), 4, 4)))
+
+if __name__ == "__main__":
+    unittest.main()
