@@ -74,5 +74,8 @@ class FunctionsTest(unittest.TestCase):
           (2, 1), (2, 2)])
         self.assertEqual(full_neighbors, set(get_adjacent_8c((1, 1), 4, 4)))
 
+        up_left_neighbors = set([(0, 1), (1, 0), (1, 1)])
+        self.assertEqual(up_left_neighbors, set(get_adjacent_8c((0, 0), 4, 4)))
+
 if __name__ == "__main__":
     unittest.main()
