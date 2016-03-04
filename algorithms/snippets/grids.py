@@ -8,6 +8,11 @@ Assumptions:
 * Zero-based indexing.
 * When limits are asked for, the value given is 1 more than the last addressable
   value for that dimension in the grid.
+
+Common variations:
+
+* You might need to keep track of cells already visited and exclude them from
+  being considered as adjacent cells.
 """
 
 def get_adjacent_8c(p, row_limit, col_limit):
@@ -79,6 +84,9 @@ class FunctionsTest(unittest.TestCase):
 
         down_left_neighbors = set([(2, 0), (2, 1), (3, 1)])
         self.assertEqual(down_left_neighbors, set(get_adjacent_8c((3, 0), 4, 4)))
+
+        down_right_neighbors = set([(3, 2), (2, 2), (2, 3)])
+        self.assertEqual(down_right_neighbors, set(get_adjacent_8c((3, 3), 4, 4)))
 
 if __name__ == "__main__":
     unittest.main()
