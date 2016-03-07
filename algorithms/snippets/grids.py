@@ -45,7 +45,7 @@ def get_adjacent_8c(p, row_limit, col_limit):
     
     return adjacent
 
-def get_adjacent_4c(p, row_limit, col_limi):
+def get_adjacent_4c(p, row_limit, col_limit):
     """
     Get the adjacent cells of the given point p assuming adjacency is 8-connected.
     """
@@ -90,6 +90,10 @@ class FunctionsTest(unittest.TestCase):
 
         up_right_neighbors = set([(0, 2), (1, 2), (1, 3)])
         self.assertEqual(up_right_neighbors, set(get_adjacent_8c((0, 3), 4, 4)))
+
+    def test_get_adjacent_4c(self):
+        full_neighbors = set([(0, 1), (1, 0), (1, 2), (2, 1)])
+        self.assertEqual(full_neighbors, set(get_adjacent_4c((1, 1), 4, 4)))
 
 if __name__ == "__main__":
     unittest.main()
