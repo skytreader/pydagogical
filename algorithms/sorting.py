@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+import unittest
 """
 Some "exotic" sorts. Will sooner or later deprecate some scripts in clrs_3e.
 
@@ -21,12 +23,25 @@ def flipsort(numlist):
         flip the first $i$ elements of numlist. Returns the list.
         """
         sublist = numlist[0:i]
-        return sublist.extend(numlist[i:len(numlist)])
+        sublist.extend(numlist[i:len(numlist)])
+        return sublist
 
-    for i in range(len(numlist)):
+    for i in range(1, len(numlist)):
         max_item = max(numlist[0:i])
         max_item_index = numlist.index(max_item)
         
         numlist = flip(i)
 
     return numlist
+
+class FunctionsTest(unittest.TestCase):
+    
+    def test_flipsort(self):
+        pi_test = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9, 3, 2, 3, 8, 4,
+            6, 2, 6, 4, 3, 3, 8, 3, 2, 7, 9, 5, 0, 2, 8, 8, 4, 1, 9, 7, 1, 6, 9]
+        pi_sorted = sorted(pi_test)
+
+        self.assertEqual(pi_sorted, flipsort(pi_test))
+
+if __name__ == "__main__":
+    unittest.main()
