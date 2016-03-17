@@ -23,6 +23,7 @@ def flipsort(numlist):
         flip the first $i$ elements of numlist. Returns the list.
         """
         sublist = numlist[0:i]
+        sublist.reverse()
         sublist.extend(numlist[i:len(numlist)])
         return sublist
 
@@ -37,9 +38,12 @@ def flipsort(numlist):
 class FunctionsTest(unittest.TestCase):
     
     def test_flipsort(self):
+        small_pi_test = [3, 1, 4, 1]
+        small_pi_sorted = sorted(small_pi_test, reverse=True)
+        self.assertEqual(small_pi_sorted, flipsort(small_pi_test))
         pi_test = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9, 3, 2, 3, 8, 4,
             6, 2, 6, 4, 3, 3, 8, 3, 2, 7, 9, 5, 0, 2, 8, 8, 4, 1, 9, 7, 1, 6, 9]
-        pi_sorted = sorted(pi_test)
+        pi_sorted = sorted(pi_test, reverse=True)
 
         self.assertEqual(pi_sorted, flipsort(pi_test))
 
