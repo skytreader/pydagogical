@@ -114,3 +114,21 @@ def find_max_subarray(numseq, low, high):
 def max_subarray(numseq):
     """Driver method. Call this not find_max_subarray"""
     return find_max_subarray(numseq, 0, len(numseq) - 1)
+
+def max_subarray_dp(numseq):
+    maxjs = []
+    max_idxs = []
+    for idx, val in enumerate(numseq):
+        if idx != 0:
+            cont = maxjs[idx - 1] + numseq[idx]
+            if cont > numseq[idx]:
+                maxjs.append(cont)
+                max_idxs.append(maxj_idxs[idx - 1])
+            else:
+                maxjs.append(numseq[idx])
+                max_idxs.append(idx)
+        else:
+            maxjs.append(numseq[0])
+            max_idxs.append(0)
+
+    return (maxjs[-1], max_idxs[-1])
