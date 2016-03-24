@@ -116,19 +116,28 @@ def max_subarray(numseq):
     return find_max_subarray(numseq, 0, len(numseq) - 1)
 
 def max_subarray_dp(numseq):
+    """
+    Returns a tuple containing the start index of the max subarray, the end
+    index of the max subarray, and the sum over that subarray, in that order.
+    """
     maxjs = []
-    max_idxs = []
+    max_ends = []
+    max_starts = []
+
     for idx, val in enumerate(numseq):
         if idx != 0:
             cont = maxjs[idx - 1] + numseq[idx]
             if cont > numseq[idx]:
                 maxjs.append(cont)
-                max_idxs.append(maxj_idxs[idx - 1])
+                max_ends.append(idx)
+                max_starts.append(max_starts[idx - 1])
             else:
                 maxjs.append(numseq[idx])
-                max_idxs.append(idx)
+                max_ends.append(idx)
+                max_starts.append(idx)
         else:
             maxjs.append(numseq[0])
-            max_idxs.append(0)
+            max_ends.append(0)
+            max_starts.append(0)
 
-    return (maxjs[-1], max_idxs[-1])
+    return (max_starts[-1], max_ends[-1], maxjs[-1])
