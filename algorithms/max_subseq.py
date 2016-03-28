@@ -120,9 +120,11 @@ def max_subarray_dp(numseq):
     Returns a tuple containing the start index of the max subarray, the end
     index of the max subarray, and the sum over that subarray, in that order.
 
-    From: http://people.cs.clemson.edu/~bcdean/dp_practice/dp_1.swf
+    From: http://people.cs.clemson.edu/~bcdean/dp_practice/dp_1.swf with
+    modifications.
     """
     maxjs = []
+    sequence_restarted = []
     max_ends = []
     max_starts = []
 
@@ -133,13 +135,25 @@ def max_subarray_dp(numseq):
                 maxjs.append(cont)
                 max_ends.append(idx)
                 max_starts.append(max_starts[idx - 1])
+                sequence_restarted.append(False)
             else:
                 maxjs.append(numseq[idx])
                 max_ends.append(idx)
                 max_starts.append(idx)
+                sequence_restarted.append(True)
         else:
             maxjs.append(numseq[0])
             max_ends.append(0)
             max_starts.append(0)
+            sequence_restarted.append(True)
+    
+    max_maxj = max(maxjs)
+    mmj_i = maxjs.index(max_maxj)
+    subseq_start_index = max_maxj
 
-    return (max_starts[-1], max_ends[-1], maxjs[-1])
+    for i in range(mmj_i, 0, -1):
+        subseq_start_index = i
+        if sequence_restarted[i]:
+            break
+
+    return (subseq_start_index, mmj_i, max_maxj)
