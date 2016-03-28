@@ -151,7 +151,7 @@ def max_subarray_dp(numseq):
     mmj_i = maxjs.index(max_maxj)
     subseq_start_index = max_maxj
 
-    for i in range(mmj_i, 0, -1):
+    for i in range(mmj_i, -1, -1):
         subseq_start_index = i
         if sequence_restarted[i]:
             break
