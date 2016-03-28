@@ -125,26 +125,18 @@ def max_subarray_dp(numseq):
     """
     maxjs = []
     sequence_restarted = []
-    max_ends = []
-    max_starts = []
 
     for idx, val in enumerate(numseq):
         if idx != 0:
             cont = maxjs[idx - 1] + numseq[idx]
             if cont > numseq[idx]:
                 maxjs.append(cont)
-                max_ends.append(idx)
-                max_starts.append(max_starts[idx - 1])
                 sequence_restarted.append(False)
             else:
                 maxjs.append(numseq[idx])
-                max_ends.append(idx)
-                max_starts.append(idx)
                 sequence_restarted.append(True)
         else:
             maxjs.append(numseq[0])
-            max_ends.append(0)
-            max_starts.append(0)
             sequence_restarted.append(True)
     
     max_maxj = max(maxjs)
