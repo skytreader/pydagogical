@@ -119,6 +119,8 @@ def max_subarray_dp(numseq):
     """
     Returns a tuple containing the start index of the max subarray, the end
     index of the max subarray, and the sum over that subarray, in that order.
+
+    From: http://people.cs.clemson.edu/~bcdean/dp_practice/dp_1.swf
     """
     maxjs = []
     max_ends = []
