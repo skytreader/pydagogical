@@ -47,7 +47,7 @@ def get_adjacent_8c(p, row_limit, col_limit):
 
 def get_adjacent_4c(p, row_limit, col_limit):
     """
-    Get the adjacent cells of the given point p assuming adjacency is 8-connected.
+    Get the adjacent cells of the given point p assuming adjacency is 4-connected.
     """
     rows = []
     cols = []
