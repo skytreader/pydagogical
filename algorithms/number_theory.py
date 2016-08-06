@@ -20,3 +20,19 @@ def pulverize(a, b):
         _t, t = t, _t - q * t
 
     return (_s, _t)
+
+def gcd(x, y):
+    a = x
+    b = y
+
+    while b:
+        a, b = b, a % b
+    
+    return a
+
+if __name__ == "__main__":
+    print(gcd(5, 3))
+    print(gcd(3, 5))
+    print(gcd(258, 147))
+    print(gcd(147, 258))
+    print(pulverize(258, 147))
