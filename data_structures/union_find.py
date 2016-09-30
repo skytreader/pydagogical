@@ -2,7 +2,7 @@
 
 class DataNode(object):
     
-    def __init__(self, data, parent=None)
+    def __init__(self, data, parent=None):
         self.data = data
         self.parent = parent
         parent_weight = parent.weight if parent else 0
@@ -31,7 +31,9 @@ class DataNode(object):
 class UnionFind(object):
     """
     A disjointed set structure. This assumes that the data added to it cannot
-    be overwritten.
+    be overwritten. All interactions with instances of this class should give
+    the raw data you need to work on; never deal with DataNodes unless you want
+    to get meta like that.
     """
     
     def __init__(self):
@@ -59,4 +61,6 @@ class UnionFind(object):
 
         Also assumes that the data given to this object can be compared.
         """
-        return d1.find().data == d2.find().data
+        d1_node = self.data2node[d1]
+        d2_node = self.data2node[d2]
+        return d1_node.find().data == d2_node.find().data
