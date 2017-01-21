@@ -1,6 +1,6 @@
 class GASolver(object):
 
-    def __init__(self, initial_pool, max_iterations, max_pool_size=8):
+    def __init__(self, initial_pool, max_iterations=float("inf"), max_pool_size=8):
         self.current_pool = initial_pool
         self.max_iterations = max_iterations
         self.max_pool_size = max_pool_size
@@ -30,6 +30,7 @@ class GASolver(object):
         itercount = 0
 
         while solution is None and itercount < self.max_iterations:
+            print("Current pool is: %s" % self.current_pool)
             for variation in self.current_pool:
                 if self.compute_fitness(variation) == 1:
                     solution = variation
@@ -37,6 +38,7 @@ class GASolver(object):
                     break
 
             if solution is None:
+                print("No solution yet, create an offspring")
                 self.create_offspring()
 
             itercount += 1
