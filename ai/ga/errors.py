@@ -1,0 +1,2 @@
+class UnreachableSolutionException(Exception):
+    pass

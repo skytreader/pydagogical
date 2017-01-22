@@ -1,4 +1,5 @@
-from genetic import GASolver
+from .errors import UnreachableSolutionException
+from .genetic import GASolver
 
 import random
 import string
@@ -11,6 +12,9 @@ class DumbMonkey(GASolver):
             string.ascii_lowercase, string.ascii_uppercase, string.punctuation,
             " "
         ])
+        for char in solution_string:
+            if char not in self.alphabet:
+                raise UnreachableSolutionException("Character in solution not in alphabet")
         self.limit = len(solution_string)
         initial_pool = "".join([
             random.choice(self.alphabet) for _ in range(self.limit)
@@ -19,7 +23,9 @@ class DumbMonkey(GASolver):
         self.solution_string = solution_string
 
     def create_offspring(self):
+        len_cp_now = len(self.current_pool)
         self.current_pool = [self.mutate(variation) for variation in self.current_pool]
+        assert len(self.current_pool) == len_cp_now
 
     def compute_fitness(self, variation):
         return 1 if variation == self.solution_string else 0
