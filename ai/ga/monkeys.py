@@ -19,10 +19,7 @@ class DumbMonkey(GASolver):
         self.solution_string = solution_string
 
     def create_offspring(self):
-        print("dumb monkey creating offspring")
-        spam = [self.mutate(variation) for variation in self.current_pool]
-        print("spam is %s" % spam)
-        self.current_pool = spam
+        self.current_pool = [self.mutate(variation) for variation in self.current_pool]
 
     def compute_fitness(self, variation):
         return 1 if variation == self.solution_string else 0
@@ -34,7 +31,6 @@ class DumbMonkey(GASolver):
         spam = "".join([
             random.choice(self.alphabet) for _ in range(self.limit)
         ])
-        print("Mutating variation __%s__ to __%s__." % (variation, spam))
         return spam
 
 class LessDumbMonkey(DumbMonkey):

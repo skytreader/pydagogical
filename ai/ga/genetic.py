@@ -38,7 +38,6 @@ class GASolver(object):
                     break
 
             if solution is None:
-                print("No solution yet, create an offspring")
                 self.create_offspring()
 
             itercount += 1
