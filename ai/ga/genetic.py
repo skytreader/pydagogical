@@ -26,22 +26,17 @@ class GASolver(object):
         Adds mutations to current_pool.
         """
         cur_max_fitness = max(self.__compute_generation_fitness())
-        print("Creating offspring. Must beat fitness of %s." % cur_max_fitness)
 
         new_pool = [self.mutate(variation) for variation in self.current_pool]
         new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
         while new_gen_fittest <= cur_max_fitness:
-            print("Got a generation whose fittest is %s." % new_gen_fittest)
             new_pool = [self.mutate(variation) for variation in self.current_pool]
             new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
-        print("loop end with fiitest being %s" % new_gen_fittest)
 
         self.current_pool.extend(new_pool)
-        print("1. current pool looks like %s fit %s" % (self.current_pool, self.__compute_generation_fitness()))
         # There are more efficient ways to do this
         self.current_pool.sort(key=self.compute_fitness, reverse=True)
         self.current_pool = self.current_pool[:self.max_pool_size]
-        print("2. current pool looks like %s fit %s" % (self.current_pool, self.__compute_generation_fitness()))
 
     def solve(self):
         solution = None
