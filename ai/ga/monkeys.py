@@ -45,6 +45,9 @@ class LessDumbMonkey(DumbMonkey):
         super(LessDumbMonkey, self).__init__(solution_string)
         self.solution_string = solution_string
 
+    def create_offspring(self):
+        GASolver.create_offspring(self)
+
     def compute_fitness(self, variation):
         correct_chars = 0
 
