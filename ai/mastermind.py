@@ -1,9 +1,11 @@
 #! /usr/bin/env python3
 
+from ai.ga.genetic import GenerationRater
+
 import random
 import string
 
-class MasterMind(object):
+class MasterMind(GenerationRater):
     
     def __init__(self, numslots, charset=string.ascii_lowercase):
         self.numslots = numslots
@@ -33,3 +35,7 @@ class MasterMind(object):
                 verdict.insert(0, False)
 
         return verdict
+
+    def rate(self, variation):
+        decision = self.decide(variation)
+        return sum([1 if d else 0.5 for d in decision]) / len(variation)

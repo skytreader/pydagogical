@@ -66,3 +66,8 @@ class GASolver(object):
             return max_variation
         else:
             return solution
+
+class GenerationRater(object):
+
+    def rate(self, variation):
+        pass
