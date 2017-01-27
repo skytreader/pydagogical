@@ -60,6 +60,8 @@ class LessDumbMonkey(DumbMonkey):
     def mutate(self, variation):
         mutate_count = random.randint(0, len(variation) - 1)
         mutant = [char for char in variation]
+        # Optimization note: you can be really unlucky if the last few mistakes
+        # is at the end of the string and mutate_count always comes up short.
         for _ in range(mutate_count):
             new = random.choice(self.alphabet)
             rand_index = random.randint(0, len(mutant) - 1)

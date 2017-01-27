@@ -9,7 +9,9 @@ class GASolver(object):
     def compute_fitness(self, variation):
         """
         Should return a value of 1 if the given variation is a solution to
-        whatever problem we are trying to solve.
+        whatever problem we are trying to solve, and less than 1 for non-
+        solutions. Of course, the higher the value, the "closer" the variation
+        is to the actual solution.
         """
         pass
 
@@ -75,4 +77,8 @@ class GASolver(object):
 class GenerationRater(object):
 
     def rate(self, variation):
+        """
+        Returns a value less than or equal to 1, in the spirit of
+        `GASolver.compute_fitness`.
+        """
         pass
