@@ -10,9 +10,8 @@ class MasterMind(GenerationRater):
     def __init__(self, numslots, charset=string.ascii_lowercase):
         self.numslots = numslots
         self.charset = charset
-
-    def initialize(self):
-        self.sequence = [random.choice(self.charset) for _ in range(self.numslots)]
+        self.sequence = [random.choice(charset) for _ in range(numslots)]
+        print("Mastermind: The sequence is %s" % self.sequence)
     
     def decide(self, guess):
         """
