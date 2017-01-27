@@ -1,9 +1,10 @@
 class GASolver(object):
 
-    def __init__(self, initial_pool, max_iterations=float("inf"), max_pool_size=8):
+    def __init__(self, initial_pool, show_print=True, max_iterations=float("inf"), max_pool_size=8):
         self.current_pool = initial_pool
         self.max_iterations = max_iterations
         self.max_pool_size = max_pool_size
+        self.show_print = show_print
 
     def compute_fitness(self, variation):
         """
@@ -38,12 +39,16 @@ class GASolver(object):
         self.current_pool.sort(key=self.compute_fitness, reverse=True)
         self.current_pool = self.current_pool[:self.max_pool_size]
 
+    def __conditional_print(self, s):
+        if self.show_print:
+            print(s)
+
     def solve(self):
         solution = None
         itercount = 0
 
         while solution is None and itercount < self.max_iterations:
-            print("Current pool is: %s" % self.current_pool)
+            self.__conditional_print("Current pool is: %s" % self.current_pool)
             for variation in self.current_pool:
                 if self.compute_fitness(variation) == 1:
                     solution = variation
@@ -52,7 +57,7 @@ class GASolver(object):
 
             if solution is None:
                 self.create_offspring()
-                print("Fitness of current_pool: %s" % self.__compute_generation_fitness())
+                self.__conditional_print("Fitness of current_pool: %s" % self.__compute_generation_fitness())
 
             itercount += 1
 
