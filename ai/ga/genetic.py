@@ -1,6 +1,9 @@
 class GASolver(object):
 
     def __init__(self, initial_pool, show_print=True, max_iterations=float("inf"), max_pool_size=8):
+        """
+        Where `initial_pool` is a list of variations.
+        """
         self.current_pool = initial_pool
         self.max_iterations = max_iterations
         self.max_pool_size = max_pool_size

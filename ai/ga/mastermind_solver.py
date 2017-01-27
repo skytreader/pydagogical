@@ -10,10 +10,10 @@ class MastermindSolver(GASolver):
 
     def __init__(self, mastermind):
         self.mastermind = mastermind
-        initial_pool = [
+        initial_pool_ = [[
             random.choice(mastermind.charset) for _ in range(mastermind.numslots)
-        ]
-        super().__init__(self, initial_pool)
+        ]]
+        super().__init__(initial_pool_)
 
     def mutate(self, variation):
         mutate_count = random.randint(0, self.mastermind.numslots - 1)

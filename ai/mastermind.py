@@ -27,7 +27,9 @@ class MasterMind(GenerationRater):
         for g, seq in zip(guess, self.sequence):
             if g == seq:
                 verdict.insert(0, True)
-                seqset.remove(g)
+
+                if g in seqset:
+                    seqset.remove(g)
 
         for g in guess:
             if g in seqset:
