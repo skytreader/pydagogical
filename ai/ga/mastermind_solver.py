@@ -2,6 +2,7 @@
 
 from ai.mastermind import MasterMind
 from ai.ga.genetic import GASolver
+from errors import UnreachableSolutionException
 
 import random
 import sys
@@ -32,6 +33,48 @@ class MastermindSolver(GASolver):
 
     def compute_fitness(self, variation):
         return self.mastermind.rate(variation)
+
+class SmartermindSolver(MasterMindSolver)
+    """
+    Mastermind solver that "breaks" the conventions of GASolver, in the interest
+    of being smarter.
+    """
+
+    def __pick_distinct_subset(self, universe, length, autoexclude=None):
+        """
+        Choose a distinct subset from universe of the specified length.
+        autoexclude is assumed to be a subset of universe that can no longer be
+        chosen. If it is already at least the specified length, it becomes the
+        return value.
+
+        universe - an iterable
+        length
+        autoexclude - an iterable
+
+        Returns a set.
+        """
+
+        if len(autoexclude) >= length:
+            return set(autoexclude)
+
+        uniset = set(universe)
+        exclude_set = set(autoexclude)
+        choices = uniset - exclude_set
+
+        if len(choices) < length:
+            raise UnreachableSolutionException("Can't pick a subset of length %d with the given constraints." % length)
+
+        distinct_subset = set()
+
+        while len(distinct_subset) < length:
+            item = random.choice(universe)
+            if item not in distinct_subset:
+                distinct_subset.add(item)
+
+        return distinct_subset
+
+    def mutate(self, variation):
+        variation_decision = self.mastermind.decide(variation)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
