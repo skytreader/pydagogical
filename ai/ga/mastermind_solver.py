@@ -67,7 +67,7 @@ class SmartermindSolver(MastermindSolver):
 
         distinct_subset = set()
 
-        while len(distinct_subset) < length:
+        for _ in range(len(choices)):
             # Relies on there being no canonical order to sets
             distinct_subset.add(choices.pop())
 
