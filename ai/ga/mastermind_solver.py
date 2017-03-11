@@ -77,22 +77,22 @@ class SmartermindSolver(MastermindSolver):
         f_count = sum([1 for d in variation_decision if not d])
 
         guess_correct = self.__pick_distinct_subset(variation, t_count)
-        print("guess correct %s" % guess_correct)
         guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
-        print("guess misplaced %s" % guess_misplaced)
 
         for item in guess_correct:
             assert item not in guess_misplaced
 
-        untouchables = set()
-        untouchables.union(guess_correct)
-        untouchables.union(guess_misplaced)
+        untouchables = guess_correct.union(guess_misplaced)
         varindices = set(range(len(variation)))
         replaceables = varindices - untouchables
 
         for misplaced in guess_misplaced:
             swap_index = self.__pick_distinct_subset(variation, 1, guess_correct).pop()
             varclone[misplaced], varclone[swap_index] = varclone[swap_index], varclone[misplaced]
+
+            if swap_index in replaceables:
+                replaceables.remove(swap_index)
+                replaceables.add(misplaced)
 
         for replace in replaceables:
             varclone[replace] = random.choice(self.mastermind.charset)
