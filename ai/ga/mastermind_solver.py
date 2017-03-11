@@ -60,16 +60,15 @@ class SmartermindSolver(MastermindSolver):
 
         uniset = set([idx for idx in range(len(universe))])
         exclude_set = set(autoexclude)
-        choices = uniset - exclude_set
+        choices = list(uniset - exclude_set)
 
         if len(choices) < length:
             raise UnreachableSolutionException("Can't pick a subset of length %d with the given constraints." % length)
 
         distinct_subset = set()
 
-        for _ in range(len(choices)):
-            # Relies on there being no canonical order to sets
-            distinct_subset.add(choices.pop())
+        while len(distinct_subset) < length:
+            distinct_subset.add(random.choice(choices))
 
         return distinct_subset
 
@@ -81,21 +80,23 @@ class SmartermindSolver(MastermindSolver):
         f_count = sum([1 for d in variation_decision if not d])
 
         guess_correct = self.__pick_distinct_subset(variation, t_count)
+        print("guess correct %s" % guess_correct)
         guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
+        print("guess misplaced %s" % guess_misplaced)
         untouchables = set()
         untouchables.union(guess_correct)
         untouchables.union(guess_misplaced)
         varindices = set(range(len(variation)))
         replaceables = varindices - untouchables
 
-        print("Swapping probably misplaced chars...")
         for misplaced in guess_misplaced:
             swap_index = self.__pick_distinct_subset(variation, 1, guess_correct).pop()
             varclone[misplaced], varclone[swap_index] = varclone[swap_index], varclone[misplaced]
 
-        print("Replacing probably wrong chars...")
         for replace in replaceables:
             varclone[replace] = random.choice(self.mastermind.charset)
+
+        print("new guess is %s" % varclone)
         
         return varclone
 

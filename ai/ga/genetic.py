@@ -36,12 +36,14 @@ class GASolver(object):
 
         new_pool = [self.mutate(variation) for variation in self.current_pool]
         new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
+        print("new_gen_fittest is %f to beat %f" % (new_gen_fittest, cur_max_fitness))
         while new_gen_fittest <= cur_max_fitness:
             new_pool = [self.mutate(variation) for variation in self.current_pool]
             new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
+            print("new_gen_fittest is %f to beat %f" % (new_gen_fittest, cur_max_fitness))
 
         self.current_pool.extend(new_pool)
-        # There are more efficient ways to do this
+        # FIXME There are more efficient ways to do this
         self.current_pool.sort(key=self.compute_fitness, reverse=True)
         self.current_pool = self.current_pool[:self.max_pool_size]
 
