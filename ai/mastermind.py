@@ -10,7 +10,19 @@ class MasterMind(GenerationRater):
     def __init__(self, numslots, charset=string.ascii_lowercase):
         self.numslots = numslots
         self.charset = charset
-        self.sequence = [random.choice(charset) for _ in range(numslots)]
+        self._sequence = [random.choice(charset) for _ in range(numslots)]
+        print("Mastermind: The sequence is %s" % self.sequence)
+
+    @property
+    def sequence(self):
+        return self._sequence
+
+    @sequence.setter
+    def sequence(self, seq):
+        """
+        This should only be called by unit tests!
+        """
+        self._sequence = seq
         print("Mastermind: The sequence is %s" % self.sequence)
     
     def decide(self, guess):
@@ -22,18 +34,19 @@ class MasterMind(GenerationRater):
         if len(guess) != self.numslots:
             raise Exception("Invalid guess")
 
-        seqset = set(self.sequence)
+        seqclone = [s for s in self.sequence]
         
         for g, seq in zip(guess, self.sequence):
             if g == seq:
                 verdict.insert(0, True)
 
-                if g in seqset:
-                    seqset.remove(g)
+                if g in seqclone:
+                    seqclone.remove(g)
 
         for g in guess:
-            if g in seqset:
+            if g in seqclone:
                 verdict.insert(0, False)
+                seqclone.remove(g)
 
         return verdict
 
