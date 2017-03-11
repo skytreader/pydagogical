@@ -74,6 +74,7 @@ class SmartermindSolver(MastermindSolver):
         return distinct_subset
 
     def mutate(self, variation):
+        print("Mutating %s" % variation)
         varclone = [x for x in variation]
         variation_decision = self.mastermind.decide(variation)
         t_count = sum([1 for d in variation_decision if d])
@@ -87,10 +88,12 @@ class SmartermindSolver(MastermindSolver):
         varindices = set(range(len(variation)))
         replaceables = varindices - untouchables
 
+        print("Swapping probably misplaced chars...")
         for misplaced in guess_misplaced:
             swap_index = self.__pick_distinct_subset(variation, 1, guess_correct).pop()
             varclone[misplaced], varclone[swap_index] = varclone[swap_index], varclone[misplaced]
 
+        print("Replacing probably wrong chars...")
         for replace in replaceables:
             varclone[replace] = random.choice(self.mastermind.charset)
         
