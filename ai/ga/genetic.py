@@ -31,16 +31,13 @@ class GASolver(object):
         """
         Adds mutations to current_pool.
         """
-        print("create_offspring: current_pool len is %d" % len(self.current_pool))
         cur_max_fitness = max(self.__compute_generation_fitness())
 
         new_pool = [self.mutate(variation) for variation in self.current_pool]
         new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
-        print("new_gen_fittest is %f to beat %f" % (new_gen_fittest, cur_max_fitness))
         while new_gen_fittest <= cur_max_fitness:
             new_pool = [self.mutate(variation) for variation in self.current_pool]
             new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
-            print("new_gen_fittest is %f to beat %f" % (new_gen_fittest, cur_max_fitness))
 
         self.current_pool.extend(new_pool)
         # FIXME There are more efficient ways to do this

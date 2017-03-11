@@ -70,7 +70,6 @@ class SmartermindSolver(MastermindSolver):
         return distinct_subset
 
     def mutate(self, variation):
-        print("Mutating %s" % variation)
         varclone = [x for x in variation]
         variation_decision = self.mastermind.decide(variation)
         t_count = sum([1 for d in variation_decision if d])
@@ -78,9 +77,6 @@ class SmartermindSolver(MastermindSolver):
 
         guess_correct = self.__pick_distinct_subset(variation, t_count)
         guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
-
-        for item in guess_correct:
-            assert item not in guess_misplaced
 
         untouchables = guess_correct.union(guess_misplaced)
         varindices = set(range(len(variation)))
@@ -97,8 +93,6 @@ class SmartermindSolver(MastermindSolver):
         for replace in replaceables:
             varclone[replace] = random.choice(self.mastermind.charset)
 
-        print("new guess is %s" % varclone)
-        
         return varclone
 
 if __name__ == "__main__":
