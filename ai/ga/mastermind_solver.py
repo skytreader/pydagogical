@@ -44,8 +44,8 @@ class SmartermindSolver(MastermindSolver):
         """
         Choose a distinct subset from universe of the specified length.
         autoexclude is assumed to be a subset of universe that can no longer be
-        chosen. If it is already at least the specified length, it becomes the
-        return value.
+        chosen. If it is impossible to pick a subset of the specified length,
+        UnreachableSolutionException is raised.
 
         universe - an ordered iterable
         length
@@ -54,9 +54,6 @@ class SmartermindSolver(MastermindSolver):
         Returns a set containing the indices of the chosen subset.
         """
         autoexclude = [] if autoexclude is None else autoexclude
-
-        if len(autoexclude) >= length:
-            return set(autoexclude)
 
         uniset = set([idx for idx in range(len(universe))])
         exclude_set = set(autoexclude)
@@ -83,6 +80,10 @@ class SmartermindSolver(MastermindSolver):
         print("guess correct %s" % guess_correct)
         guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
         print("guess misplaced %s" % guess_misplaced)
+
+        for item in guess_correct:
+            assert item not in guess_misplaced
+
         untouchables = set()
         untouchables.union(guess_correct)
         untouchables.union(guess_misplaced)
