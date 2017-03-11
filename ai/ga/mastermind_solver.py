@@ -47,17 +47,17 @@ class SmartermindSolver(MasterMindSolver)
         chosen. If it is already at least the specified length, it becomes the
         return value.
 
-        universe - an iterable
+        universe - an ordered iterable
         length
-        autoexclude - an iterable
+        autoexclude - an iterable of indices to exclude from the return value
 
-        Returns a set.
+        Returns a set containing the indices of the chosen subset.
         """
 
         if len(autoexclude) >= length:
             return set(autoexclude)
 
-        uniset = set(universe)
+        uniset = set([idx for idx in range(len(universe))])
         exclude_set = set(autoexclude)
         choices = uniset - exclude_set
 
@@ -74,14 +74,42 @@ class SmartermindSolver(MasterMindSolver)
         return distinct_subset
 
     def mutate(self, variation):
+        varclone = [x for x in variation]
         variation_decision = self.mastermind.decide(variation)
+        t_count = sum([1 for d in variation_decision if d])
+        f_count = sum([1 for d in variation_descision if not d])
+
+        guess_correct = self.__pick_distinct_subset(variation, t_count)
+        guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
+        untouchables = guess_correct + guess_misplaced
+        varindices = set(range(len(variation)))
+        replaceables = varindices - untouchables
+
+        for misplaced in guess_misplaced:
+            swap_index = self.__pick_distinct_subset(variation, 1, guess_correct).pop()
+            varclone[misplaced], varclone[swap_index] = varclone[swap_index], varclone[misplaced]
+
+         for replace in replaceables:
+             varclone[replace] = random.choice(self.mastermind.charset)
+         
+         return varclone
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 -m ai.ga.mastermind_solver <numslots>")
+        print("Usage: python3 -m ai.ga.mastermind_solver (naive|smart) <numslots>")
         exit(1)
 
-    numslots = int(sys.argv[1])
+    _type = sys.argv[1]
+    numslots = int(sys.argv[2])
+
     mastermind = MasterMind(numslots)
-    solver = MastermindSolver(mastermind)
+
+    if _type == "naive":
+        solver = MastermindSolver(mastermind)
+    elif _type == "smart":
+        solver = SmartermindSolver(mastermind)
+    else:
+        print("type can only be either naive or smart")
+        exit()
+
     solver.solve()
