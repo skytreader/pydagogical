@@ -2,7 +2,7 @@
 
 from ai.mastermind import MasterMind
 from ai.ga.genetic import GASolver
-from errors import UnreachableSolutionException
+from .errors import UnreachableSolutionException
 
 import random
 import sys
@@ -34,7 +34,7 @@ class MastermindSolver(GASolver):
     def compute_fitness(self, variation):
         return self.mastermind.rate(variation)
 
-class SmartermindSolver(MasterMindSolver)
+class SmartermindSolver(MastermindSolver):
     """
     Mastermind solver that "breaks" the conventions of GASolver, in the interest
     of being smarter.
@@ -53,6 +53,7 @@ class SmartermindSolver(MasterMindSolver)
 
         Returns a set containing the indices of the chosen subset.
         """
+        autoexclude = [] if autoexclude is None else autoexclude
 
         if len(autoexclude) >= length:
             return set(autoexclude)
@@ -67,9 +68,8 @@ class SmartermindSolver(MasterMindSolver)
         distinct_subset = set()
 
         while len(distinct_subset) < length:
-            item = random.choice(universe)
-            if item not in distinct_subset:
-                distinct_subset.add(item)
+            # Relies on there being no canonical order to sets
+            distinct_subset.add(choices.pop())
 
         return distinct_subset
 
@@ -77,11 +77,13 @@ class SmartermindSolver(MasterMindSolver)
         varclone = [x for x in variation]
         variation_decision = self.mastermind.decide(variation)
         t_count = sum([1 for d in variation_decision if d])
-        f_count = sum([1 for d in variation_descision if not d])
+        f_count = sum([1 for d in variation_decision if not d])
 
         guess_correct = self.__pick_distinct_subset(variation, t_count)
         guess_misplaced = self.__pick_distinct_subset(variation, f_count, autoexclude=guess_correct)
-        untouchables = guess_correct + guess_misplaced
+        untouchables = set()
+        untouchables.union(guess_correct)
+        untouchables.union(guess_misplaced)
         varindices = set(range(len(variation)))
         replaceables = varindices - untouchables
 
@@ -89,13 +91,13 @@ class SmartermindSolver(MasterMindSolver)
             swap_index = self.__pick_distinct_subset(variation, 1, guess_correct).pop()
             varclone[misplaced], varclone[swap_index] = varclone[swap_index], varclone[misplaced]
 
-         for replace in replaceables:
-             varclone[replace] = random.choice(self.mastermind.charset)
-         
-         return varclone
+        for replace in replaceables:
+            varclone[replace] = random.choice(self.mastermind.charset)
+        
+        return varclone
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("Usage: python3 -m ai.ga.mastermind_solver (naive|smart) <numslots>")
         exit(1)
 
