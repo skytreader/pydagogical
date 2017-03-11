@@ -35,15 +35,18 @@ class MasterMind(GenerationRater):
             raise Exception("Invalid guess")
 
         seqclone = [s for s in self.sequence]
+        guessclone = [s for s in guess]
         
-        for g, seq in zip(guess, self.sequence):
+        for g, seq in list(zip(guessclone, self.sequence)):
             if g == seq:
                 verdict.insert(0, True)
 
+                # FIXME conditional looks extraneous
                 if g in seqclone:
                     seqclone.remove(g)
+                guessclone.remove(g)
 
-        for g in guess:
+        for g in guessclone:
             if g in seqclone:
                 verdict.insert(0, False)
                 seqclone.remove(g)
