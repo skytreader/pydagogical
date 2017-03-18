@@ -50,6 +50,7 @@ class TSPSolver(GASolver):
             mutant.extend(maintain)
             mutant.extend(shuffleable)
 
+        print("mutant is %s" % mutant)
         print("Mutant with pathlen %s" % self.path_cost(mutant))
         return mutant
 
@@ -65,6 +66,9 @@ if __name__ == "__main__":
         [95,260],[875,920],[700,500],[555,815],[830,485],[1170,65],
         [830,610],[605,625],[595,360],[1340,725],[1740,245]
     ]
+    berlin6 = [
+        [565,575],[25,185],[345,750],[945,685],[845,655],[880,660]
+    ]
 
-    solver = TSPSolver(berlin52)
+    solver = TSPSolver(berlin6)
     solver.solve()
