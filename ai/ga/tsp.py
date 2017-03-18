@@ -9,6 +9,7 @@ class TSPSolver(GASolver):
     
     def __init__(self, cities):
         self.cities = cities
+        print("original pathlen %s" % self.path_cost(cities))
         initial_pool_ = [cities]
         super().__init__(initial_pool_)
 
@@ -24,6 +25,7 @@ class TSPSolver(GASolver):
     
         while i < limit:
             distance += self.euc_2d(self.cities[i-1], self.cities[i])
+            i += 1
     
         return distance
 
@@ -33,21 +35,23 @@ class TSPSolver(GASolver):
     def mutate(self, variation):
         choose_left = random.choice((True, False))
         split_index = random.choice(range(len(variation)))
+        mutant = []
 
         if choose_left:
             shuffleable = variation[0:split_index+1]
             maintain = variation[split_index+1:]
-            mutant = []
-            mutant.extend(random.shuffle(shuffleable))
+            random.shuffle(shuffleable)
+            mutant.extend(shuffleable)
             mutant.extend(maintain)
-            return mutant
         else:
             shuffleable = variation[split_index+1:]
             maintain = variation[0:split_index+1]
-            mutant = []
+            random.shuffle(shuffleable)
             mutant.extend(maintain)
-            mutant.extend(random.shuffle(shuffleable))
-            return mutant
+            mutant.extend(shuffleable)
+
+        print("Mutant with pathlen %s" % self.path_cost(mutant))
+        return mutant
 
 if __name__ == "__main__":
     berlin52 = [
