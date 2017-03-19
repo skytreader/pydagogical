@@ -7,11 +7,11 @@ import random
 
 class TSPSolver(GASolver):
     
-    def __init__(self, cities):
+    def __init__(self, cities, max_iterations=100):
         self.cities = cities
         print("original pathlen %s" % self.path_cost(cities))
         initial_pool_ = [cities]
-        super().__init__(initial_pool_)
+        super().__init__(initial_pool_, max_iterations=max_iterations)
 
     def euc_2d(self, p1, p2):
         dx = p1[0] - p2[0]

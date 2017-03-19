@@ -1,3 +1,5 @@
+import math
+
 class GASolver(object):
 
     def __init__(self, initial_pool, show_print=True, max_iterations=float("inf"), max_pool_size=8):
@@ -35,9 +37,16 @@ class GASolver(object):
 
         new_pool = [self.mutate(variation) for variation in self.current_pool]
         new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
-        while new_gen_fittest <= cur_max_fitness:
+        itercount = 0
+        if self.max_iterations != float("inf"):
+            pool_mutation_limit = int(math.ceil(self.max_iterations / 10))
+        else:
+            pool_mutation_limit = float("inf")
+
+        while new_gen_fittest <= cur_max_fitness and itercount < self.max_iterations:
             new_pool = [self.mutate(variation) for variation in self.current_pool]
             new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
+            itercount += 1
 
         self.current_pool.extend(new_pool)
         # FIXME There are more efficient ways to do this
@@ -73,6 +82,7 @@ class GASolver(object):
                 if self.compute_fitness(variation) > self.compute_fitness(max_variation):
                     max_variation = variation
 
+            print("Exhausted possibilities. Best answer has score: %s" % self.compute_fitness(max_variation))
             return max_variation
         else:
             return solution
