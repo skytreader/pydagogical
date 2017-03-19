@@ -49,7 +49,11 @@ class TravellingSalesAnts(object):
         cindices = set([i for i in range(len(self.cities))])
         choices = list(cindices - visit_set)
         choices.sort(key=lambda dest: self.pheromone_matrix[src][dest], reverse=True)
-        next_city = random.choice(choices[:int(len(choices) / 4)])
+        # pick the top n based on pheromones
+        n = len(choices)
+        if n >= 4:
+            n = int(n / 4)
+        next_city = random.choice(choices[:n])
         return next_city
 
     def solve(self):
