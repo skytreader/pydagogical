@@ -1,5 +1,6 @@
 import math
 import random
+import sys
 
 class TravellingSalesAnts(object):
     """
@@ -73,6 +74,11 @@ class TravellingSalesAnts(object):
         print("Path found: %s" % self.antroutes[mindex])
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python3 %s <antcount>" % sys.argv[0])
+        exit(1)
+
+    antcount = int(sys.argv[1])
     berlin52 = [
         [565,575],[25,185],[345,750],[945,685],[845,655],
         [880,660],[25,230],[525,1000],[580,1175],[650,1130],[1605,620],
@@ -85,5 +91,5 @@ if __name__ == "__main__":
         [830,610],[605,625],[595,360],[1340,725],[1740,245]
     ]
 
-    solver = TravellingSalesAnts(berlin52, 20)
+    solver = TravellingSalesAnts(berlin52, antcount)
     solver.solve()
