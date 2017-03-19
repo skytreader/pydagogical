@@ -49,8 +49,6 @@ class TSPSolver(GASolver):
             mutant.extend(maintain)
             mutant.extend(shuffleable)
 
-        #print("mutant is %s" % mutant)
-        #print("Mutant with pathlen %s" % self.path_cost(mutant))
         return mutant
 
 if __name__ == "__main__":
