@@ -16,6 +16,8 @@ class TravellingSalesAnts(object):
             [0 for city in self.cities]
             for city in self.cities
         ]
+        origpath = [i for i in range(self.city_count)]
+        print("Original path cost: %s" % self.path_cost(origpath))
 
     def euc_2d(self, p1, p2):
         dx = p1[0] - p2[0]
