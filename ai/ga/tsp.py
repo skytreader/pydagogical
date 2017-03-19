@@ -9,8 +9,8 @@ class TSPSolver(GASolver):
     
     def __init__(self, cities, max_iterations=100):
         self.cities = cities
-        print("original pathlen %s" % self.path_cost(cities))
-        initial_pool_ = [cities]
+        initial_pool_ = [[i for i in range(len(self.cities))]]
+        print("original pathlen %s" % self.path_cost(initial_pool_[0]))
         super().__init__(initial_pool_, max_iterations=max_iterations)
 
     def euc_2d(self, p1, p2):
@@ -21,12 +21,11 @@ class TSPSolver(GASolver):
     def path_cost(self, variation):
         distance = 0
         limit = len(variation)
-        i = 1
-    
-        while i < limit:
-            distance += self.euc_2d(variation[i-1], variation[i])
-            i += 1
-    
+
+        for i in range(limit):
+            c2 = variation[(i + 1) % limit]
+            distance += self.euc_2d(self.cities[variation[i]], self.cities[c2])
+
         return distance
 
     def compute_fitness(self, variation):
