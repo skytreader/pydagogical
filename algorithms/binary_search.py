@@ -41,7 +41,7 @@ def binary_search(sorted_space, query):
 def binary_insert(ss, item):
     """
     Inserts the item in sorted_space (assumed to be sorted) such that
-  the list remains to be sorted. The sorted_space is traversed as
+    the list remains to be sorted. The sorted_space is traversed as
     in binary_search.
 
     Returns the sorted_space with the item inserted in the proper
