@@ -1,7 +1,5 @@
 #! /usr/bin/env python3
 
-import unittest
-
 """
 Naive binary tree implementation.
 """
@@ -50,7 +48,6 @@ class BinaryTree(object):
         pass
 
     def __str__(self):
-        #return str(self.node_data) + ":{'left_son':'" + str(self.left_son) + "',''right_son':'" + str(self.right_son)
         # This is the __str__ for debuggin
         return str(self.node_data)
 
