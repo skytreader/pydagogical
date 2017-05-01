@@ -11,7 +11,7 @@ class FunctionsTests(unittest.TestCase):
         )
         self.assertRaises(
             ValueError,
-            self.__cardinality_check,
+            exp._cardinality_check,
             val_table[0],
             val_table[1]
         )
@@ -21,4 +21,4 @@ class FunctionsTests(unittest.TestCase):
             (-2, 23, 48, 73, 98),
             (0.977, 0.008, 0.008, 0.006, 0.001)
         )
-        self.assertAlmostEqual(-0.85, exp.expected_value(**val_table))
+        self.assertAlmostEqual(-0.85, exp.expected_value(val_table[0], val_table[1]))
