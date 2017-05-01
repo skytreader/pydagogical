@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import math
 
 def mean(numset):
@@ -6,7 +8,7 @@ def mean(numset):
 def variance(numset):
     m = mean(numset)
     setsize = len(numset)
-    varterms = (( ((x - m) ** 2) / setsize) for x in numset)
+    varterms = ((((x - m) ** 2) / setsize) for x in numset)
     return sum(varterms)
 
 def standard_deviation(numset):
