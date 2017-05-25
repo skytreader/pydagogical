@@ -11,7 +11,7 @@ class Node(object):
     def filter_children(self, decider):
         # TODO This can be optimized by the fact that the, in a prefix tree,
         # the decider will return True for at most one child.
-        return [child for child in self.children if decider(child.data)]
+        return [child for child in self.children if child is not None and decider(child.data)]
 
     def __str__(self):
         children_str = "(%s)" % " ".join([str(c) for c in self.children])
@@ -42,43 +42,38 @@ class PrefixTree(object):
                     node.children.append(child)
                 child = node
 
-            print(child)
             return child
 
-        print("Adding %s" % word)
         first_children = self.tree.filter_children(lambda c: c == word[0])
         # Here we are sure that this is always going to be a singleton
         if first_children:
             curnode = first_children[0]
 
             for idx, char in enumerate(word[1:]):
-                print("considering %s %s" % (char, idx))
-                print("children is %s" % curnode.children)
                 children = curnode.filter_children(lambda c: c == char)
                 if children:
-                    print("exists so continue")
                     curnode = children[0]
                 else:
-                    print("does not exist anymore so we just add")
+                    # None is a sentinel value signifying that a word ends in this
+                    # letter too
+                    curnode.children.append(None)
                     curnode.children.append(create_prefix_linked_tree(word[idx + 1:]))
                     break
             self.tree.children.append(curnode)
         else:
-            print("There are no children so we just add")
             self.tree.children.append(create_prefix_linked_tree(word))
 
     def in_tree(self, prefix):
         curnode = self.tree
 
         for c in prefix:
-            print("checking %s" % c)
             prefix_child = curnode.filter_children(lambda char: char == c)
             if prefix_child:
                 curnode = prefix_child[0]
             else:
                 return PrefixTreeSearchResults.PREFIX_NOT_FOUND
 
-        if curnode.children:
+        if curnode.children and None not in curnode.children:
             return PrefixTreeSearchResults.PREFIX_FOUND
         else:
             return PrefixTreeSearchResults.PREFIX_TERMINATED
