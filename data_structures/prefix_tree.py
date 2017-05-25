@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+from enum import Enum
+
 class Node(object):
 
     def __init__(self, data):
@@ -7,7 +9,17 @@ class Node(object):
         self.children = []
 
     def filter_children(self, decider):
-        return [child for child in self.children if decider(child)]
+        # TODO This can be optimized by the fact that the, in a prefix tree,
+        # the decider will return True for at most one child.
+        return [child for child in self.children if decider(child.data)]
+
+class PrefixTreeSearchResults(Enum):
+    """Prefix in tree but did not lead to terminal node."""
+    PREFIX_FOUND = 0
+    """Prefix in tree and lead to terminal node."""
+    PREFIX_TERMINATED = 1
+    """Prefix completely not found."""
+    PREFIX_NOT_FOUND = 2
 
 class PrefixTree(object):
 
@@ -38,3 +50,18 @@ class PrefixTree(object):
                     curnode.children.append(create_prefix_linked_tree(word[idx:]))
         else:
             self.tree.children.append(create_prefix_linked_tree(word))
+
+    def in_tree(self, prefix):
+        curnode = self.tree
+
+        for c in prefix:
+            prefix_child = curnode.filter_children(lambda char: char == c)
+            if prefix_child:
+                curnode = prefix_child[0]
+            else:
+                return PrefixTreeSearchResults.PREFIX_NOT_FOUND
+
+        if curnode.children:
+            return PrefixTreeSearchResults.PREFIX_FOUND
+        else:
+            return PrefixTreeSearchResults.PREFIX_TERMINATED
