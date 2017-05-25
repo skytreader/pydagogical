@@ -7,6 +7,8 @@ class PrefixTreeTests(unittest.TestCase):
     def test_in_tree(self):
         pt = PrefixTree()
         pt.add_word("child")
+        self.assertEqual(pt.in_tree("child"), PrefixTreeSearchResults.PREFIX_TERMINATED)
+        self.assertEqual(pt.in_tree("children"), PrefixTreeSearchResults.PREFIX_NOT_FOUND)
         pt.add_word("children")
         self.assertEqual(pt.in_tree("children"), PrefixTreeSearchResults.PREFIX_TERMINATED)
         self.assertEqual(pt.in_tree("child"), PrefixTreeSearchResults.PREFIX_TERMINATED)
