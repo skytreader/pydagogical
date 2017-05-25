@@ -59,7 +59,11 @@ class PrefixTree(object):
                     curnode.children.append(None)
                     curnode.children.append(create_prefix_linked_tree(word[idx + 1:]))
                     break
-            self.tree.children.append(curnode)
+
+            if curnode.children:
+                curnode.children.append(None)
+            else:
+                self.tree.children.append(curnode)
         else:
             self.tree.children.append(create_prefix_linked_tree(word))
 
