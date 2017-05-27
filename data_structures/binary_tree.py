@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+from enum import Enum, unique
 
 """
 Naive binary tree implementation.
@@ -14,47 +15,19 @@ def debug_print(ls):
 
     return list_string
 
-class BinaryTree(object):
-    """
-    Interface for binary tree objects.
-    """
-    
-    """
-    Flag for depth-first search.
-    """
-    DFS = "dfs"
-    """
-    Flag for breadth-first search.
-    """
-    BFS = "bfs"
-    """
-    Flag for in-order search
-    """
-    INP = "inp"
-
-    def __init__(self, node_data):
-        self.node_data = node_data
-        self.left_son = None
-        self.right_son = None
-
-    def search(self, query, search_type = ""):
-        """
-        Searches the binary tree for the given query data.
-        Returns either true or false. The optional search_type
-        parameter can be used to specify the type of search
-        to be done. Use the DFS, BDS, and INP fields of this
-        class.
-        """
-        pass
-
-    def __str__(self):
-        # This is the __str__ for debuggin
-        return str(self.node_data)
+@unique
+class Traversals(Enum):
+    INORDER = 0
+    PREORDER = 1
+    POSTORDER = 2
 
 class InorderIterator(object):
     """
     Inorder traversal. Avoid modifying the tree while iterating. The modifications
     may not be reflected during traversal.
+
+    Note: Inorder traversal is just DFS with the added guarantee that the left
+    sons always come before the right sons.
     """
     #TODO Ensure that the iterator is for Python 3
     
@@ -95,8 +68,10 @@ class InorderIterator(object):
 
         # Update roving_pointer to point to what succeeds next_node
 
-        if not self.roving_pointer.left_son or\
-          self.roving_pointer.left_son in self.visited:
+        if (
+            not self.roving_pointer.left_son or
+            self.roving_pointer.left_son in self.visited
+        ):
             if not self.roving_pointer.right_son and len(self.traversal_stack):
                 # Backtrack to parent node. If it was never visited, it goes next.
                 backtrack_node = self.traversal_stack.pop()
@@ -126,6 +101,34 @@ class InorderIterator(object):
         self.visited.append(next_node)
         return next_node.node_data
 
+class BinaryTree(object):
+    """
+    Interface for binary tree objects.
+    """
+
+    ITERATORS = {
+        Traversals.INORDER: InorderIterator
+    }
+
+    def __init__(self, node_data):
+        self.node_data = node_data
+        self.left_son = None
+        self.right_son = None
+
+    def search(self, query, search_type = ""):
+        """
+        Searches the binary tree for the given query data.
+        Returns either true or false. The optional search_type
+        parameter can be used to specify the type of search
+        to be done. Use the DFS, BDS, and INP fields of this
+        class.
+        """
+        pass
+
+    def __str__(self):
+        # This is the __str__ for debugging
+        return str(self.node_data)
+
 class NaiveBinaryTree(BinaryTree):
     """
     Naive implementation of a binary tree.
@@ -134,8 +137,16 @@ class NaiveBinaryTree(BinaryTree):
     def __init__(self, node_data):
         super(NaiveBinaryTree, self).__init__(node_data)
 
-    def search(self, query, search_type = BinaryTree.DFS):
+    def search(self, query, search_type=Traversals.INORDER):
         """
-        Searches using depth-first search by default.
+        Searches using inorder search by default.
+
+        Returns True if the query can be found in this tree, False otherwise.
         """
-        pass
+        walkthrough = BinaryTree.ITERATORS[search_type](self)
+
+        for node in walkthrough:
+            if node.node_data == query:
+                return True
+
+        return False

@@ -24,7 +24,7 @@ class IteratorTest(unittest.TestCase):
         # Create the nodes
         nodes = {}
         self.node_data = "ABCDEFGHIJKLMNO"
-        self.dfs_order = "HDIBJEKALFMCNGO"
+        self.inorder = "HDIBJEKALFMCNGO"
 
         for c in self.node_data:
             nodes[c] = NaiveBinaryTree(c)
@@ -69,16 +69,16 @@ class IteratorTest(unittest.TestCase):
 
         # Ensure that we expect the same number of nodes from the orders of
         # iteration
-        self.assertEqual(len(self.node_data), len(self.dfs_order))
+        self.assertEqual(len(self.node_data), len(self.inorder))
 
-    def test_dfs(self):
-        dfs = InorderIterator(self.test_root)
+    def test_inorder(self):
+        inorder = InorderIterator(self.test_root)
         iterator_order = ""
         
-        for data in dfs:
+        for data in inorder:
             iterator_order += data
 
-        self.assertEqual(self.dfs_order, iterator_order)
+        self.assertEqual(self.inorder, iterator_order)
 
 class BooleanTest(unittest.TestCase):
     
@@ -89,11 +89,11 @@ class BooleanTest(unittest.TestCase):
         self.boole_tree.left_son.left_son = NaiveBinaryTree(True)
         self.boole_tree.left_son.right_son = NaiveBinaryTree(True)
 
-    def test_dfs(self):
-        dfs = InorderIterator(self.boole_tree)
+    def test_inorder(self):
+        inorder = InorderIterator(self.boole_tree)
         iterator_order = []
 
-        for data in dfs:
+        for data in inorder:
             iterator_order.append(data)
 
         self.assertEqual([True, False, True, True, False], iterator_order)
@@ -107,11 +107,11 @@ class StructureTest(unittest.TestCase):
         self.boole_tree.left_son.left_son = NaiveBinaryTree("D")
         self.boole_tree.left_son.right_son = NaiveBinaryTree("E")
 
-    def test_dfs(self):
-        dfs = InorderIterator(self.boole_tree)
+    def test_inorder(self):
+        inorder = InorderIterator(self.boole_tree)
         iterator_order = []
 
-        for data in dfs:
+        for data in inorder:
             iterator_order.append(data)
 
         self.assertEqual(["D", "B", "E", "A", "C"], iterator_order)
