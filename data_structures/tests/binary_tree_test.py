@@ -1,4 +1,4 @@
-from ..binary_tree import NaiveBinaryTree, InorderIterator
+from ..binary_tree import NaiveBinaryTree, InorderIterator, PreorderIterator
 
 import unittest
 
@@ -13,6 +13,7 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         nodes = {}
         self.node_data = "ABCDEFGHIJKLMNO"
         self.inorder = "HDIBJEKALFMCNGO"
+        self.preorder = "ABDHIEJKCFLMGNO"
 
         for c in self.node_data:
             nodes[c] = NaiveBinaryTree(c)
@@ -75,7 +76,22 @@ class IteratorTest(NaiveBinaryTreeTest):
         for node in inorder:
             iterator_order.append(node)
 
-        self.assertEqual(self.inorder, "".join([node.node_data for node in iterator_order]))
+        self.assertEqual(
+            self.inorder,
+            "".join([node.node_data for node in iterator_order])
+        )
+
+    def test_preorder(self):
+        preorder = PreorderIterator(self.test_root)
+        iterator_order = []
+
+        for node in preorder:
+            iterator_order.append(node)
+
+        self.assertEqual(
+            self.preorder,
+            "".join([node.node_data for node in iterator_order])
+        )
 
 class BooleanTest(unittest.TestCase):
     

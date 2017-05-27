@@ -107,17 +107,31 @@ class PreorderIterator(object):
         self.visited = set()
 
     def __in_visited(self, node):
-        return node is not None and node in self.visited
+        return node is None or node in self.visited
 
     def __next__(self):
         next_node = self.roving_pointer
+        print("preorder next_node is %s" % next_node.node_data)
         if next_node in self.visited and not self.traversal_stack:
             raise StopIteration
 
-        if self.__in_visited(next_node.left_son) and self.__in_visited(next_node.right_son):
+        is_lson_visited = self.__in_visited(next_node.left_son)
+        is_rson_visited = self.__in_visited(next_node.right_son)
+        print("lson rson visit status %s %s" % (is_lson_visited, is_rson_visited))
+
+        if is_lson_visited and is_rson_visited:
             self.roving_pointer = self.traversal_stack.pop()
-        elif self.__in_visited(next_node.left_son) and not self.__in_visited(next_node.right_son):
+            print("popped from stack roving pointer is now %s" % self.roving_pointer.node_data)
+        elif is_lson_visited and not is_rson_visited:
             self.roving_pointer = next_node.right_son
+            print("chose right son roving pointer is now %s" % self.roving_pointer.node_data)
+        elif not is_lson_visited:
+            self.roving_pointer = next_node.left_son
+            print("chose left son roving pointer is not %s" % self.roving_pointer.node_data)
+
+        self.visited.add(next_node)
+        if not (is_lson_visited and is_rson_visited):
+            self.traversal_stack.append(next_node)
 
         return next_node
 
