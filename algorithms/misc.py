@@ -33,12 +33,20 @@ def get_proper_non_decreasing_subranges(lnum):
     subranges = set()
 
     while i < limit:
-        if lnum[i] < lnum[i - 1] and subranges != (i - 1):
-            subranges.add((subrange_start, i - 1))
+        if lnum[i] > lnum[i - 1]:
+            subranges.add((subrange_start, i))
+            j = subrange_start + 1
+
+            while j < i:
+                subranges.add((j, i))
+                j += 1
+
+        if lnum[i] < lnum[i - 1]:
             subrange_start = i
+
         i += 1
 
-    if lnum and lnum[subrange_start] <= lnum[i - 1]:
+    if lnum and lnum[subrange_start] < lnum[i - 1]:
         subranges.add((subrange_start, i - 1))
     
     return subranges
