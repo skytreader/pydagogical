@@ -37,7 +37,7 @@ class InorderIterator(object):
         self.roving_pointer = self.bintree
         # the traversal stack
         self.traversal_stack = []
-        self.visited = []
+        self.visited = set()
 
         self.__initialize()
 
@@ -100,6 +100,24 @@ class InorderIterator(object):
         
         self.visited.append(next_node)
         return next_node.node_data
+
+class PreorderIterator(object):
+    
+    def __init__(self, bintree):
+        self.bintree = bintree
+        self.roving_pointer = self.bintree
+        self.traversal_stack = []
+        self.visited = set()
+
+        while self.roving_pointer.left_son:
+            self.traversal_stack.append(self.roving_pointer)
+            self.roving_pointer = self.roving_pointer.left_son
+
+    def __next__(self):
+        next_node = self.roving_pointer
+        if next_node:
+            pass
+        return next_node
 
 class BinaryTree(object):
     """
