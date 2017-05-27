@@ -25,9 +25,6 @@ class InorderIterator(object):
     """
     Inorder traversal. Avoid modifying the tree while iterating. The modifications
     may not be reflected during traversal.
-
-    Note: Inorder traversal is just DFS with the added guarantee that the left
-    sons always come before the right sons.
     """
     #TODO Ensure that the iterator is for Python 3
     
@@ -109,14 +106,17 @@ class PreorderIterator(object):
         self.traversal_stack = []
         self.visited = set()
 
-        while self.roving_pointer.left_son:
-            self.traversal_stack.append(self.roving_pointer)
-            self.roving_pointer = self.roving_pointer.left_son
+    def __in_visited(self, node):
+        return node is not None and node in self.visited
 
     def __next__(self):
         next_node = self.roving_pointer
-        if next_node:
-            pass
+        if next_node in self.visited and not self.traversal_stack:
+            raise StopIteration
+
+        if self.__in_visited(next_node.left_son) and self.__in_visited(next_node.rson):
+            self.roving_pointer = self.traversal_stack.pop()
+
         return next_node
 
 class BinaryTree(object):
