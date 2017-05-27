@@ -96,7 +96,7 @@ class InorderIterator(object):
         # been visited.
         
         self.visited.add(next_node)
-        return next_node.node_data
+        return next_node
 
 class PreorderIterator(object):
     
@@ -168,8 +168,8 @@ class NaiveBinaryTree(BinaryTree):
         """
         walkthrough = BinaryTree.ITERATORS[search_type](self)
 
-        for data in walkthrough:
-            if data == query:
+        for node in walkthrough:
+            if node.node_data == query:
                 return True
 
         return False

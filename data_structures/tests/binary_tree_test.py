@@ -70,12 +70,12 @@ class IteratorTest(NaiveBinaryTreeTest):
 
     def test_inorder(self):
         inorder = InorderIterator(self.test_root)
-        iterator_order = ""
+        iterator_order = []
         
-        for data in inorder:
-            iterator_order += data
+        for node in inorder:
+            iterator_order.append(node)
 
-        self.assertEqual(self.inorder, iterator_order)
+        self.assertEqual(self.inorder, "".join([node.node_data for node in iterator_order]))
 
 class BooleanTest(unittest.TestCase):
     
@@ -93,7 +93,10 @@ class BooleanTest(unittest.TestCase):
         for data in inorder:
             iterator_order.append(data)
 
-        self.assertEqual([True, False, True, True, False], iterator_order)
+        self.assertEqual(
+            [True, False, True, True, False],
+            [node.node_data for node in iterator_order]
+        )
 
 class StructureTest(unittest.TestCase):
     
@@ -111,7 +114,7 @@ class StructureTest(unittest.TestCase):
         for data in inorder:
             iterator_order.append(data)
 
-        self.assertEqual(["D", "B", "E", "A", "C"], iterator_order)
+        self.assertEqual(["D", "B", "E", "A", "C"], [node.node_data for node in iterator_order])
 
 if __name__ == "__main__":
     unittest.main()
