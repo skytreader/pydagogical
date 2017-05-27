@@ -98,7 +98,7 @@ class InorderIterator(object):
         # At this point, by virtue of inorder, we are sure that the left son has
         # been visited.
         
-        self.visited.append(next_node)
+        self.visited.add(next_node)
         return next_node.node_data
 
 class PreorderIterator(object):
