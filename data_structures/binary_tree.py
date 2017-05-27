@@ -114,10 +114,15 @@ class PreorderIterator(object):
         if next_node in self.visited and not self.traversal_stack:
             raise StopIteration
 
-        if self.__in_visited(next_node.left_son) and self.__in_visited(next_node.rson):
+        if self.__in_visited(next_node.left_son) and self.__in_visited(next_node.right_son):
             self.roving_pointer = self.traversal_stack.pop()
+        elif self.__in_visited(next_node.left_son) and not self.__in_visited(next_node.right_son):
+            self.roving_pointer = next_node.right_son
 
         return next_node
+
+    def __iter__(self):
+        return self
 
 class BinaryTree(object):
     """
