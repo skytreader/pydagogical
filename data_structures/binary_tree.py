@@ -145,8 +145,8 @@ class NaiveBinaryTree(BinaryTree):
         """
         walkthrough = BinaryTree.ITERATORS[search_type](self)
 
-        for node in walkthrough:
-            if node.node_data == query:
+        for data in walkthrough:
+            if data == query:
                 return True
 
         return False
