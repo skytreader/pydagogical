@@ -152,13 +152,11 @@ class BinaryTree(object):
         self.left_son = None
         self.right_son = None
 
-    def search(self, query, search_type = ""):
+    def search(self, query, search_type=Traversals.INORDER):
         """
-        Searches the binary tree for the given query data.
-        Returns either true or false. The optional search_type
-        parameter can be used to specify the type of search
-        to be done. Use the DFS, BDS, and INP fields of this
-        class.
+        Searches the binary tree for the given query data.  Returns either true
+        or false. The optional search_type parameter can be used to specify the
+        type of search to be done. Use the fields of the traversals Enum.
         """
         pass
 
