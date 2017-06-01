@@ -65,8 +65,8 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         """
         nodes = {}
         self.node_data_strictly_binary = "ABCDEFG"
-        self.inorder_full = "DBFEGAC"
-        self.preorder_full = "ABDEFGC"
+        self.inorder_strictly_binary = "DBFEGAC"
+        self.preorder_strictly_binary = "ABDEFGC"
 
         for c in self.node_data_strictly_binary:
             nodes[c] = NaiveBinaryTree(c)
