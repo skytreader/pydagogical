@@ -167,29 +167,19 @@ class IteratorTest(NaiveBinaryTreeTest):
     Test all the iterators in this class.
     """
 
-    def test_inorder(self):
-        inorder = InorderIterator(self.root_full)
-        iterator_order = []
-        
-        for node in inorder:
-            iterator_order.append(node)
-
+    def __iterator_unit(self, iterator, binary_tree, expected_order):
+        iterated = iterator(binary_tree)
+        iterator_order = [node for node in iterated]
         self.assertEqual(
-            self.inorder_full,
+            expected_order,
             "".join([node.node_data for node in iterator_order])
         )
+
+    def test_inorder(self):
+        self.__iterator_unit(InorderIterator, self.root_full, self.inorder_full)
 
     def test_preorder(self):
-        preorder = PreorderIterator(self.root_full)
-        iterator_order = []
-
-        for node in preorder:
-            iterator_order.append(node)
-
-        self.assertEqual(
-            self.preorder_full,
-            "".join([node.node_data for node in iterator_order])
-        )
+        self.__iterator_unit(PreorderIterator, self.root_full, self.preorder_full)
 
 class BooleanTest(unittest.TestCase):
     
