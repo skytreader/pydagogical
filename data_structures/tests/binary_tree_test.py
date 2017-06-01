@@ -7,6 +7,8 @@ class NaiveBinaryTreeTest(unittest.TestCase):
     def setUp(self):
         self.__setup_full_binary_tree()
         self.__setup_strictly_binary_tree()
+        self.__setup_left_skewed_binary_tree()
+        self.__setup_right_skewed_binary_tree()
 
     def __setup_full_binary_tree(self):
         """
@@ -84,6 +86,42 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         nodes["E"].left_son = nodes["F"]
         nodes["E"].right_son = nodes["G"]
 
+    def __setup_left_skewed_binary_tree(self):
+        nodes = {}
+        self.node_data_left_skewed = "ABC"
+        self.inorder_left_skewed = "CBA"
+        self.preorder_left_skewed = "ABC"
+
+        for c in self.node_data_left_skewed:
+            nodes[c] = NaiveBinaryTree(c)
+
+        # LEVEL 0
+        self.root_left_skewed = nodes["A"]
+
+        # LEVEL 1
+        nodes["A"].left_son = nodes["B"]
+
+        # LEVEL 2
+        nodes["B"].left_son = nodes["C"]
+
+    def __setup_right_skewed_binary_tree(self):
+        nodes = {}
+        self.node_data_right_skewed = "ABC"
+        self.inorder_right_skewed = "ABC"
+        self.preorder_right_skewed = "ABC"
+
+        for c in self.node_data_right_skewed:
+            nodes[c] = NaiveBinaryTree(c)
+
+        # LEVEL 0
+        self.root_right_skewed = nodes["A"]
+
+        # LEVEL 1
+        nodes["A"].right_son = nodes["B"]
+
+        # LEVEL 2
+        nodes["B"].right_son = nodes["C"]
+
     def test_setUp(self):
         """
         Ensures that setUp is not wonky and is as expected.
@@ -92,6 +130,33 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         # iteration
         self.assertEqual(len(self.node_data_full), len(self.inorder_full))
         self.assertEqual(len(self.node_data_full), len(self.preorder_full))
+
+        self.assertEqual(
+            len(self.node_data_strictly_binary),
+            len(self.inorder_strictly_binary)
+        )
+        self.assertEqual(
+            len(self.node_data_strictly_binary),
+            len(self.preorder_strictly_binary)
+        )
+
+        self.assertEqual(
+            len(self.node_data_left_skewed),
+            len(self.inorder_left_skewed)
+        )
+        self.assertEqual(
+            len(self.node_data_left_skewed),
+            len(self.preorder_left_skewed)
+        )
+
+        self.assertEqual(
+            len(self.node_data_right_skewed),
+            len(self.inorder_right_skewed)
+        )
+        self.assertEqual(
+            len(self.node_data_right_skewed),
+            len(self.preorder_right_skewed)
+        )
 
     def test_search(self):
         self.assertFalse(self.root_full.search("P"))
