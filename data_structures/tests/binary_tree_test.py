@@ -5,20 +5,24 @@ import unittest
 class NaiveBinaryTreeTest(unittest.TestCase):
     
     def setUp(self):
+        self.__setup_full_binary_tree()
+        self.__setup_strictly_binary_tree()
+
+    def __setup_full_binary_tree(self):
         """
         Creates a binary tree with the letters of the alphabet (A-O) laid out in
         level-order.
         """
         # Create the nodes
         nodes = {}
-        self.node_data = "ABCDEFGHIJKLMNO"
-        self.inorder = "HDIBJEKALFMCNGO"
-        self.preorder = "ABDHIEJKCFLMGNO"
+        self.node_data_full = "ABCDEFGHIJKLMNO"
+        self.inorder_full = "HDIBJEKALFMCNGO"
+        self.preorder_full = "ABDHIEJKCFLMGNO"
 
-        for c in self.node_data:
+        for c in self.node_data_full:
             nodes[c] = NaiveBinaryTree(c)
 
-        self.test_root = nodes["A"]
+        self.root_full = nodes["A"]
 
         # Connect the nodes
         # LEVEL 0
@@ -45,24 +49,53 @@ class NaiveBinaryTreeTest(unittest.TestCase):
         nodes["G"].left_son = nodes["N"]
         nodes["G"].right_son = nodes["O"]
 
-        self.nodes = nodes
+        self.nodes_full = nodes
+
+    def __setup_strictly_binary_tree(self):
+        """
+              A
+             / \
+             B C
+            / \
+            D E
+             / \
+             F  G
+        """
+        nodes = {}
+        self.node_data_strictly_binary = "ABCDEFG"
+        self.inorder_full = "DBFEGAC"
+        self.preorder_full = "ABDEFGC"
+
+        for c in self.node_data_strictly_binary:
+            nodes[c] = NaiveBinaryTree(c)
+
+        # LEVEL 0
+        self.root_strictly_binary = nodes["A"]
+
+        # LEVEL 1
+        nodes["A"].left_son = nodes["B"]
+        nodes["A"].right_son = nodes["C"]
+
+        # LEVEL 2
+        nodes["B"].left_son = nodes["D"]
+        nodes["B"].right_son = nodes["E"]
+
+        # LEVEL 3
+        nodes["E"].left_son = nodes["F"]
+        nodes["E"].right_son = nodes["G"]
 
     def test_setUp(self):
         """
         Ensures that setUp is not wonky and is as expected.
         """
-
-        # Ensure that binary trees are pointing to expected data
-        for c in self.node_data:
-            self.assertEqual(c, self.nodes[c].node_data)
-
         # Ensure that we expect the same number of nodes from the orders of
         # iteration
-        self.assertEqual(len(self.node_data), len(self.inorder))
+        self.assertEqual(len(self.node_data_full), len(self.inorder_full))
+        self.assertEqual(len(self.node_data_full), len(self.preorder_full))
 
     def test_search(self):
-        self.assertFalse(self.test_root.search("P"))
-        self.assertTrue(self.test_root.search("A"))
+        self.assertFalse(self.root_full.search("P"))
+        self.assertTrue(self.root_full.search("A"))
 
 class IteratorTest(NaiveBinaryTreeTest):
     """
@@ -70,26 +103,26 @@ class IteratorTest(NaiveBinaryTreeTest):
     """
 
     def test_inorder(self):
-        inorder = InorderIterator(self.test_root)
+        inorder = InorderIterator(self.root_full)
         iterator_order = []
         
         for node in inorder:
             iterator_order.append(node)
 
         self.assertEqual(
-            self.inorder,
+            self.inorder_full,
             "".join([node.node_data for node in iterator_order])
         )
 
     def test_preorder(self):
-        preorder = PreorderIterator(self.test_root)
+        preorder = PreorderIterator(self.root_full)
         iterator_order = []
 
         for node in preorder:
             iterator_order.append(node)
 
         self.assertEqual(
-            self.preorder,
+            self.preorder_full,
             "".join([node.node_data for node in iterator_order])
         )
 
