@@ -177,9 +177,15 @@ class IteratorTest(NaiveBinaryTreeTest):
 
     def test_inorder(self):
         self.__iterator_unit(InorderIterator, self.root_full, self.inorder_full)
+        self.__iterator_unit(InorderIterator, self.root_strictly_binary, self.inorder_strictly_binary)
+        self.__iterator_unit(InorderIterator, self.root_left_skewed, self.inorder_left_skewed)
+        self.__iterator_unit(InorderIterator, self.root_right_skewed, self.inorder_right_skewed)
 
     def test_preorder(self):
         self.__iterator_unit(PreorderIterator, self.root_full, self.preorder_full)
+        self.__iterator_unit(PreorderIterator, self.root_strictly_binary, self.preorder_strictly_binary)
+        self.__iterator_unit(PreorderIterator, self.root_left_skewed, self.preorder_left_skewed)
+        self.__iterator_unit(PreorderIterator, self.root_right_skewed, self.preorder_right_skewed)
 
 class BooleanTest(unittest.TestCase):
     
