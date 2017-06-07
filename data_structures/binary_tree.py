@@ -113,6 +113,7 @@ class PreorderIterator(object):
         next_node = self.roving_pointer
         if (next_node is None or next_node in self.visited) and not self.traversal_stack:
             raise StopIteration
+        self.visited.add(next_node)
 
         is_lson_visitable = self.__can_visit(next_node.left_son)
         is_rson_visitable = self.__can_visit(next_node.right_son)
@@ -128,12 +129,11 @@ class PreorderIterator(object):
             # visitable right_son
             stack_rover = self.traversal_stack.pop()
 
-            while not self.__can_visit(stack_rover.right_son):
+            while self.traversal_stack and not self.__can_visit(stack_rover.right_son):
                 stack_rover = self.traversal_stack.pop()
 
             self.roving_pointer = stack_rover.right_son
 
-        self.visited.add(next_node)
         if is_lson_visitable or is_rson_visitable:
             self.traversal_stack.append(next_node)
 
