@@ -13,7 +13,25 @@ def construct_major_scale(unison_note):
 
     return major_scale
 
+def eval_flat(note):
+    if len(note) == 2 and note[1] == "b":
+        norm_note = note[0].upper()
+        note_index = CHROMATIC_SCALE.index(norm_note)
+        return CHROMATIC_SCALE[note_index - 1]
+    else:
+        raise ValueError("Call only on flat-notated notes.")
+
+def interval_quality(note1, note2):
+    # FIXME This assumes it won't be fed flats.
+    # TODO Work this in terms of minor and major intervals.
+    norm_note1 = note1.upper()
+    norm_note2 = note2.upper()
+    index1 = CHROMATIC_SCALE.index(norm_note1)
+    index2 = CHROMATIC_SCALE.index(norm_note2)
+    return abs(index1 - index2) + 1
+
 def interval_quantity(note1, note2):
+    # TODO Work this in terms of minor and major intervals.
     plain_note1 = note1[0].upper()
     plain_note2 = note2[0].upper()
     index1 = NO_SHARPS.index(plain_note1)

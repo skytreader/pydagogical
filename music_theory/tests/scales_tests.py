@@ -1,4 +1,4 @@
-from ..scales import construct_major_scale, interval_quantity
+from ..scales import construct_major_scale, eval_flat, interval_quality, interval_quantity
 
 import unittest
 
@@ -25,3 +25,27 @@ class ScalesTests(unittest.TestCase):
         self.assertEqual(3, interval_quantity("a", "C#"))
         self.assertEqual(3, interval_quantity("A#", "c"))
         self.assertEqual(3, interval_quantity("a", "C#"))
+
+    def test_eval_flat(self):
+        self.assertEqual("G#", eval_flat("Ab"))
+        self.assertEqual("B", eval_flat("Cb"))
+        self.assertEqual("A#", eval_flat("Bb"))
+        self.assertEqual("A#", eval_flat("bb"))
+        self.assertRaises(ValueError, eval_flat, "D#")
+        self.assertRaises(ValueError, eval_flat, "D")
+
+    def test_interval_quality(self):
+        self.assertEqual(4, interval_quality("A", "C"))
+        self.assertEqual(3, interval_quality("A#", "C"))
+        self.assertEqual(5, interval_quality("A", "C#"))
+        self.assertEqual(4, interval_quality("a", "C"))
+        self.assertEqual(4, interval_quality("a", "c"))
+        self.assertEqual(4, interval_quality("a#", "c#"))
+        self.assertEqual(3, interval_quality("a#", "c"))
+        self.assertEqual(5, interval_quality("a", "c#"))
+        self.assertEqual(4, interval_quality("a#", "C#"))
+        self.assertEqual(4, interval_quality("A#", "c#"))
+        self.assertEqual(3, interval_quality("a#", "C"))
+        self.assertEqual(5, interval_quality("a", "C#"))
+        self.assertEqual(3, interval_quality("A#", "c"))
+        self.assertEqual(5, interval_quality("a", "C#"))
