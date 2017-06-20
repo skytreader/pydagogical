@@ -28,7 +28,12 @@ def interval_quality(note1, note2):
     norm_note2 = note2.upper()
     index1 = CHROMATIC_SCALE.index(norm_note1)
     index2 = CHROMATIC_SCALE.index(norm_note2)
-    return abs(index1 - index2) + 1
+
+    if index2 >= index1:
+        return index2 - index1 + 1
+    else:
+        index2 += len(CHROMATIC_SCALE)
+        return index2 - index1 + 1
 
 def interval_quantity(note1, note2):
     # TODO Work this in terms of minor and major intervals.
@@ -36,4 +41,9 @@ def interval_quantity(note1, note2):
     plain_note2 = note2[0].upper()
     index1 = NO_SHARPS.index(plain_note1)
     index2 = NO_SHARPS.index(plain_note2)
-    return abs(index1 - index2) + 1
+
+    if index2 >= index1:
+        return index2 - index1 + 1
+    else:
+        index2 += len(NO_SHARPS)
+        return index2 - index1 + 1
