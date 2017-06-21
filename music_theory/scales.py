@@ -43,10 +43,12 @@ def interval_quality(note1, note2):
     index2 = CHROMATIC_SCALE.index(norm_note2)
 
     if index2 >= index1:
-        return index2 - index1 + 1
+        quality = index2 - index1
     else:
         index2 += len(CHROMATIC_SCALE)
-        return index2 - index1 + 1
+        quality = index2 - index1
+    
+    return INTERVAL_NAMES[quality]
 
 def interval_quantity(note1, note2):
     # TODO Work this in terms of minor and major intervals.
