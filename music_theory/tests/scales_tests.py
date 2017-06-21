@@ -1,4 +1,4 @@
-from ..scales import construct_major_scale, eval_flat, interval_quality, interval_quantity
+from ..scales import *
 
 import unittest
 
@@ -55,3 +55,9 @@ class ScalesTests(unittest.TestCase):
 
         self.assertNotEqual(interval_quality("A", "C"), interval_quality("C", "A"))
         self.assertEqual(10, interval_quality("C", "A"))
+
+    def test_add_interval(self):
+        self.assertEqual("C", add_interval("A", "minor 3rd"))
+        self.assertEqual("C#", add_interval("A", "major 3rd"))
+        self.assertEqual("A", add_interval("A", "octave"))
+        self.assertEqual("A", add_interval("A", "unison"))
