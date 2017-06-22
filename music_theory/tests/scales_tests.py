@@ -30,12 +30,12 @@ class ScalesTests(unittest.TestCase):
         self.assertEqual(6, interval_quantity("C", "A"))
 
     def test_eval_flat(self):
-        self.assertEqual("G#", eval_flat("Ab"))
-        self.assertEqual("B", eval_flat("Cb"))
-        self.assertEqual("A#", eval_flat("Bb"))
-        self.assertEqual("A#", eval_flat("bb"))
-        self.assertRaises(ValueError, eval_flat, "D#")
-        self.assertRaises(ValueError, eval_flat, "D")
+        self.assertEqual("G#", norm_flat("Ab"))
+        self.assertEqual("B", norm_flat("Cb"))
+        self.assertEqual("A#", norm_flat("Bb"))
+        self.assertEqual("A#", norm_flat("bb"))
+        self.assertEqual("D#", norm_flat("D#"))
+        self.assertEqual("D", norm_flat("D"))
 
     def test_interval_quality(self):
         self.assertEqual("perfect 4th", interval_quality("C", "F"))
