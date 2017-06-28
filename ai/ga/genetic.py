@@ -27,6 +27,9 @@ class GASolver(object):
             return [self.compute_fitness(variation) for variation in generation]
 
     def mutate(self, variation):
+        """
+        _Return_ a mutation of the given variation.
+        """
         pass
 
     def create_offspring(self):
