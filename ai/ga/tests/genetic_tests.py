@@ -7,7 +7,7 @@ import unittest
 class MockSolver(GASolver):
 
     def __init__(self, initial_pool):
-        super(MockSolver, self).__init__(initial_pool, show_print=False)
+        super(MockSolver, self).__init__(initial_pool, show_print=False, max_iterations=1)
 
     def mutate(self, variation):
         return "".join([random.choice(string.ascii_lowercase) for _ in range(len(variation))])
@@ -26,3 +26,7 @@ class GeneticTests(unittest.TestCase):
         self.ga_solver.create_offspring()
         post_offspring_len = len(self.ga_solver.current_pool)
         self.assertTrue(post_offspring_len > pre_offspring_len)
+
+    def test_solve(self):
+        # Just call solve to make sure that it does not throw exceptions.
+        self.ga_solver.solve()
