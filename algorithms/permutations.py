@@ -6,15 +6,17 @@ not expected to be unique.
 def __reconstruct_original_chars(index_perm, seq):
     return [seq[index] for index in index_perm]
 
-def generate_next_state(curstate, limit):
+def generate_next_states(curstate, limit):
     """
     Assumes that len(curstate) != limit.
     """
-    next_state = curstate
+    next_states = []
     for i in range(limit):
         if i not in curstate:
+            next_state = [i for i in curstate]
             next_state.append(i)
-            return next_state
+            next_states.append(next_state)
+    return next_states
 
 def permute_dfs(seq):
     if not seq:
@@ -27,13 +29,13 @@ def permute_dfs(seq):
 
     while cur_index < seqlimit:
         cur_prefix = genstack.pop()
-        print(cur_prefix)
-        next_state = generate_next_state(cur_prefix, seqlimit)
+        next_states = generate_next_states(cur_prefix, seqlimit)
 
-        if len(next_state) == seqlimit:
-            permutations.add(tuple(__reconstruct_original_chars(next_state, seq)))
-        else:
-            genstack.append(next_state)
+        for state in next_states:
+            if len(state) == seqlimit:
+                permutations.add(tuple(__reconstruct_original_chars(state, seq)))
+            else:
+                genstack.append(state)
 
         if not genstack:
             cur_index += 1
