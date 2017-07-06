@@ -6,7 +6,8 @@ class PermutationsTest(unittest.TestCase):
 
     def setUp(self):
         self.cases = {
-            "abc": ["abc", "acb", "bac", "bca", "cab", "cba"]
+            "abc": ["abc", "acb", "bac", "bca", "cab", "cba"],
+            "": []
         }
 
         for k in self.cases:
