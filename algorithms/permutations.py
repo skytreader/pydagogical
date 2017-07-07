@@ -42,3 +42,32 @@ def permute_dfs(seq):
             genstack = [[cur_index]]
 
     return permutations
+
+# Totes unfinished!
+def permute_heaps(seq):
+    def generate_2perm(seq2):
+        return (
+            (seq2[0], seq2[1]),
+            (seq2[1], seq2[0])
+        )
+
+    if not seq:
+        return set()
+    elif len(seq) == 1:
+        return set(((seq[0]),),)
+    elif len(seq) == 2:
+        return set(generate_2perm(seq))
+    else:
+        i = 0
+        limit = len(seq)
+        subrange_limit = 2
+        all_perms = []
+
+        while i < limit:
+            subrange = seq[0:subrange_limit]
+            if subrange_limit == 2:
+                twoperms = generate_2perm(subrange)
+                all_perms.extend(twoperms)
+
+            i += 1
+        return all_perms
