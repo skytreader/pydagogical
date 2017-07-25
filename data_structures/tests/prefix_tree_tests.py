@@ -56,3 +56,12 @@ class PrefixTreeTests(unittest.TestCase):
         self.assertEqual(pt.in_tree("heck"), PrefixTreeSearchResults.PREFIX_NOT_FOUND)
         self.assertEqual(pt.in_tree("ha"), PrefixTreeSearchResults.PREFIX_FOUND)
         self.assertEqual(pt.in_tree("hacker"), PrefixTreeSearchResults.PREFIX_TERMINATED)
+
+    def test_more_branching(self):
+        pt = PrefixTree()
+        contents = ["because", "can", "do", "must", "we", "what"]
+        for c in contents:
+            pt.add_word(contents)
+        
+        # By virtue of "we" or "what"
+        self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("w"))
