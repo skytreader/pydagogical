@@ -60,10 +60,10 @@ class PrefixTreeTests(unittest.TestCase):
 
     def test_more_branching(self):
         pt = PrefixTree()
-        contents = ["because", "can", "do", "must", "we", "what"]
+        contents = ["because", "can", "do", "must", "we", "what", "dunk"]
         for c in contents:
             pt.add_word(c)
         
-        self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("c"))
+        self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("d"))
         # By virtue of "we" or "what"
         self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("w"))
