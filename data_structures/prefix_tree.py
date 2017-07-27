@@ -48,24 +48,33 @@ class PrefixTree(object):
         # Here we are sure that this is always going to be a singleton
         if first_children:
             curnode = first_children[0]
+            terminated = False
 
             for idx, char in enumerate(word[1:]):
                 children = curnode.filter_children(lambda c: c == char)
                 if children:
                     curnode = children[0]
+                elif curnode.children:
+                    # curnode has no children that could prefix the word as
+                    # parsed so far, but we have not yet reached a terminal node
+                    curnode.children.append(create_prefix_linked_tree(word[idx + 1:]))
+                    terminated = True
+                    break
                 else:
                     # None is a sentinel value signifying that a word ends in this
                     # letter too
                     curnode.children.append(None)
                     curnode.children.append(create_prefix_linked_tree(word[idx + 1:]))
+                    terminated = True
                     break
 
-            if curnode.children:
+            if curnode.children and not terminated:
                 curnode.children.append(None)
             else:
                 self.tree.children.append(curnode)
         else:
             self.tree.children.append(create_prefix_linked_tree(word))
+
 
     def in_tree(self, prefix):
         curnode = self.tree

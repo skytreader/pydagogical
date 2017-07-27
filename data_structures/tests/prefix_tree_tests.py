@@ -65,5 +65,4 @@ class PrefixTreeTests(unittest.TestCase):
             pt.add_word(c)
         
         self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("d"))
-        # By virtue of "we" or "what"
         self.assertEqual(PrefixTreeSearchResults.PREFIX_FOUND, pt.in_tree("w"))
