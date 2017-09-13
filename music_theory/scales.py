@@ -65,3 +65,7 @@ def interval_quantity(note1, note2):
     else:
         index2 += len(NO_SHARPS)
         return index2 - index1 + 1
+
+def get_chord(note):
+    major_scale = construct_major_scale(note)
+    return [major_scale[0], major_scale[2], major_scale[4]]
