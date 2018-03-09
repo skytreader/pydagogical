@@ -10,8 +10,7 @@ class Grid(GameModel):
     def __init__(self, grid_size):
         super(Grid, self).__init__()
         self.qg = QuadraticGrid(
-            grid_size[0], grid_size[1], diag_neighbors=False,
-            border_properties=BorderProperties()
+            grid_size[0], grid_size[1], diag_neighbors=False
         )
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
@@ -23,8 +22,11 @@ class Grid(GameModel):
     def render(self, **kwargs):
         row = kwargs["row"]
         col = kwargs["col"]
+        print "Asked to render %s, %s" % (row, col)
+        import random
 
-        if self.qg.grid[row][col]:
+        #if self.qg.grid[row][col]:
+        if random.choice((True, False)):
             return GridScreen.UNTAKEN
         else:
             return GridScreen.BLOCKED
