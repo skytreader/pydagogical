@@ -22,11 +22,8 @@ class Grid(GameModel):
     def render(self, **kwargs):
         row = kwargs["row"]
         col = kwargs["col"]
-        print "Asked to render %s, %s" % (row, col)
-        import random
 
-        #if self.qg.grid[row][col]:
-        if random.choice((True, False)):
+        if self.qg.grid[row][col]:
             return GridScreen.UNTAKEN
         else:
             return GridScreen.BLOCKED
