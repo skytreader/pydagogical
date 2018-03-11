@@ -1,6 +1,7 @@
 from components.core import GameScreen, GameLoopEvents
 from components.core import Colors
 
+import logging
 import pygame
 
 class GridScreen(GameScreen):
@@ -20,8 +21,9 @@ class GridLoopEvents(GameLoopEvents):
         super(GridLoopEvents, self).__init__(gamescreen.config, gamescreen)
 
     def __mouse_click(self):
+        self.debug_queue.log("click event detected")
         pos = pygame.mouse.get_pos()
-        clicked_cell = self.gamescreen.model.qg.get_clicked_cell(self.gamescreen pos)
+        clicked_cell = self.gamescreen.model.qg.get_clicked_cell(self.gamescreen, pos)
         self.gamescreen.model.toggle(clicked_cell[0], clicked_cell[1])
 
     def attach_event_handlers(self):
