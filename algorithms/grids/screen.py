@@ -21,7 +21,6 @@ class GridLoopEvents(GameLoopEvents):
         super(GridLoopEvents, self).__init__(gamescreen.config, gamescreen)
 
     def __mouse_click(self, ev):
-        self.debug_queue.log("click event detected")
         pos = pygame.mouse.get_pos()
         clicked_cell = self.game_screen.model.qg.get_clicked_cell(self.game_screen, pos)
         self.game_screen.model.toggle(clicked_cell[0], clicked_cell[1])
