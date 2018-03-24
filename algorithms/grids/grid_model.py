@@ -7,11 +7,11 @@ class Grid(GameModel):
     FREE = True
     BLOCKED = False
 
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, max_size):
         super(Grid, self).__init__()
         self.qg = QuadraticGrid(
-            grid_size[0], grid_size[1], diag_neighbors=False,
-            border_properties=BorderProperties()
+            grid_size[0], grid_size[1], max_size[0], max_size[1],
+            diag_neighbors=False, border_properties=BorderProperties()
         )
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
