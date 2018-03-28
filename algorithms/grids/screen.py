@@ -1,3 +1,4 @@
+from components.common_ui import Button
 from components.core import GameScreen, GameLoopEvents
 from components.core import Colors
 
@@ -12,8 +13,12 @@ class GridScreen(GameScreen):
     def __init__(self, config, model):
         super(GridScreen, self).__init__(config, model)
 
+    def setup(self):
+        self.simulate_button = Button("Find Path", Colors.HUMAN_BLUE, (428, 128))
+
     def draw_screen(self, window):
         self.model.qg.draw(window, self)
+        self.simulate_button.draw(window, self)
 
 class GridLoopEvents(GameLoopEvents):
 
