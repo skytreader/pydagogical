@@ -28,7 +28,8 @@ class GridLoopEvents(GameLoopEvents):
     def __mouse_click(self, ev):
         pos = pygame.mouse.get_pos()
         clicked_cell = self.game_screen.model.qg.get_clicked_cell(self.game_screen, pos)
-        self.game_screen.model.toggle(clicked_cell[0], clicked_cell[1])
+        if clicked_cell:
+            self.game_screen.model.toggle(clicked_cell[0], clicked_cell[1])
 
     def attach_event_handlers(self):
         click_event = pygame.event.Event(pygame.MOUSEBUTTONDOWN)
