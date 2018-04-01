@@ -15,6 +15,15 @@ class GridScreen(GameScreen):
 
     def setup(self):
         self.simulate_button = Button("Find Path", Colors.HUMAN_BLUE, (428, 128))
+        self.simulate_button.set_event_handler(
+            pygame.event.Event(pygame.MOUSEBUTTONDOWN), self.simulate_handler
+        )
+        self.ui_elements.add(self.simulate_button)
+
+    def simulate_handler(self, event):
+        pos = pygame.mouse.get_pos()
+        if self._is_drawable_clicked(self.simulate_button, pos):
+            print "Hello world."
 
     def draw_screen(self, window):
         self.model.qg.draw(window, self)
@@ -32,5 +41,6 @@ class GridLoopEvents(GameLoopEvents):
             self.game_screen.model.toggle(clicked_cell[0], clicked_cell[1])
 
     def attach_event_handlers(self):
+        super(GridLoopEvents, self).attach_event_handlers()
         click_event = pygame.event.Event(pygame.MOUSEBUTTONDOWN)
         self.add_event_handler(click_event, self.__mouse_click)
