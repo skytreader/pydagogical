@@ -27,6 +27,8 @@ class GridScreen(GameScreen):
 
     def draw_screen(self, window):
         self.model.qg.draw(window, self)
+
+    def draw_unchanging(self, window):
         self.simulate_button.draw(window, self)
 
 class GridLoopEvents(GameLoopEvents):
