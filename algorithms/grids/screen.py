@@ -32,7 +32,7 @@ class GridScreen(GameScreen):
 class GridLoopEvents(GameLoopEvents):
 
     def __init__(self, gamescreen):
-        super(GridLoopEvents, self).__init__(gamescreen.config, gamescreen)
+        super(GridLoopEvents, self).__init__(gamescreen)
 
     def __mouse_click(self, ev):
         pos = pygame.mouse.get_pos()
