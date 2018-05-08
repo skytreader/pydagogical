@@ -38,6 +38,11 @@ class SmartermindSolver(MastermindSolver):
     """
     Mastermind solver that "breaks" the conventions of GASolver, in the interest
     of being smarter.
+
+    When mutating a variation, this takes into account the fitness of the
+    current variation (both the "correct" score and the "misplaced" score). The
+    hypothesis is that this should be statistically better than plain
+    MastermindSolver above.
     """
 
     def __pick_distinct_subset(self, universe, length, autoexclude=None):
