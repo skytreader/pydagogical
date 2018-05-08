@@ -1,5 +1,13 @@
 import math
 
+class SolutionStat(object):
+
+    def __init__(self, answer, iters, max_iters, ans_score):
+        self.answer = answer
+        self.iters = iters
+        self.max_iters = max_iters
+        self.ans_score = ans_score
+
 class GASolver(object):
 
     def __init__(self, initial_pool, show_print=True, max_iterations=float("inf"), max_pool_size=8):
@@ -80,15 +88,24 @@ class GASolver(object):
 
         if solution is None:
             max_variation = self.current_pool[0]
+            max_var_fitness = self.compute_fitness(max_variation)
 
             for variation in self.current_pool[1:]:
-                if self.compute_fitness(variation) > self.compute_fitness(max_variation):
+                cand_var_fitness = self.compute_fitness(max_variation)
+                if self.compute_fitness(variation) > cand_var_fitness:
                     max_variation = variation
+                    max_var_fitness = cand_var_fitness
 
             print("Exhausted possibilities. Best answer has score: %s" % self.compute_fitness(max_variation))
-            return max_variation
+            return SolutionStat(
+                answer=max_variation, ans_score=max_var_fitness,
+                iters=itercount, max_iters=self.max_iterations
+            )
         else:
-            return solution
+            return SolutionStat(
+                answer=solution, ans_score=self.compute_fitness(solution),
+                iters=itercount, max_iters=self.max_iterations
+            )
 
 class GenerationRater(object):
 
