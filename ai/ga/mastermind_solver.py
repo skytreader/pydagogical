@@ -1,11 +1,19 @@
 #! /usr/bin/env python3
 
 from ai.mastermind import MasterMind
-from ai.ga.genetic import GASolver
+from ai.ga.genetic import GASolver, StandardGASolver
 from .errors import UnreachableSolutionException
 
 import random
 import sys
+
+class SGASolver(StandardGASolver):
+
+    def __init__(self, mastermind, pool_size=4):
+        self.mastermind = mastermind
+        initial_pool = [[
+            random.choice(mastermind.charset) for _ in range(mastermind.numslot)
+        ] for _ in pool_size]
 
 class MastermindSolver(GASolver):
 
