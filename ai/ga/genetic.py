@@ -134,7 +134,7 @@ class StandardGASolver(GASolver):
         super().__init__(initial_pool, max_iterations=max_iterations, max_pool_size=max_pool_size)
 
     def __crossover(self, parents):
-        division_limit = random.randint(1, len(parents[0] - 1))
+        division_limit = random.randint(1, len(parents[0]) - 1)
 
         p0a = parents[0][:division_limit]
         p0b = parents[0][division_limit:]
@@ -157,12 +157,13 @@ class StandardGASolver(GASolver):
 
         while solution is None and itercount < self.max_iterations:
             self.current_pool = new_generation
+            old_generation = new_generation
             new_generation = []
 
             while len(new_generation) < self.max_pool_size:
+                print("Building new generation. We currently have: %s" % new_generation)
                 generation_fitness = self.compute_generation_fitness()
                 individual_fitness_map = list(zip(self.current_pool, generation_fitness))
-                print("The fitness map looks like %s" % individual_fitness_map)
                 individual_fitness_map.sort(key=lambda x: x[1], reverse=True)
                 # Update current_pool for culling
                 self.current_pool = [x[0] for x in individual_fitness_map]
@@ -182,6 +183,8 @@ class StandardGASolver(GASolver):
 
                 new_generation.extend(children)
 
+            print("new generation: %s" % new_generation)
+            print("current generation: %s" % old_generation)
             for child in new_generation:
                 if self.compute_fitness(child) == 1:
                     solution = child

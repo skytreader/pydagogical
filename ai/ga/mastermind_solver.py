@@ -29,6 +29,9 @@ class SGASolver(StandardGASolver):
 
         return mutation
 
+    def compute_fitness(self, variation):
+        return self.mastermind.rate(variation)
+
 class MastermindSolver(GASolver):
 
     def __init__(self, mastermind):
