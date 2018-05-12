@@ -153,7 +153,7 @@ class StandardGASolver(GASolver):
         solution = None
         itercount = 0
         
-        new_generation = initial_pool
+        new_generation = self.current_pool
 
         while solution is None and itercount < self.max_iterations:
             self.current_pool = new_generation

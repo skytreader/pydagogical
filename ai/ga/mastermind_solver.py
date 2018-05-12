@@ -9,11 +9,25 @@ import sys
 
 class SGASolver(StandardGASolver):
 
-    def __init__(self, mastermind, pool_size=4):
+    def __init__(self, mastermind, max_iterations=float("inf"), pool_size=4):
         self.mastermind = mastermind
         initial_pool = [[
-            random.choice(mastermind.charset) for _ in range(mastermind.numslot)
-        ] for _ in pool_size]
+            random.choice(mastermind.charset) for _ in range(mastermind.numslots)
+        ] for _ in range(pool_size)]
+
+        super().__init__(initial_pool, max_iterations)
+
+    def mutate(self, variation):
+        """
+        [PREBYS] assumes that the variation is a binary string; this does not.
+        For this version, $p_m$ for all possible $m$ is 0.5.
+        """
+        mutation = [c for c in variation]
+        for idx, c in mutation:
+            if random.choice((True, False)):
+                mutation[idx] = random.choice(self.mastermind.charset)
+
+        return mutation
 
 class MastermindSolver(GASolver):
 
@@ -110,7 +124,7 @@ class SmartermindSolver(MastermindSolver):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python3 -m ai.ga.mastermind_solver (naive|smart) <numslots>")
+        print("Usage: python3 -m ai.ga.mastermind_solver (naive|smart|standard) <numslots>")
         exit(1)
 
     _type = sys.argv[1]
@@ -122,6 +136,8 @@ if __name__ == "__main__":
         solver = MastermindSolver(mastermind)
     elif _type == "smart":
         solver = SmartermindSolver(mastermind)
+    elif _type == "standard":
+        solver = SGASolver(mastermind)
     else:
         print("type can only be either naive or smart")
         exit()
