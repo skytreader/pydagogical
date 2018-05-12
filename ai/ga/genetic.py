@@ -29,7 +29,7 @@ class GASolver(object):
         """
         pass
 
-    def __compute_generation_fitness(self, generation=None):
+    def compute_generation_fitness(self, generation=None):
         if generation is None:
             return [self.compute_fitness(variation) for variation in self.current_pool]
         else:
@@ -48,10 +48,10 @@ class GASolver(object):
         This _desperately_ tries to create an offspring with a better fitness
         than its parents.
         """
-        cur_max_fitness = max(self.__compute_generation_fitness())
+        cur_max_fitness = max(self.compute_generation_fitness())
 
         new_pool = [self.mutate(variation) for variation in self.current_pool]
-        new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
+        new_gen_fittest = max(self.compute_generation_fitness(new_pool))
         itercount = 0
         if self.max_iterations != float("inf"):
             pool_mutation_limit = int(math.ceil(self.max_iterations / 10))
@@ -60,7 +60,7 @@ class GASolver(object):
 
         while new_gen_fittest <= cur_max_fitness and itercount < self.max_iterations:
             new_pool = [self.mutate(variation) for variation in self.current_pool]
-            new_gen_fittest = max(self.__compute_generation_fitness(new_pool))
+            new_gen_fittest = max(self.compute_generation_fitness(new_pool))
             itercount += 1
 
         self.current_pool.extend(new_pool)
@@ -86,7 +86,7 @@ class GASolver(object):
 
             if solution is None:
                 self.create_offspring()
-                self.__conditional_print("Fitness of current_pool: %s" % self.__compute_generation_fitness())
+                self.__conditional_print("Fitness of current_pool: %s" % self.compute_generation_fitness())
 
             itercount += 1
 
@@ -160,7 +160,7 @@ class StandardGASolver(GASolver):
             new_generation = []
 
             while len(new_generation) < self.max_pool_size:
-                generation_fitness = self.__compute_generation_fitness()
+                generation_fitness = self.compute_generation_fitness()
                 individual_fitness_map = zip(self.current_pool, generation_fitness)
                 individual_fitness_map.sort(key=lambda x: x[1], reverse=True)
                 # Update current_pool for culling
