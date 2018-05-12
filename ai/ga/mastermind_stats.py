@@ -16,7 +16,7 @@ def print_results(numlist):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Empirical stats for mastermind solvers.")
     parser.add_argument("--charset", dest="charset", type=str, help="The possible characters for the hidden code.", default=string.ascii_lowercase)
-    parser.add_argument("--codelen", dest="codelen", type=int, help="The length of the code to guess.")
+    parser.add_argument("--codelen", dest="codelen", type=int, help="The length of the code to guess.", required=True)
     parser.add_argument("--simlen", dest="simlen", type=int, help="The number of simulations to run.", default=1000)
 
     args = parser.parse_args()

@@ -4,8 +4,9 @@ from ai.mastermind import MasterMind
 from ai.ga.genetic import GASolver, StandardGASolver
 from .errors import UnreachableSolutionException
 
+import argparse
 import random
-import sys
+import string
 
 class SGASolver(StandardGASolver):
 
@@ -126,14 +127,27 @@ class SmartermindSolver(MastermindSolver):
         return varclone
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python3 -m ai.ga.mastermind_solver (naive|smart|standard) <numslots>")
-        exit(1)
+    parser = argparse.ArgumentParser(description="Generate and solve mastermind instances.")
+    parser.add_argument(
+        "--solver", "-s", help="The type of solver to use", type=str,
+        choices=("naive", "smart", "standard"), required=True
+    )
+    parser.add_argument(
+        "--len", "-l", help="The length of the code to be guessed", type=int,
+        required=True
+    )
+    parser.add_argument(
+        "--charset", "-c", help="The allowed alphabet for the mastermind",
+        type=str, default=string.ascii_lowercase, required=False
+    )
 
-    _type = sys.argv[1]
-    numslots = int(sys.argv[2])
+    args = vars(parser.parse_args())
 
-    mastermind = MasterMind(numslots)
+    _type = args["solver"]
+    numslots = int(args["len"])
+    charset = args["charset"]
+
+    mastermind = MasterMind(numslots, charset=charset)
 
     if _type == "naive":
         solver = MastermindSolver(mastermind)
