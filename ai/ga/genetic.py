@@ -27,7 +27,7 @@ class GASolver(object):
         solutions. Of course, the higher the value, the "closer" the variation
         is to the actual solution.
         """
-        pass
+        raise NotImplementedError("The fitness function for this solver is unimplemented.")
 
     def compute_generation_fitness(self, generation=None):
         if generation is None:
@@ -39,7 +39,7 @@ class GASolver(object):
         """
         _Return_ a mutation of the given variation.
         """
-        pass
+        raise NotImpementedError("The mutation function for this solver is unimplemented.")
 
     def create_offspring(self):
         """
@@ -161,7 +161,8 @@ class StandardGASolver(GASolver):
 
             while len(new_generation) < self.max_pool_size:
                 generation_fitness = self.compute_generation_fitness()
-                individual_fitness_map = zip(self.current_pool, generation_fitness)
+                individual_fitness_map = list(zip(self.current_pool, generation_fitness))
+                print("The fitness map looks like %s" % individual_fitness_map)
                 individual_fitness_map.sort(key=lambda x: x[1], reverse=True)
                 # Update current_pool for culling
                 self.current_pool = [x[0] for x in individual_fitness_map]
