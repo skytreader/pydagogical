@@ -19,6 +19,9 @@ class GASolver(object):
         self.max_iterations = max_iterations
         self.max_pool_size = max_pool_size
         self.show_print = show_print
+        self.stats = {
+            "fittest_per_gen": []
+        }
 
     def compute_fitness(self, variation):
         """
@@ -86,6 +89,8 @@ class GASolver(object):
 
             if solution is None:
                 self.create_offspring()
+                gen_fitness = self.compute_generation_fitness()
+                self.stats["fittest_per_gen"].append(max(gen_fitness))
                 self.__conditional_print("Fitness of current_pool: %s" % self.compute_generation_fitness())
 
             itercount += 1
@@ -157,6 +162,7 @@ class StandardGASolver(GASolver):
 
         while solution is None and itercount < self.max_iterations:
             self.current_pool = new_generation
+            self.stats["fittest_per_gen"].append(max(self.compute_generation_fitness()))
             old_generation = new_generation
             new_generation = []
 
@@ -193,7 +199,7 @@ class StandardGASolver(GASolver):
             itercount += 1
 
         if solution is None:
-            max_variation = self.current_pool[0]
+            max_variation = new_generation[0]
             max_var_fitness = self.compute_fitness(max_variation)
 
             for variation in self.current_pool[1:]:

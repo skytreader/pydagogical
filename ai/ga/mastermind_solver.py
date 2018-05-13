@@ -8,6 +8,8 @@ import argparse
 import random
 import string
 
+import matplotlib.pyplot as plt
+
 class SGASolver(StandardGASolver):
 
     def __init__(self, mastermind, max_iterations=float("inf"), pool_size=4):
@@ -140,23 +142,30 @@ if __name__ == "__main__":
         "--charset", "-c", help="The allowed alphabet for the mastermind",
         type=str, default=string.ascii_lowercase, required=False
     )
+    parser.add_argument(
+        "--maxiters", "-m", help="The maximum number of iterations before solver forcibly quits",
+        type=int, default=0, required=False
+    )
 
     args = vars(parser.parse_args())
 
     _type = args["solver"]
     numslots = int(args["len"])
     charset = args["charset"]
+    max_iters = int(args["maxiters"]) if args["maxiters"] > 0 else float("inf")
 
     mastermind = MasterMind(numslots, charset=charset)
 
     if _type == "naive":
-        solver = MastermindSolver(mastermind)
+        solver = MastermindSolver(mastermind, max_iterations=max_iters)
     elif _type == "smart":
-        solver = SmartermindSolver(mastermind)
+        solver = SmartermindSolver(mastermind, max_iterations=max_iters)
     elif _type == "standard":
-        solver = SGASolver(mastermind)
+        solver = SGASolver(mastermind, max_iterations=max_iters)
     else:
         print("type can only be either naive or smart")
         exit()
 
     solver.solve()
+    plt.plot(solver.stats["fittest_per_gen"])
+    plt.show()
