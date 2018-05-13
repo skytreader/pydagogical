@@ -20,13 +20,16 @@ class SGASolver(StandardGASolver):
 
         super().__init__(initial_pool, max_iterations)
 
+    def _should_crossover(self):
+        return random.choice((False, False, True))
+
     def mutate(self, variation):
         """
         [PREBYS] assumes that the variation is a binary string; this does not.
         For this version, $p_m$ for all possible $m$ is 0.5.
         """
         mutation = [c for c in variation]
-        for idx, c in mutation:
+        for idx, c in enumerate(mutation):
             if random.choice((True, False)):
                 mutation[idx] = random.choice(self.mastermind.charset)
 

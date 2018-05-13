@@ -152,6 +152,13 @@ class StandardGASolver(GASolver):
 
         return (p0a, p1a)
 
+    def _should_crossover(self):
+        """
+        Override this method to tweak the behavior of your GA. Maybe you want it
+        to mutate more than it should crossover?
+        """
+        return random.choice((True, False))
+
     def solve(self):
         # This iteration limiting is not in [PREBYS] and yet we do them because
         # they make sense from an engineering perspective.
@@ -182,12 +189,12 @@ class StandardGASolver(GASolver):
 
                 # Randomly decide if we should crossover
                 children = None
-                if random.choice((True, False)):
+                if self._should_crossover():
                     children = self.__crossover(chosen_parents)
                 else:
                     children = chosen_parents
 
-                new_generation.extend(children)
+                new_generation.extend([self.mutate(c) for c in children])
 
             print("new generation: %s" % new_generation)
             print("current generation: %s" % old_generation)
