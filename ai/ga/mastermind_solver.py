@@ -20,18 +20,27 @@ class SGASolver(StandardGASolver):
 
         super().__init__(initial_pool, max_iterations)
 
-    def _should_crossover(self):
-        return random.choice((False, False, True))
+    def _should_crossover(self, parents):
+        parent_scores = [self.mastermind.rate(parents[0]), self.mastermind.rate(parents[1])]
+
+        return parent_scores[0] < 0.7 and parent_scores[1] < 0.7
 
     def mutate(self, variation):
         """
         [PREBYS] assumes that the variation is a binary string; this does not.
         For this version, $p_m$ for all possible $m$ is 0.5.
         """
+        score = self.mastermind.rate(variation)
+        t_count = len([x for x in self.mastermind.decide(variation) if not x])
+        mutatables = len(variation) - t_count
+        mutated_count = 0
         mutation = [c for c in variation]
         for idx, c in enumerate(mutation):
-            if random.choice((True, False)):
+            if mutated_count == mutatables:
+                break
+            if random.random() > score:
                 mutation[idx] = random.choice(self.mastermind.charset)
+                mutated_count += 1
 
         return mutation
 

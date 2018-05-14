@@ -152,7 +152,7 @@ class StandardGASolver(GASolver):
 
         return (p0a, p1a)
 
-    def _should_crossover(self):
+    def _should_crossover(self, parents):
         """
         Override this method to tweak the behavior of your GA. Maybe you want it
         to mutate more than it should crossover?
@@ -166,10 +166,15 @@ class StandardGASolver(GASolver):
         itercount = 0
         
         new_generation = self.current_pool
+        should_note_offspring = False
 
         while solution is None and itercount < self.max_iterations:
             self.current_pool = new_generation
-            self.stats["fittest_per_gen"].append(max(self.compute_generation_fitness()))
+            fittest = max(self.compute_generation_fitness())
+            should_note_offspring = fittest > 0.7
+            if should_note_offspring:
+                print("NOTEMARK the fittest in this generation")
+            self.stats["fittest_per_gen"].append(fittest)
             old_generation = new_generation
             new_generation = []
 
@@ -184,20 +189,23 @@ class StandardGASolver(GASolver):
                 # This is a very austere way of choosing the new generation...we should
                 # look into using a probabilistic selection function.
                 chosen_parents = [individual_fitness_map[0][0], individual_fitness_map[1][0]]
+                print("Chose parents: %s" % chosen_parents)
                 # Cull the pool
                 self.current_pool = self.current_pool[2:]
 
                 # Randomly decide if we should crossover
                 children = None
-                if self._should_crossover():
+                if self._should_crossover(chosen_parents):
                     children = self.__crossover(chosen_parents)
                 else:
                     children = chosen_parents
 
                 new_generation.extend([self.mutate(c) for c in children])
 
-            print("new generation: %s" % new_generation)
-            print("current generation: %s" % old_generation)
+            if should_note_offspring:
+                print("BOOKMARK!")
+            print("new generation: %s %s" % (new_generation, self.compute_generation_fitness(new_generation)))
+            print("current generation: %s %s" % (old_generation, self.compute_generation_fitness(old_generation)))
             for child in new_generation:
                 if self.compute_fitness(child) == 1:
                     solution = child
