@@ -9,6 +9,9 @@ class SolutionStat(object):
         self.max_iters = max_iters
         self.ans_score = ans_score
 
+    def __str__(self):
+        return "{'answer': '%s', 'iters': '%s', 'max_iters': '%s', 'ans_score': '%s'}" % (self.answer, self.iters, self.max_iters, self.ans_score)
+
 class GASolver(object):
 
     def __init__(self, initial_pool, show_print=True, max_iterations=float("inf"), max_pool_size=8):
@@ -106,14 +109,17 @@ class GASolver(object):
                     max_var_fitness = cand_var_fitness
 
             print("Exhausted possibilities. Best answer has score: %s" % self.compute_fitness(max_variation))
+            self.stats["fittest_per_gen"].append(max_var_fitness)
             return SolutionStat(
                 answer=max_variation, ans_score=max_var_fitness,
                 iters=itercount, max_iters=self.max_iterations
             )
         else:
+            score = self.compute_fitness(solution)
+            self.stats["fittest_per_gen"].append(score)
             return SolutionStat(
-                answer=solution, ans_score=self.compute_fitness(solution),
-                iters=itercount, max_iters=self.max_iterations
+                answer=solution, ans_score=score, iters=itercount,
+                max_iters=self.max_iterations
             )
 
 class StandardGASolver(GASolver):
@@ -224,14 +230,17 @@ class StandardGASolver(GASolver):
                     max_var_fitness = cand_var_fitness
 
             print("Exhausted possibilities. Best answer has score: %s" % self.compute_fitness(max_variation))
+            self.stats["fittest_per_gen"].append(max_var_fitness)
             return SolutionStat(
                 answer=max_variation, ans_score=max_var_fitness,
                 iters=itercount, max_iters=self.max_iterations
             )
         else:
+            score = self.compute_fitness(solution)
+            self.stats["fittest_per_gen"].append(score)
             return SolutionStat(
-                answer=solution, ans_score=self.compute_fitness(solution),
-                iters=itercount, max_iters=self.max_iterations
+                answer=solution, ans_score=score, iters=itercount,
+                max_iters=self.max_iterations
             )
 
 class GenerationRater(object):

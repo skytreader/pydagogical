@@ -178,6 +178,8 @@ if __name__ == "__main__":
         print("type can only be either naive or smart")
         exit()
 
-    solver.solve()
+    soln = solver.solve()
+    print("Got solution: %s" % soln)
+    print(solver.stats["fittest_per_gen"])
     plt.plot(solver.stats["fittest_per_gen"])
     plt.show()
