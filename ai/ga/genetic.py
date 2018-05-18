@@ -145,6 +145,7 @@ class StandardGASolver(GASolver):
         super().__init__(initial_pool, max_iterations=max_iterations, max_pool_size=max_pool_size)
 
     def __crossover(self, parents):
+        print("Parents are %s" % parents)
         division_limit = random.randint(1, len(parents[0]) - 1)
 
         p0a = parents[0][:division_limit]
@@ -195,7 +196,6 @@ class StandardGASolver(GASolver):
                 # This is a very austere way of choosing the new generation...we should
                 # look into using a probabilistic selection function.
                 chosen_parents = [individual_fitness_map[0][0], individual_fitness_map[1][0]]
-                print("Chose parents: %s" % chosen_parents)
                 # Cull the pool
                 self.current_pool = self.current_pool[2:]
 
