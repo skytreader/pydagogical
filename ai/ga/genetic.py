@@ -166,6 +166,26 @@ class StandardGASolver(GASolver):
         """
         return random.choice((True, False))
 
+    def _select_parents(self, ifm):
+        """
+        Where ifm (individual fitness map) is a list of tuples where each tuple
+        is a parent and its corresponding fitness score. This method also 
+        reorders self.current_pool to remove the parents from the current_pool.
+        """
+        self.current_pool = [x[0] for x in ifm]
+        parents = []
+
+        while len(parents) < 2:
+            for i in ifm:
+                # The probability of parenthood is in direct proportion to fitness
+                if i[0] not in parents and random.random() <= i[1]:
+                    parents.append(i[0])
+
+                if len(parents) == 2:
+                    break
+
+        return parents
+
     def solve(self):
         # This iteration limiting is not in [PREBYS] and yet we do them because
         # they make sense from an engineering perspective.
@@ -176,12 +196,12 @@ class StandardGASolver(GASolver):
         should_note_offspring = False
 
         while solution is None and itercount < self.max_iterations:
-            self.current_pool = new_generation
             fittest = max(self.compute_generation_fitness())
             should_note_offspring = fittest > 0.7
             if should_note_offspring:
                 print("NOTEMARK the fittest in this generation")
             self.stats["fittest_per_gen"].append(fittest)
+            # old_generation is just for bookkeeping; can be safely removed
             old_generation = new_generation
             new_generation = []
 
@@ -190,14 +210,8 @@ class StandardGASolver(GASolver):
                 generation_fitness = self.compute_generation_fitness()
                 individual_fitness_map = list(zip(self.current_pool, generation_fitness))
                 individual_fitness_map.sort(key=lambda x: x[1], reverse=True)
-                # Update current_pool for culling
-                self.current_pool = [x[0] for x in individual_fitness_map]
 
-                # This is a very austere way of choosing the new generation...we should
-                # look into using a probabilistic selection function.
-                chosen_parents = [individual_fitness_map[0][0], individual_fitness_map[1][0]]
-                # Cull the pool
-                self.current_pool = self.current_pool[2:]
+                chosen_parents = self._select_parents(individual_fitness_map)
 
                 # Randomly decide if we should crossover
                 children = None
@@ -208,6 +222,7 @@ class StandardGASolver(GASolver):
 
                 new_generation.extend([self.mutate(c) for c in children])
 
+            self.current_pool = new_generation
             if should_note_offspring:
                 print("BOOKMARK!")
             print("new generation: %s %s" % (new_generation, self.compute_generation_fitness(new_generation)))
