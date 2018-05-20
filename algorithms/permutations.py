@@ -59,15 +59,22 @@ def permute_heaps(seq):
         return set(generate_2perm(seq))
     else:
         i = 0
-        limit = len(seq)
+        __seq = [x for x in seq]
+        limit = len(__seq)
         subrange_limit = 2
         all_perms = []
 
         while i < limit:
-            subrange = seq[0:subrange_limit]
+            subrange = __seq[0:subrange_limit]
             if subrange_limit == 2:
                 twoperms = generate_2perm(subrange)
                 all_perms.extend(twoperms)
 
+            new_perms = []
+            for perm in all_perms:
+                np = [x for x in perm]
+                np.append(__seq[subrange_limit])
+
             i += 1
+
         return all_perms
