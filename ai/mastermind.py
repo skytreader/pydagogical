@@ -31,16 +31,14 @@ class MasterMind(GenerationRater):
     @staticmethod
     def blind_decide(sequence, guess):
         """
-        Returns a list of booleans of at most length numslots, where there is:
-
-        True for a correct symbol in the correct location.
-        False for a correct symbol in the wrong location.
-
-        In retrospect, this should've just returned a dictionary with the given
-        counts. But it was so tempting to do this like the actual mastermind is
-        done, with the list _actually_ representing the pegs returned.
+        Returns a dictionary with two fields: "completely-correct" and
+        "symbol-correct" and whose values are counts of symbols in the guess
+        which do precisely that.
         """
-        verdict = []
+        verdict = {
+            "completely-correct": 0,
+            "symbol-correct": 0
+        }
         if len(guess) != len(sequence):
             raise Exception("Invalid guess")
 
@@ -49,7 +47,7 @@ class MasterMind(GenerationRater):
         
         for g, seq in list(zip(guessclone, sequence)):
             if g == seq:
-                verdict.insert(0, True)
+                verdict["completely-correct"] += 1
 
                 # FIXME conditional looks extraneous
                 if g in seqclone:
@@ -58,11 +56,11 @@ class MasterMind(GenerationRater):
 
         for g in guessclone:
             if g in seqclone:
-                verdict.insert(0, False)
+                verdict["symbol-correct"] += 1
                 seqclone.remove(g)
 
         return verdict
 
     def rate(self, variation):
         decision = self.decide(variation)
-        return sum([1 if d else 0.5 for d in decision]) / len(variation)
+        return ((1 * decision["completely-correct"]) + (0.5 * decision["symbol-correct"])) / len(variation)

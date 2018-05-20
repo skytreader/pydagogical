@@ -74,12 +74,12 @@ class EligibleFitnessSolver(SGASolver):
 
 class MastermindSolver(GASolver):
 
-    def __init__(self, mastermind):
+    def __init__(self, mastermind, max_iterations=float("inf")):
         self.mastermind = mastermind
         initial_pool_ = [[
             random.choice(mastermind.charset) for _ in range(mastermind.numslots)
         ]]
-        super().__init__(initial_pool_)
+        super().__init__(initial_pool_, max_iterations=max_iterations)
 
     def mutate(self, variation):
         mutate_count = random.randint(0, self.mastermind.numslots - 1)
