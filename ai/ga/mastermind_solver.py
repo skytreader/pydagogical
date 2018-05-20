@@ -5,6 +5,7 @@ from ai.ga.genetic import GASolver, StandardGASolver
 from .errors import UnreachableSolutionException
 
 import argparse
+import itertools
 import random
 import string
 
@@ -66,11 +67,94 @@ class EligibleFitnessSolver(SGASolver):
     """
 
     def __init__(self, mastermind, max_iterations=float("inf"), pool_size=4):
+        """
+        If you can't choose wisely, choose randomly: set the expected length
+        of the eligible codes subset to be half of that of pool_size (round
+        down). 
+        """
         super().__init__(mastermind, max_iterations, pool_size)
         self.guess_history = []
+        # length of the eligible codes subset
+        self.len_ecs = int(pool_size / 2)
+
+    def play_guess(self, variation):
+        """
+        Appends the variation to the guess_history and returns the
+        generated history entry. The history entry is a dictionary with two
+        fields: "guess" and "score".
+        """
+        history_entry = {
+            "guess": variation,
+            "score": self.mastermind.decide(variation)
+        }
+        self.guess_history.append(history_entry)
+        print("Played guess: %s" % history_entry)
+        return history_entry
 
     def compute_fitness(self, variation):
-        pass
+        zero_count = 0
+        for gh in self.guess_history:
+            decision = MasterMind.blind_decide(variation, gh["guess"])
+
+            if decision == gh["score"]:
+                zero_count += 1
+
+        return zero_count / len(self.guess_history)
+
+    def _select_parents(self, population):
+        p0 = random.choice(population)
+        p1 = random.choice(population)
+
+        while p1 == p0:
+            p1 = random.choice(population)
+
+        return (p0, p1)
+
+    def make_new_population(self, population):
+        new_pop = set()
+
+        crossover = self._crossover(self._select_parents(population))
+        for co in crossover:
+            new_pop.add(co)
+
+        p0, p1 = self._select_parents(population)
+        new_pop.add(self.mutate(p0))
+        new_pop.add(self.mutate(p1))
+
+        p0, p1 = self._select_parents(population)
+        new_pop.add(itertools.permutations(p0))
+        new_pop.add(itertools.permutations(p1))
+
+        return new_pop
+
+    def solve(self):
+        itercount = 0
+        initial_guess = [
+            random.choice(self.mastermind.charset) for _ in range(len(self.mastermind.numslots))
+        ]
+        last_guess = self.play_guess(initial_guess)
+
+        while last_guess["score"]["completely_correct"] != self.mastermind.numslots:
+            population = [
+                [
+                    random.choice(self.mastermind.charset) for _ in range(len(self.mastermind.numslots))
+                ]
+            ]
+            h = 0
+            eligible_codes_subset = set()
+
+            while h < self.max_iterations and len(eligible_codes_subset) < self.len_ecs:
+                population = self.make_new_population(population)
+                individual_fitness_map = list(zip(
+                    population, self.compute_generation_fitness(population)
+                ))
+                
+                for individual in individual_fitness_map:
+                    if individual[1] == 1:
+                        eligible_codes_subset.add(individual[0])
+                h += 1
+
+            last_guess = self.play_guess(random.choice(eligible_codes_subset))
 
 class MastermindSolver(GASolver):
 

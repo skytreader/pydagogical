@@ -144,8 +144,7 @@ class StandardGASolver(GASolver):
 
         super().__init__(initial_pool, max_iterations=max_iterations, max_pool_size=max_pool_size)
 
-    def __crossover(self, parents):
-        print("Parents are %s" % parents)
+    def _crossover(self, parents):
         division_limit = random.randint(1, len(parents[0]) - 1)
 
         p0a = parents[0][:division_limit]
@@ -169,8 +168,7 @@ class StandardGASolver(GASolver):
     def _select_parents(self, ifm):
         """
         Where ifm (individual fitness map) is a list of tuples where each tuple
-        is a parent and its corresponding fitness score. This method also 
-        reorders self.current_pool to remove the parents from the current_pool.
+        is a parent and its corresponding fitness score.
         """
         if len(ifm) < 2:
             raise ValueError("_select_parents needs to be given a population of at least 2. Given %s." % len(ifm))
@@ -209,7 +207,7 @@ class StandardGASolver(GASolver):
                 # Randomly decide if we should crossover
                 children = None
                 if self._should_crossover(chosen_parents):
-                    children = self.__crossover(chosen_parents)
+                    children = self._crossover(chosen_parents)
                 else:
                     children = chosen_parents
 
