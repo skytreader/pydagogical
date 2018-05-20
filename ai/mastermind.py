@@ -26,18 +26,22 @@ class MasterMind(GenerationRater):
         print("Mastermind: The sequence is %s" % self.sequence)
     
     def decide(self, guess):
+        return MasterMind.blind_decide(self.sequence, guess)
+
+    @staticmethod
+    def blind_decide(sequence, guess):
         """
         True for a correct symbol in the correct location.
         False for a correct symbol in the wrong location.
         """
         verdict = []
-        if len(guess) != self.numslots:
+        if len(guess) != len(sequence):
             raise Exception("Invalid guess")
 
-        seqclone = [s for s in self.sequence]
+        seqclone = [s for s in sequence]
         guessclone = [s for s in guess]
         
-        for g, seq in list(zip(guessclone, self.sequence)):
+        for g, seq in list(zip(guessclone, sequence)):
             if g == seq:
                 verdict.insert(0, True)
 
