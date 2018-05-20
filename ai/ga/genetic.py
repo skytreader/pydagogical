@@ -199,12 +199,9 @@ class StandardGASolver(GASolver):
         while solution is None and itercount < self.max_iterations:
             fittest = max(self.compute_generation_fitness())
             self.stats["fittest_per_gen"].append(fittest)
-            # old_generation is just for bookkeeping; can be safely removed
-            old_generation = new_generation
             new_generation = []
 
             while len(new_generation) < self.max_pool_size:
-                print("Building new generation. We currently have: %s" % new_generation)
                 generation_fitness = self.compute_generation_fitness()
                 individual_fitness_map = list(zip(self.current_pool, generation_fitness))
                 chosen_parents = self._select_parents(individual_fitness_map)
@@ -220,7 +217,7 @@ class StandardGASolver(GASolver):
 
             self.current_pool = new_generation
             print("new generation: %s %s" % (new_generation, self.compute_generation_fitness(new_generation)))
-            print("current generation: %s %s" % (old_generation, self.compute_generation_fitness(old_generation)))
+
             for child in new_generation:
                 if self.compute_fitness(child) == 1:
                     solution = child

@@ -31,8 +31,14 @@ class MasterMind(GenerationRater):
     @staticmethod
     def blind_decide(sequence, guess):
         """
+        Returns a list of booleans of at most length numslots, where there is:
+
         True for a correct symbol in the correct location.
         False for a correct symbol in the wrong location.
+
+        In retrospect, this should've just returned a dictionary with the given
+        counts. But it was so tempting to do this like the actual mastermind is
+        done, with the list _actually_ representing the pegs returned.
         """
         verdict = []
         if len(guess) != len(sequence):

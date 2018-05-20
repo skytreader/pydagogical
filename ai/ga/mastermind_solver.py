@@ -59,6 +59,19 @@ class AustereSGASolver(SGASolver):
         self.current_pool = self.current_pool[:2]
         return parents
 
+class EligibleFitnessSolver(SGASolver):
+    """
+    SGA solver which follows the suggestion from [BERGHMAN] and scores children
+    using the concept of eligible codes.
+    """
+
+    def __init__(self, mastermind, max_iterations=float("inf"), pool_size=4):
+        super().__init__(mastermind, max_iterations, pool_size)
+        self.guess_history = []
+
+    def compute_fitness(self, variation):
+        pass
+
 class MastermindSolver(GASolver):
 
     def __init__(self, mastermind):
