@@ -172,6 +172,8 @@ class StandardGASolver(GASolver):
         is a parent and its corresponding fitness score. This method also 
         reorders self.current_pool to remove the parents from the current_pool.
         """
+        if len(ifm) < 2:
+            raise ValueError("_select_parents needs to be given a population of at least 2. Given %s." % len(ifm))
         self.current_pool = [x[0] for x in ifm]
         parents = []
 
@@ -193,13 +195,9 @@ class StandardGASolver(GASolver):
         itercount = 0
         
         new_generation = self.current_pool
-        should_note_offspring = False
 
         while solution is None and itercount < self.max_iterations:
             fittest = max(self.compute_generation_fitness())
-            should_note_offspring = fittest > 0.7
-            if should_note_offspring:
-                print("NOTEMARK the fittest in this generation")
             self.stats["fittest_per_gen"].append(fittest)
             # old_generation is just for bookkeeping; can be safely removed
             old_generation = new_generation
@@ -209,8 +207,6 @@ class StandardGASolver(GASolver):
                 print("Building new generation. We currently have: %s" % new_generation)
                 generation_fitness = self.compute_generation_fitness()
                 individual_fitness_map = list(zip(self.current_pool, generation_fitness))
-                individual_fitness_map.sort(key=lambda x: x[1], reverse=True)
-
                 chosen_parents = self._select_parents(individual_fitness_map)
 
                 # Randomly decide if we should crossover
@@ -223,8 +219,6 @@ class StandardGASolver(GASolver):
                 new_generation.extend([self.mutate(c) for c in children])
 
             self.current_pool = new_generation
-            if should_note_offspring:
-                print("BOOKMARK!")
             print("new generation: %s %s" % (new_generation, self.compute_generation_fitness(new_generation)))
             print("current generation: %s %s" % (old_generation, self.compute_generation_fitness(old_generation)))
             for child in new_generation:

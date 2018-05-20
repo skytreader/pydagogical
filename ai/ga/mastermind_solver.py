@@ -47,6 +47,18 @@ class SGASolver(StandardGASolver):
     def compute_fitness(self, variation):
         return self.mastermind.rate(variation)
 
+class AustereSGASolver(SGASolver):
+    """
+    SGA solver which only allows the fittest members of current generation to be
+    parents.
+    """
+
+    def _select_parents(self, ifm):
+        self.current_pool = sorted([x[0] for x in ifm], key=lambda x: x[1], reverse=True)
+        parents = [ifm[0][0], ifm[1][0]]
+        self.current_pool = self.current_pool[:2]
+        return parents
+
 class MastermindSolver(GASolver):
 
     def __init__(self, mastermind):
@@ -144,7 +156,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate and solve mastermind instances.")
     parser.add_argument(
         "--solver", "-s", help="The type of solver to use", type=str,
-        choices=("naive", "smart", "standard"), required=True
+        choices=("naive", "smart", "standard", "austere"), required=True
     )
     parser.add_argument(
         "--len", "-l", help="The length of the code to be guessed", type=int,
@@ -174,6 +186,8 @@ if __name__ == "__main__":
         solver = SmartermindSolver(mastermind, max_iterations=max_iters)
     elif _type == "standard":
         solver = SGASolver(mastermind, max_iterations=max_iters)
+    elif _type == "austere":
+        solver = AustereSGASolver(mastermind, max_iterations=max_iters)
     else:
         print("type can only be either naive or smart")
         exit()
