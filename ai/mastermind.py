@@ -40,7 +40,7 @@ class MasterMind(GenerationRater):
             "symbol-correct": 0
         }
         if len(guess) != len(sequence):
-            raise Exception("Invalid guess")
+            raise Exception("Invalid guess: %s expecting length %d." % (guess, len(sequence)))
 
         seqclone = [s for s in sequence]
         guessclone = [s for s in guess]

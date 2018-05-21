@@ -147,11 +147,11 @@ class StandardGASolver(GASolver):
     def _crossover(self, parents):
         division_limit = random.randint(1, len(parents[0]) - 1)
 
-        p0a = parents[0][:division_limit]
-        p0b = parents[0][division_limit:]
+        p0a = list(parents[0][:division_limit])
+        p0b = list(parents[0][division_limit:])
 
-        p1a = parents[1][:division_limit]
-        p1b = parents[1][division_limit:]
+        p1a = list(parents[1][:division_limit])
+        p1b = list(parents[1][division_limit:])
 
         p0a.extend(p1b)
         p1a.extend(p0b)

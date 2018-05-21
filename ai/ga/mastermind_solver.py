@@ -102,6 +102,8 @@ class EligibleFitnessSolver(SGASolver):
         return zero_count / len(self.guess_history)
 
     def _select_parents(self, population):
+        if len(population) == 1:
+            raise ValueError("Can't select parents with a population of 1.")
         p0 = random.choice(population)
         p1 = random.choice(population)
 
@@ -115,36 +117,39 @@ class EligibleFitnessSolver(SGASolver):
 
         crossover = self._crossover(self._select_parents(population))
         for co in crossover:
-            new_pop.add(co)
+            new_pop.add(tuple(co))
 
         p0, p1 = self._select_parents(population)
-        new_pop.add(self.mutate(p0))
-        new_pop.add(self.mutate(p1))
+        new_pop.add(tuple(self.mutate(p0)))
+        new_pop.add(tuple(self.mutate(p1)))
 
         p0, p1 = self._select_parents(population)
-        new_pop.add(itertools.permutations(p0))
-        new_pop.add(itertools.permutations(p1))
+        for p in itertools.permutations(p0):
+            new_pop.add(tuple(p))
+        for p in itertools.permutations(p1):
+            new_pop.add(tuple(p))
 
-        return new_pop
+        return list(new_pop)
 
     def solve(self):
         itercount = 0
         initial_guess = [
-            random.choice(self.mastermind.charset) for _ in range(len(self.mastermind.numslots))
+            random.choice(self.mastermind.charset) for _ in range(self.mastermind.numslots)
         ]
         last_guess = self.play_guess(initial_guess)
 
-        while last_guess["score"]["completely_correct"] != self.mastermind.numslots:
+        while last_guess["score"]["completely-correct"] != self.mastermind.numslots:
             population = [
                 [
-                    random.choice(self.mastermind.charset) for _ in range(len(self.mastermind.numslots))
-                ]
+                    random.choice(self.mastermind.charset) for _ in range(self.mastermind.numslots)
+                ] for __ in range(self.max_pool_size)
             ]
             h = 0
             eligible_codes_subset = set()
 
             while h < self.max_iterations and len(eligible_codes_subset) < self.len_ecs:
                 population = self.make_new_population(population)
+                print("new populations: %s" % population)
                 individual_fitness_map = list(zip(
                     population, self.compute_generation_fitness(population)
                 ))
@@ -154,7 +159,7 @@ class EligibleFitnessSolver(SGASolver):
                         eligible_codes_subset.add(individual[0])
                 h += 1
 
-            last_guess = self.play_guess(random.choice(eligible_codes_subset))
+            last_guess = self.play_guess(random.choice(list(eligible_codes_subset)))
 
 class MastermindSolver(GASolver):
 
@@ -253,7 +258,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate and solve mastermind instances.")
     parser.add_argument(
         "--solver", "-s", help="The type of solver to use", type=str,
-        choices=("naive", "smart", "standard", "austere"), required=True
+        choices=("naive", "smart", "standard", "austere", "eligible"), required=True
     )
     parser.add_argument(
         "--len", "-l", help="The length of the code to be guessed", type=int,
@@ -277,17 +282,17 @@ if __name__ == "__main__":
 
     mastermind = MasterMind(numslots, charset=charset)
 
-    if _type == "naive":
-        solver = MastermindSolver(mastermind, max_iterations=max_iters)
-    elif _type == "smart":
-        solver = SmartermindSolver(mastermind, max_iterations=max_iters)
-    elif _type == "standard":
-        solver = SGASolver(mastermind, max_iterations=max_iters)
-    elif _type == "austere":
-        solver = AustereSGASolver(mastermind, max_iterations=max_iters)
-    else:
-        print("type can only be either naive or smart")
-        exit()
+    # Works under the assumption that solver constructors can all survive with
+    # the same form of arguments.
+    type_constructor_map = {
+        "naive": MastermindSolver,
+        "smart": SmartermindSolver,
+        "standard": SGASolver,
+        "austere": AustereSGASolver,
+        "eligible": EligibleFitnessSolver
+    }
+    constructor = type_constructor_map[_type]
+    solver = constructor(mastermind, max_iterations=max_iters)
 
     soln = solver.solve()
     print("Got solution: %s" % soln)
