@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 from ai.mastermind import MasterMind
-from ai.ga.genetic import GASolver, StandardGASolver
+from ai.ga.genetic import GASolver, SolutionStat, StandardGASolver
 from .errors import UnreachableSolutionException
 
 import argparse
@@ -138,7 +138,7 @@ class EligibleFitnessSolver(SGASolver):
         ]
         last_guess = self.play_guess(initial_guess)
 
-        while last_guess["score"]["completely-correct"] != self.mastermind.numslots:
+        while last_guess["score"]["completely-correct"] != self.mastermind.numslots and itercount < self.max_iterations:
             population = [
                 [
                     random.choice(self.mastermind.charset) for _ in range(self.mastermind.numslots)
@@ -150,16 +150,23 @@ class EligibleFitnessSolver(SGASolver):
             while h < self.max_iterations and len(eligible_codes_subset) < self.len_ecs:
                 population = self.make_new_population(population)
                 print("new populations: %s" % population)
-                individual_fitness_map = list(zip(
-                    population, self.compute_generation_fitness(population)
-                ))
+                genfitness = self.compute_generation_fitness(population)
+                individual_fitness_map = list(zip(population, genfitness))
                 
                 for individual in individual_fitness_map:
                     if individual[1] == 1:
                         eligible_codes_subset.add(individual[0])
                 h += 1
 
-            last_guess = self.play_guess(random.choice(list(eligible_codes_subset)))
+            random_eligible_code = random.choice(list(eligible_codes_subset))
+            self.stats["fittest_per_gen"].append(self.mastermind.rate(random_eligible_code))
+            last_guess = self.play_guess(random_eligible_code)
+            itercount += 1
+
+        return SolutionStat(
+            answer=last_guess["guess"], ans_score=last_guess["score"],
+            iters=itercount, max_iters=self.max_iterations
+        )
 
 class MastermindSolver(GASolver):
 
