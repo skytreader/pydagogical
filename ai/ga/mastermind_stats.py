@@ -40,7 +40,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     iter_counts = {i: [] for i in args.include}
     max_iters = args.maxiters if args.maxiters > 0 else float("inf")
-    solvers = [TYPE_CONSTRUCTOR_MAP[i] for i in args.maxiters]
 
     for i in range(args.simlen):
         print("Simulating %s / %s" % (i + 1, args.simlen))
@@ -50,8 +49,8 @@ if __name__ == "__main__":
                 mastermind, max_iterations=max_iters
             )
 
-            solver.solve()
-            iter_counts[included_solver].append(solver.iters)
+            soln = solver.solve()
+            iter_counts[included_solver].append(soln.iters)
 
     for solver in args.include:
         print("=" * 60)

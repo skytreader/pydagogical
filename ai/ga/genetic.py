@@ -170,13 +170,41 @@ class StandardGASolver(GASolver):
         Where ifm (individual fitness map) is a list of tuples where each tuple
         is a parent and its corresponding fitness score.
         """
+
+        def all_low_fitness(ifm, threshold=0.2):
+            is_all_low = True
+
+            for i in ifm:
+                is_all_zero = i[1] <= 0
+
+                if not is_all_zero:
+                    return False
+
+            return True
+
         if len(ifm) < 2:
             raise ValueError("_select_parents needs to be given a population of at least 2. Given %s." % len(ifm))
+
+        if all_low_fitness(ifm):
+            individuals = [i[0] for i in ifm]
+            p0 = random.choice(individuals)
+            p1 = random.choice(individuals)
+            
+            while p1 == p0:
+                p1 = random.choice(individuals)
+
+            return [p0, p1]
+
         self.current_pool = [x[0] for x in ifm]
         parents = []
 
         while len(parents) < 2:
             for i in ifm:
+                # FIXME Ugly. Rewrite.
+                unchosen_ifm = [i for i in ifm if i[0] not in parents]
+                if all_low_fitness(unchosen_ifm):
+                    parents.append(random.choice(unchosen_ifm)[0])
+
                 # The probability of parenthood is in direct proportion to fitness
                 if i[0] not in parents and random.random() <= i[1]:
                     parents.append(i[0])
