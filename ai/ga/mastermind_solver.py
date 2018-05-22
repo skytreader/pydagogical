@@ -261,6 +261,16 @@ class SmartermindSolver(MastermindSolver):
 
         return varclone
 
+# Works under the assumption that solver constructors can all survive with
+# the same form of arguments.
+TYPE_CONSTRUCTOR_MAP = {
+    "naive": MastermindSolver,
+    "smart": SmartermindSolver,
+    "standard": SGASolver,
+    "austere": AustereSGASolver,
+    "eligible": EligibleFitnessSolver
+}
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate and solve mastermind instances.")
     parser.add_argument(
@@ -288,16 +298,6 @@ if __name__ == "__main__":
     max_iters = int(args["maxiters"]) if args["maxiters"] > 0 else float("inf")
 
     mastermind = MasterMind(numslots, charset=charset)
-
-    # Works under the assumption that solver constructors can all survive with
-    # the same form of arguments.
-    type_constructor_map = {
-        "naive": MastermindSolver,
-        "smart": SmartermindSolver,
-        "standard": SGASolver,
-        "austere": AustereSGASolver,
-        "eligible": EligibleFitnessSolver
-    }
     constructor = type_constructor_map[_type]
     solver = constructor(mastermind, max_iterations=max_iters)
 
