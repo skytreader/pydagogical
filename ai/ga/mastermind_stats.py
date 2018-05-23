@@ -36,9 +36,13 @@ if __name__ == "__main__":
         "--maxiters", type=int, default=0, required=False,
         help="Max number of iterations _per solver type_."
     )
+    parser.add_argument(
+        "--strict-soln", action="store_true",
+        help="If present, we will only note those runs which managed to find a solution."
+    )
 
     args = parser.parse_args()
-    iter_counts = {i: [] for i in args.include}
+    stats = {i: [] for i in args.include}
     max_iters = args.maxiters if args.maxiters > 0 else float("inf")
 
     for i in range(args.simlen):
@@ -50,9 +54,9 @@ if __name__ == "__main__":
             )
 
             soln = solver.solve()
-            iter_counts[included_solver].append(soln.iters)
+            stats[included_solver].append(soln.iters)
 
     for solver in args.include:
         print("=" * 60)
         print("%s solver stats:" % solver)
-        print_results(iter_counts[solver])
+        print_results(stats[solver])
