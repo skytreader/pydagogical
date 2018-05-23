@@ -9,7 +9,8 @@ import argparse
 import string
 import sys
 
-def print_results(numlist):
+def print_results(numlist, simlen):
+    print("Solved %s / %s" % (len(numlist), simlen))
     print("Mean iterations: %s" % mean(numlist))
     print("Standard deviation: %s" % standard_deviation(numlist))
 
@@ -54,9 +55,13 @@ if __name__ == "__main__":
             )
 
             soln = solver.solve()
-            stats[included_solver].append(soln.iters)
+            if args.strict_soln:
+                if soln.ans_score == 1:
+                    stats[included_solver].append(soln.iters)
+            else:
+                stats[included_solver].append(soln.iters)
 
     for solver in args.include:
         print("=" * 60)
         print("%s solver stats:" % solver)
-        print_results(stats[solver])
+        print_results(stats[solver], args.simlen)
