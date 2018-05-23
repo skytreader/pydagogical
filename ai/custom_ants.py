@@ -4,20 +4,15 @@ import sys
 
 class TravellingSalesAnts(object):
     """
-    Solve TSP via Ant Colony Optimization.
+    Solves TSP via a modified (without an objective good reason) Ant Colony
+    Optimization.
     """
 
-    def __init__(
-        self, cities, ant_count, evap_factor=0.5, backtrip_constant=1,
-        max_iters=100
-    ):
+    def __init__(self, cities, ant_count):
         self.cities = cities
         self.city_count = len(cities)
         self.ant_count = ant_count
         self.antroutes = [None for ant in range(self.ant_count)]
-        self.evap_factor = evap_factor
-        self.backtrip_constant = backtrip_constant
-        self.max_iters = max_iters
         self.pheromone_matrix = [
             [0 for city in self.cities]
             for city in self.cities
@@ -40,11 +35,8 @@ class TravellingSalesAnts(object):
 
         return distance
 
-    def _ant_tour(self, antno, is_return_trip=False):
-        if is_return_trip:
-            print("Ant %d is a touring machine returning." % antno)
-        else:
-            print("Ant %d is a touring machine starting." % antno)
+    def ant_tour(self, antno):
+        print("Ant %d is a touring machine." % antno)
         cindices = [i for i in range(len(self.cities))]
         current = random.choice(cindices)
         self.antroutes[antno] = [current]
@@ -52,8 +44,7 @@ class TravellingSalesAnts(object):
         while len(self.antroutes[antno]) != self.city_count:
             next_city = self.get_random_next(self.antroutes[antno], current)
             dist = self.euc_2d(self.cities[current], self.cities[next_city])
-            if is_return_trip:
-                self.pheromone_matrix[current][next_city] += self.backtrip_constant / dist
+            self.pheromone_matrix[current][next_city] += 1 / dist
             current = next_city
             self.antroutes[antno].append(current)
 
@@ -69,23 +60,9 @@ class TravellingSalesAnts(object):
         next_city = random.choice(choices[:n])
         return next_city
 
-    def _evaporate_pheromones(self):
-        for start_idx, start_point in enumerate(self.pheromone_matrix):
-            for end_idx, dest_point in enumerate(start_point):
-                self.pheromone_matrix[start_idx][end_idx] = (
-                    (1 - self.evap_factor) * self.pheromone_matrix[start_idx][end_idx]
-                )
-
-    def _forage_rounds(self):
-        for i in range(self.ant_count):
-            self._ant_tour(i)
-        self._evaporate_pheromones()
-        for i in range(self.ant_count):
-            self._ant_tour(i, is_return_trip=True)
-
     def solve(self):
-        for i in range(self.max_iters):
-            self._forage_rounds()
+        for i in range(self.ant_count):
+            self.ant_tour(i)
 
         mintour = float("inf")
         mindex = -1
