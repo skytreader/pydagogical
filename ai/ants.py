@@ -44,7 +44,7 @@ class TravellingSalesAnts(object):
         if is_return_trip:
             print("Ant %d is a touring machine returning." % antno)
         else:
-            print("Ant %d is a touring machine starting." % antno)
+            print("Ant %d is a touring machine beginning." % antno)
         cindices = [i for i in range(len(self.cities))]
         current = random.choice(cindices)
         self.antroutes[antno] = [current]
@@ -98,6 +98,7 @@ class TravellingSalesAnts(object):
 
         print("Min path has length: %s" % mintour)
         print("Path found: %s" % self.antroutes[mindex])
+        return mintour
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
