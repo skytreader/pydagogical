@@ -298,7 +298,7 @@ if __name__ == "__main__":
     max_iters = int(args["maxiters"]) if args["maxiters"] > 0 else float("inf")
 
     mastermind = MasterMind(numslots, charset=charset)
-    constructor = type_constructor_map[_type]
+    constructor = TYPE_CONSTRUCTOR_MAP[_type]
     solver = constructor(mastermind, max_iterations=max_iters)
 
     soln = solver.solve()
