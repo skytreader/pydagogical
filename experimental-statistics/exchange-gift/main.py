@@ -28,6 +28,8 @@ What strategy should Alice choose?
 - Whether to use plain random or SystemRandom.
 """
 
+from argparse import ArgumentParser
+
 import random
 
 ALICE = "Alice"
@@ -62,20 +64,29 @@ class DrawFirstStrategy(ExchangeGiftStrategy):
 
 class ExperimentSimulator(object):
 
-    def __init__(self, strategy, runs=1000):
-        self.runs = runs
+    def __init__(self, strategy):
         self.strategy = strategy
     
-    def run(self):
+    def run(self, runs):
         success = 0
-        for i in range(self.runs):
+        for i in range(runs):
             if self.strategy.make_alice_choose():
                 success += 1
 
         return success
 
 if __name__ == "__main__":
-    experiment = ExperimentSimulator(DrawFirstStrategy(100))
-    success = experiment.run()
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--participants", "-p", type=int, required=True,
+        help="The number of participants in the exchange gift we are simulating."
+    )
+    parser.add_argument(
+        "--runs", "-r", type=int, required=True,
+        help="The number of times we will run the experiment."
+    )
+    args = vars(parser.parse_args())
+    experiment = ExperimentSimulator(DrawFirstStrategy(args["participants"]))
+    success = experiment.run(args["runs"])
 
-    print("%s / %s = %s" % (success, experiment.runs, success / experiment.runs))
+    print("%s / %s = %s" % (success, args["runs"], success / args["runs"]))
