@@ -26,6 +26,21 @@ def construct_major_scale(unison_note):
 
     return major_scale
 
+def construct_natural_minor_scale(unison_note):
+    """
+    AKA The Aeolian Mode.
+    """
+    major_scale = construct_major_scale(unison_note)
+    minor_scale = major_scale[5:7]
+    minor_scale.extend(major_scale[0:5])
+    return minor_scale
+
+def construct_relative_minor_scale(unison_note):
+    """
+    Alias for construct_natural_minor_scale.
+    """
+    return construct_natural_minor_scale(unison_note)
+
 def norm_flat(note):
     if len(note) == 2 and note[1] == "b":
         norm_note = note[0].upper()
