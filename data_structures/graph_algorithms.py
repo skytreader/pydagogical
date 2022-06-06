@@ -75,7 +75,7 @@ def dijkstra(map):
     while not is_in_tree[curcell[0]][curcell[1]]:
         is_in_tree[curcell[0]][curcell[1]] = True
         neighbors = [
-            adj for adj in __get_adjacent_4c(curcell, width, height) if map[adj[0]][adj[1]] != 1
+            adj for adj in __get_adjacent_4c(curcell, height, width) if map[adj[0]][adj[1]] != 1
         ]
 
         for n in neighbors:
