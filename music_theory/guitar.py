@@ -1,6 +1,6 @@
 from .scales import CHROMATIC_SCALE
 
-def construct_fretting(tuning, fret_limit=12):
+def construct_fretting(tuning: str, fret_limit: int = 12):
     """
     `tuning` is a string describing the notes sounded by the guitar string when
     played in open. No length restrictions are imposed because, hey, whatever
