@@ -1,4 +1,4 @@
-from ..permutations import permute_dfs
+from ...combinatorics.permutations import permute_dfs
 
 import unittest
 

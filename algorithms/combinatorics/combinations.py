@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
 def binomial_coefficients(n, m):
+    if m > n:
+        raise ValueError("n >= m at all times")
     limit = n + 1
     bin_coeff = [[None for _ in range(limit)] for _ in range(limit)]
 
@@ -31,6 +33,9 @@ def generate_combinations(n, m):
             clone = [x for x in partial_combi]
             clone.append(spam)
             yield tuple(clone)
+
+    if m > n:
+        raise ValueError("n >= m at all times")
 
     skew = [[x] for x in range(n)]
 
