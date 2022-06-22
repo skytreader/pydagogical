@@ -45,6 +45,9 @@ def permute_dfs(seq):
 
 # Totes unfinished!
 def permute_heaps(seq):
+    """
+    https://en.wikipedia.org/wiki/Heap%27s_algorithm
+    """
     def generate_2perm(seq2):
         return (
             (seq2[0], seq2[1]),
