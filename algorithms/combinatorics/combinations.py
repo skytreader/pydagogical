@@ -14,4 +14,33 @@ def binomial_coefficients(n, m):
 
     return bin_coeff[n][m]
 
-print(binomial_coefficients(5, 4))
+def generate_combinations(n, m):
+    """
+    Generate all m combinations from a universe of n. This is a _generator_ to
+    curb NP growth.
+
+    The universe will be the integers [0, n-1].
+
+    Assurances:
+
+    - the return order is _lexicographically least_. One element in the universe
+    counts for one character in the ordering criteria.
+    """
+    def make_neighbors(partial_combi):
+        for spam in range(partial_combi[-1] + 1, n):
+            clone = [x for x in partial_combi]
+            clone.append(spam)
+            yield tuple(clone)
+
+    skew = [[x] for x in range(n)]
+
+    while skew:
+        # Must use the skew as a queue rather than stack to ensure ordering.
+        # Call pop with no arguments to perform DFS instead.
+        combi = skew.pop(0)
+
+        if len(combi) == m:
+            yield combi
+        else:
+            for neighbor in make_neighbors(combi):
+                skew.append(neighbor)
