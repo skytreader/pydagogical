@@ -45,7 +45,7 @@ def generate_combinations(n, m):
         combi = skew.pop(0)
 
         if len(combi) == m:
-            yield combi
+            yield tuple(combi)
         else:
             for neighbor in make_neighbors(combi):
                 skew.append(neighbor)
