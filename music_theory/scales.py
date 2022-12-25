@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 
 ScaleType = Tuple[str, str, str, str, str, str, str, str, str, str, str, str]
 IntervalPatternType = Tuple[int, int, int, int, int, int, int]
@@ -58,6 +58,10 @@ def norm_flat(note: str) -> str:
 def __normalize_note(note: str) -> str:
     return norm_flat(note) if len(note) == 2 and note[1] == "b" else note.upper()
 
+def flatten_note(note: str) -> str:
+    normalized = __normalize_note(note)
+    return CHROMATIC_SCALE[CHROMATIC_SCALE.index(normalized) - 1]
+
 def interval_quality(note1: str, note2: str) -> str:
     # FIXME This assumes it won't be fed flats.
     # TODO Work this in terms of minor and major intervals.
@@ -87,6 +91,21 @@ def interval_quantity(note1: str, note2: str) -> int:
         index2 += len(NO_SHARPS)
         return index2 - index1 + 1
 
-def get_chord(note: str) -> Tuple[str, str, str]:
+def get_major_chord(note: str) -> Tuple[str, str, str]:
     major_scale = construct_major_scale(note)
     return (major_scale[0], major_scale[2], major_scale[4])
+
+def get_minor_chord(note: str) -> Tuple[str, str, str]:
+    major_chord = get_major_chord(note)
+    return (major_chord[0], flatten_note(major_chord[1]), major_chord[2])
+
+def determine_chord(n1: str, n2: str, n3: str) -> Optional[str]:
+    note_tuple = (__normalize_note(n) for n in (n1, n2, n3))
+    note_set = set(note_tuple)
+    for note in note_tuple:
+        if set(get_major_chord(note)) == note_set:
+            return "%s major" % note
+        elif set(get_minor_chord(note)) == note_set:
+            return "%s minor" % note
+
+    return None
