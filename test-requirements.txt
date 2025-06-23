@@ -1,2 +1,0 @@
-nosexcover
-python-coveralls
