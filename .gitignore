@@ -1,7 +1,2 @@
-*.py~
-*.pyc
-*/__pycache__/*
-*.sw?
-*~
-*.log
-*.bak
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*
