@@ -7,7 +7,7 @@ pbr==5.4.5
 pluggy==1.6.0
 Pygments==2.19.2
 pytest==8.4.1
-setuptools==46.4.0
+setuptools==78.1.1
 six==1.15.0
 stevedore==3.0.0
 virtualenv @ file:///tmp/venvburrito.h134a00x/virtualenv-20.0.26
